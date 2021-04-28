@@ -1,0 +1,9 @@
+{
+  "title": "마이컴퍼니",
+  "sign_in": "로그인",
+  "sign_up": "회원가입",
+  "email": "이메일",
+  "password": "비밀번호",
+  "forgot_password": "비밀번호를 잊어버리셨나요?",
+  "find_password": "비밀번호 찾기"
+}
