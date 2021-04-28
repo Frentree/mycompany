@@ -4,6 +4,10 @@
   "sign_up": "회원가입",
   "email": "이메일",
   "password": "비밀번호",
+  "password_confirm": "비밀번호",
   "forgot_password": "비밀번호를 잊어버리셨나요?",
-  "find_password": "비밀번호 찾기"
+  "find_password": "비밀번호 찾기",
+  "name": "이름",
+  "birthday_hint": "생년월일 (ex: 1999.01.01)",
+  "phone": "전화번호"
 }

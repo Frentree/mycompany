@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
 
 class DecorationStyle {
-  InputDecoration textFormDecoration({String? hintText}) {
-    return InputDecoration(
+  InputDecoration textFormDecoration({String? hintText, Widget? suffixIcon}) {
+        return InputDecoration(
       contentPadding: EdgeInsets.symmetric(horizontal: 12.0.w),
       filled: true,
       fillColor: textFormBackgroundColor,
@@ -20,6 +20,9 @@ class DecorationStyle {
         fontSize: 13.0.sp,
         color: hintTextColor,
       ),
+      /*suffix: suffixIcon,*/
+       suffixIcon: suffixIcon,
+       suffixIconConstraints: BoxConstraints()
     );
   }
 }

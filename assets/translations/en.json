@@ -4,6 +4,10 @@
   "sign_up": "Sign Up",
   "email": "Email",
   "password": "Password",
+  "password_confirm": "Password confirm",
   "forgot_password": "Forgot your password?",
-  "find_password": "Find password"
+  "find_password": "Find password",
+  "name": "Name",
+  "birthday_hint": "Birthday (ex: 1999.01.01)",
+  "phone": "phone"
 }

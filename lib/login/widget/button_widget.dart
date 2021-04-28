@@ -82,4 +82,17 @@ class ButtonWidget {
       ),
     );
   }
+  
+  IconButton textFormClearButton({required TextEditingController textEditingController}) {
+    return IconButton(
+      icon: Icon(
+        Icons.cancel,
+      ),
+      color: Color(0xffC4C4C4),
+      iconSize: 15.0.w,
+      onPressed: (){
+        textEditingController.clear();
+      },
+    );
+  }
 }
