@@ -16,8 +16,14 @@ class SignInViewState extends State<SignInView> {
   LoginStyleRepository _loginStyleRepository = LoginStyleRepository();
   LoginWidgetRepository _loginWidgetRepository = LoginWidgetRepository();
 
-  TextEditingController _loginUserIdCon = TextEditingController();
-  TextEditingController _loginUserPwdCon = TextEditingController();
+
+  late TextEditingController _passwordController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _passwordController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +87,7 @@ class SignInViewState extends State<SignInView> {
             ),
             child: Container(
               child: Text(
-                "Sign In",
+                'sign_in'.tr(),
                 style: TextStyle(
                   fontSize: 18.0.sp,
                   fontWeight: FontWeight.w700,
@@ -102,7 +108,6 @@ class SignInViewState extends State<SignInView> {
               width: 305.0.w,
               height: 40.0.h,
               child: TextFormField(
-                controller: _loginUserIdCon,
                 decoration: _loginStyleRepository.textFormDecoration(hintText: 'email'.tr()),
                 style: TextStyle(
                   fontSize: 13.0.sp,
@@ -123,7 +128,6 @@ class SignInViewState extends State<SignInView> {
               width: 305.0.w,
               height: 40.0.h,
               child: TextFormField(
-                controller: _loginUserPwdCon,
                 decoration: _loginStyleRepository.textFormDecoration(hintText: 'password'.tr()),
                 style: TextStyle(
                   fontSize: 13.0.sp,
