@@ -16,6 +16,9 @@ class SignInViewState extends State<SignInView> {
   LoginStyleRepository _loginStyleRepository = LoginStyleRepository();
   LoginWidgetRepository _loginWidgetRepository = LoginWidgetRepository();
 
+  TextEditingController _loginUserIdCon = TextEditingController();
+  TextEditingController _loginUserPwdCon = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +102,7 @@ class SignInViewState extends State<SignInView> {
               width: 305.0.w,
               height: 40.0.h,
               child: TextFormField(
+                controller: _loginUserIdCon,
                 decoration: _loginStyleRepository.textFormDecoration(hintText: 'email'.tr()),
                 style: TextStyle(
                   fontSize: 13.0.sp,
@@ -119,6 +123,7 @@ class SignInViewState extends State<SignInView> {
               width: 305.0.w,
               height: 40.0.h,
               child: TextFormField(
+                controller: _loginUserPwdCon,
                 decoration: _loginStyleRepository.textFormDecoration(hintText: 'password'.tr()),
                 style: TextStyle(
                   fontSize: 13.0.sp,
@@ -127,7 +132,11 @@ class SignInViewState extends State<SignInView> {
               ),
             ),
           ),
-          _loginWidgetRepository.elevatedButton(topPadding: 20.0.h, buttonName: 'sign_in'.tr(), buttonAction: () => SignInFunction().page(context)),
+          _loginWidgetRepository.elevatedButton(
+              topPadding: 20.0.h,
+              buttonName: 'sign_in'.tr(),
+              buttonAction: () => SignInFunction().schedule(context)
+          ),
           _loginWidgetRepository.outlinedButton(topPadding: 12.0.h, buttonName: 'sign_up'.tr(), buttonAction: () => SignInFunction().page(context)),
           Container(
             alignment: Alignment.centerLeft,
