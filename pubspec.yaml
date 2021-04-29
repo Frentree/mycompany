@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  firebase_core: ^1.1.0
   syncfusion_flutter_calendar: ^19.1.57
   flutter_screenutil: ^5.0.0
   easy_localization: ^3.0.0

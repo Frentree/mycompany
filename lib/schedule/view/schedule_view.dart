@@ -30,10 +30,12 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   @override
   Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => _getDataSource(),
         child: Container(
+          padding: EdgeInsets.only(top: statusBarHeight),
           width: double.infinity,
           height: double.infinity,
           child: SfCalendar(

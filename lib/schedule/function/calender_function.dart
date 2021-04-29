@@ -22,10 +22,10 @@ class CalenderFunction{
     for (var doc in scheduleSnapshot) {
       String type = doc.data()['type'];
       String name = doc.data()['name'];
-      String title = doc.data()['title'];
-      String mail = doc.data()['createUid'];
-      String location = doc.data()['location'];
-      String notes = "[${type}] ${title}";
+      String? title = doc.data()['title'];
+      String? mail = doc.data()['createUid'];
+      String? location = doc.data()['location'];
+      String? notes = "[${type}] ${title}";
       Timestamp startTimes = doc.data()['startTime'];
 
       if(typeList.contains(type)){
