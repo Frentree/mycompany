@@ -25,4 +25,6 @@ class LoginWidgetRepository {
         buttonName: buttonName,
         buttonAction: buttonAction,
       );
+
+  IconButton textFormClearButton({required TextEditingController textEditingController}) => _buttonWidget.textFormClearButton(textEditingController: textEditingController);
 }
