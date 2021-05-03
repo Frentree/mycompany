@@ -6,6 +6,7 @@ import 'package:mycompany/login/view/sign_up_view.dart';
 import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/public/provider/public_provider_repository.dart';
 import 'package:mycompany/login/widget/login_widget_repository.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 
 class SignInFunction {
   void page(BuildContext context) {
@@ -69,5 +70,9 @@ class SignInFunction {
         errorMessage: loginServiceRepository.changeMessageToErrorCode(),
       );
     }
+  }
+
+  void schedule(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleView()));
   }
 }
