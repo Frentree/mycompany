@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/public/widget/main_menu.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -18,6 +19,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   void initState() {
     super.initState();
     _getDataSource();
+    setState(() {});
   }
 
   _getDataSource() async {
@@ -32,6 +34,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
+      floatingActionButton: getMainCircularMenu(context: context, navigator: 'home'),
       body: RefreshIndicator(
         onRefresh: () => _getDataSource(),
         child: Container(
@@ -53,18 +56,7 @@ class _ScheduleViewState extends State<ScheduleView> {
             ),
 
             todayHighlightColor: Colors.teal,
-            onTap: (CalendarTapDetails details) {
-              dynamic appointment = details.appointments;
-              //DateTime date = details.date;
-              //CalendarElement element = details.targetElement; //  달력 요소
-              if(appointment != null){
-                //showDialogCalender(context, appointment, date);
-                /*if(pickDate != date) {
-                    pickDate = date;
-                  } else {
-                  }*/
-              }
-            },
+            onTap: (CalendarTapDetails details) => ScheduleFunctionReprository().getScheduleDetail(details: details, context: context),
           ),
         ),
       ),

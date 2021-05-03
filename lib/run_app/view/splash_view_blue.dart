@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mycompany/public//style/color.dart';
+import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 
 class SplashViewBlue extends StatefulWidget {

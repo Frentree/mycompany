@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/schedule/view/schedule_registration_view.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
+import 'package:mycompany/schedule/widget/cirecular_button_item.dart';
+import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
+
+PublicFunctionReprository _reprository = PublicFunctionReprository();
+
+Widget getMainCircularMenu({required BuildContext context,required String navigator}) {
+  return CircularMenu(
+      alignment: Alignment.bottomRight,
+      radius: 170.0,
+      toggleButtonColor: Colors.red,
+      //startingAngleInRadian: 0.0,
+      items: [
+        CircularMenuItem(
+            icon: Icons.home,
+            onTap: () => navigator != 'home' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
+        CircularMenuItem(
+            icon: Icons.schedule,
+            onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false) : {}),
+        CircularMenuItem(
+            icon: Icons.settings,
+            onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
+        CircularMenuItem(
+            icon: Icons.star,
+            onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
+        CircularMenuItem(
+            icon: Icons.settings,
+            onTap: () => navigator != 'setting' ?  _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
+      ]);
+}

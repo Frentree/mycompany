@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
+import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalenderFunction{
@@ -49,8 +50,25 @@ class CalenderFunction{
 
     }
 
-
     return shedules;
+  }
+
+  void getScheduleDetail(CalendarTapDetails details, BuildContext context){
+    dynamic appointment = details.appointments;
+    DateTime? date = details.date;
+    //CalendarElement element = details.targetElement; //  달력 요소
+    if(appointment != null){
+      ScheduleDialogWidget().showScheduleDetail(context: context, data: appointment, date: date!);
+    }
+  }
+
+  void mainNavigator(CalendarTapDetails details, BuildContext context){
+    dynamic appointment = details.appointments;
+    DateTime? date = details.date;
+    //CalendarElement element = details.targetElement; //  달력 요소
+    if(appointment != null){
+      ScheduleDialogWidget().showScheduleDetail(context: context, data: appointment, date: date!);
+    }
   }
 
 }
