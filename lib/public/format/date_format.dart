@@ -1,17 +1,16 @@
-/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DateFormat {
-  DateTime changeTimeStampToDateTime({Timestamp timestamp}) {
+  DateTime changeTimeStampToDateTime({required Timestamp timestamp}) {
     DateTime dateTime = timestamp.toDate();
 
     return dateTime;
   }
 
-  Timestamp changeDateTimeToTimeStamp({DateTime dateTime}) {
+  Timestamp changeDateTimeToTimeStamp({required DateTime dateTime}) {
 
     Timestamp timestamp = Timestamp.fromDate(dateTime);
 
     return timestamp;
   }
-}*/
+}

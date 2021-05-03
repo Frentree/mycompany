@@ -9,5 +9,9 @@
   "find_password": "Find password",
   "name": "Name",
   "birthday_hint": "Birthday (ex: 1999.01.01)",
-  "phone": "phone"
+  "phone": "Phone",
+  "error_email_already_in_use": "This email is already in use.",
+  "error_incorrect_login_information": "The ID is not registered, or the password is incorrect.",
+  "error_too_many_requests": "Too many requests. Try again later.",
+  "error_undefined": "An undefined error happened."
 }

@@ -4,15 +4,15 @@ import 'package:mycompany/public/style/color.dart';
 
 class DecorationStyle {
   InputDecoration textFormDecoration({String? hintText, Widget? suffixIcon}) {
-        return InputDecoration(
+    return InputDecoration(
       contentPadding: EdgeInsets.symmetric(horizontal: 12.0.w),
       filled: true,
-      fillColor: textFormBackgroundColor,
+      fillColor: Color(0xffF7F7F7),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0.r),
         borderSide: BorderSide(
           width: 0.0,
-          style: BorderStyle.none,
+          style: BorderStyle.none
         ),
       ),
       hintText: hintText,
@@ -20,9 +20,8 @@ class DecorationStyle {
         fontSize: 13.0.sp,
         color: hintTextColor,
       ),
-      /*suffix: suffixIcon,*/
-       suffixIcon: suffixIcon,
-       suffixIconConstraints: BoxConstraints()
+      suffixIcon: suffixIcon,
+      suffixIconConstraints: BoxConstraints(),
     );
   }
 }

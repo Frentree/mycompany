@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
 
-class ButtonWidget {
+class LoginButtonWidget {
   Container elevatedButton({required double topPadding, required String buttonName, VoidCallback? buttonAction}) {
     return Container(
       alignment: Alignment.centerLeft,
-      width: 1.0.sw,
       padding: EdgeInsets.only(
         top: topPadding,
-        left: 27.5.w,
-        right: 27.5.w,
       ),
       child: SizedBox(
         width: 305.0.w,
@@ -51,11 +48,8 @@ class ButtonWidget {
   Container outlinedButton({required double topPadding, required String buttonName, VoidCallback? buttonAction}) {
     return Container(
       alignment: Alignment.centerLeft,
-      width: 1.0.sw,
       padding: EdgeInsets.only(
         top: topPadding,
-        left: 27.5.w,
-        right: 27.5.w,
       ),
       child: SizedBox(
         width: 305.0.w,

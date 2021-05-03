@@ -1,4 +1,3 @@
-/*
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -12,19 +11,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserInfoProvider with ChangeNotifier {
   DateFormat _dateFormat = DateFormat();
-  LoginFirebaseRepository _loginFirebaseRepository = LoginFirebaseRepository();
-  UserModel _userModel;
+  LoginFirestoreRepository _loginFirestoreRepository = LoginFirestoreRepository();
+  UserModel? _userModel;
 
-  UserModel getUserData() {
+  UserModel? getUserData() {
     return _userModel;
   }
 
-  void setUserData({UserModel userModel}) {
+  void setUserData({UserModel? userModel}) {
     _userModel = userModel;
     notifyListeners();
   }
 
-  Future<void> saveUserDataToPhone({UserModel userModel}) async {
+  Future<void> saveUserDataToPhone({required UserModel userModel}) async {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     dynamic encodeData = userModel.toJson();
 
@@ -39,7 +38,7 @@ class UserInfoProvider with ChangeNotifier {
   Future<void> loadUserDataToPhone() async {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     if(_sharedPreferences.getString(USER) != null){
-      dynamic decodeData = jsonDecode(_sharedPreferences.getString(USER));
+      dynamic decodeData = jsonDecode(_sharedPreferences.getString(USER)!);
 
       decodeData['birthday'] = _dateFormat.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['birthday']));
       decodeData['createDate'] = _dateFormat.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['createDate']));
@@ -47,7 +46,7 @@ class UserInfoProvider with ChangeNotifier {
 
       _userModel = UserModel.fromMap(mapData: decodeData);
 
-      UserModel _userData = await _loginFirebaseRepository.readUserData(email: _userModel.email);
+      UserModel _userData = await _loginFirestoreRepository.readUserData(email: _userModel!.email);
 
       if(_userData != _userModel){
         saveUserDataToPhone(userModel: _userData);
@@ -66,4 +65,4 @@ class UserInfoProvider with ChangeNotifier {
     await _sharedPreferences.remove(USER);
     setUserData(userModel: null);
   }
-}*/
+}
