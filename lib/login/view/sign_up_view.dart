@@ -181,7 +181,7 @@ class SignUpViewState extends State<SignUpView> {
               ),
             ),
           ),
-          _loginWidgetRepository.elevatedButton(topPadding: 20.0.h, buttonName: 'sign_up'.tr(), buttonAction: () => SignInFunction().page(context)),
+          _loginWidgetRepository.elevatedButton(topPadding: 20.0.h, buttonName: 'sign_up'.tr(), /*buttonAction: () => SignInFunction().page(context)*/),
         ],
       ),
     );

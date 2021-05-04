@@ -1,14 +1,13 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DateFormat {
-  DateTime changeTimeStampToDateTime({Timestamp? timestamp}) {
-    DateTime dateTime = timestamp!.toDate();
+  DateTime changeTimeStampToDateTime({required Timestamp timestamp}) {
+    DateTime dateTime = timestamp.toDate();
 
     return dateTime;
   }
 
-  Timestamp changeDateTimeToTimeStamp({DateTime? dateTime}) {
+  Timestamp changeDateTimeToTimeStamp({required DateTime dateTime}) {
 
     Timestamp timestamp = Timestamp.fromDate(dateTime!);
 
@@ -22,14 +21,14 @@ class DateFormat {
     return dateText;
   }
 
-  String twoDigitsFormat(int date){
+  String twoDigitsFormat(int date) {
     String newDate = "";
 
-    if(date < 10) {
+    if (date < 10) {
       newDate = "0" + date.toString();
     }
 
-    else{
+    else {
       newDate = date.toString();
     }
 

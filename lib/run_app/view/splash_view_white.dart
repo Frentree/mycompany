@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/view/sign_in_view.dart';
 
 class SplashViewWhite extends StatefulWidget {
@@ -20,10 +21,10 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
               vertical: 340.7.h,
             ),
             child: GestureDetector(
-              child: SizedBox(
+              child: SvgPicture.asset(
+                'assets/images/logo_blue.svg',
                 width: 148.5.w,
                 height: 74.53.h,
-                child: Image.asset('assets/images/logo_blue.png'),
               ),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SignInView()));

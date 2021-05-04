@@ -18,7 +18,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
         height: double.infinity,
         child: Column(
           children: [
-
+            Text("일정등록")
           ],
         ),
       ),
