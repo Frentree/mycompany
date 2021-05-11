@@ -13,5 +13,6 @@
   "error_email_already_in_use": "This email is already in use.",
   "error_incorrect_login_information": "The ID is not registered, or the password is incorrect.",
   "error_too_many_requests": "Too many requests. Try again later.",
-  "error_undefined": "An undefined error happened."
+  "error_undefined": "An undefined error happened.",
+  "titles": "제목"
 }

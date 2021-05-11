@@ -9,7 +9,7 @@ class DateFormat {
 
   Timestamp changeDateTimeToTimeStamp({required DateTime dateTime}) {
 
-    Timestamp timestamp = Timestamp.fromDate(dateTime!);
+    Timestamp timestamp = Timestamp.fromDate(dateTime);
 
     return timestamp;
   }
@@ -18,6 +18,13 @@ class DateFormat {
     String dateText;
 
     dateText = date.year.toString() + "년 " + twoDigitsFormat(date.month) + "월 " + twoDigitsFormat(date.day) + "일";
+    return dateText;
+  }
+
+  String dateTimeFormat({required DateTime date}){
+    String dateText;
+
+    dateText = date.year.toString() + "년 " + twoDigitsFormat(date.month) + "월 " + twoDigitsFormat(date.day) + "일 " + date.hour.toString() + "시 " + date.minute.toString() + "분";
     return dateText;
   }
 

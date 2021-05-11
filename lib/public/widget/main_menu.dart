@@ -16,18 +16,23 @@ Widget getMainCircularMenu({required BuildContext context,required String naviga
       items: [
         CircularMenuItem(
             icon: Icons.home,
+            color: navigator != 'home' ? Colors.blue : Colors.black38,
             onTap: () => navigator != 'home' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
         CircularMenuItem(
             icon: Icons.schedule,
+            color: navigator != 'schedule' ? Colors.blue : Colors.black38,
             onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false) : {}),
         CircularMenuItem(
             icon: Icons.settings,
+            color: navigator != 'star' ? Colors.blue : Colors.black38,
             onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
         CircularMenuItem(
             icon: Icons.star,
+            color: navigator != 'good' ? Colors.blue : Colors.black38,
             onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
         CircularMenuItem(
             icon: Icons.settings,
+            color: navigator != 'setting' ? Colors.blue : Colors.black38,
             onTap: () => navigator != 'setting' ?  _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
       ]);
 }

@@ -1,0 +1,58 @@
+import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
+
+/// Spanish (ES)
+class StringsEs extends StringsI18n {
+  const StringsEs();
+
+  @override
+  String getCancelText() {
+    return "Cancelar";
+  }
+
+  @override
+  String getDoneText() {
+    return "Aceptar";
+  }
+
+  @override
+  List<String> getMonths() {
+    return [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre"
+    ];
+  }
+
+  @override
+  List<String> getWeeksFull() {
+    return [
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+      "Domingo",
+    ];
+  }
+
+  @override
+  List<String>? getWeeksShort() {
+    return null;
+  }
+
+  @override
+  List<String>? getMonthsShort() {
+    // TODO: implement getMonthsShort
+    return null;
+  }
+}

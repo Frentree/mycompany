@@ -13,4 +13,7 @@ class ScheduleFunctionReprository {
   void getScheduleDetail({required CalendarTapDetails details,required BuildContext context}) =>
       _calenderFunction.getScheduleDetail(details, context);
 
+  Future<DateTime> dateTimeSet({required DateTime date, required BuildContext context}) =>
+      _calenderFunction.dateTimeSet(date, context);
+
 }

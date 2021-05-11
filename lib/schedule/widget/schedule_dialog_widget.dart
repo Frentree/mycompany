@@ -2,8 +2,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
+import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widget.dart';
 
 class ScheduleDialogWidget {
   DateFormat _format = DateFormat();
@@ -88,4 +92,47 @@ class ScheduleDialogWidget {
     );
   }
 
+  Future<DateTime> showDatePicker({required BuildContext context, required DateTime date}) async {
+    DateTime pickDate = date;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.only(top: 20, bottom: 20),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 270.0.h,
+            child: Center(
+              child: DateTimePickerWidget(
+                minDateTime: DateTime.parse('1900-01-01'),
+                dateFormat: 'yyyy년 MM월 dd일 HH시 mm분',
+                locale: DateTimePickerLocale.ko,
+                initDateTime: date,
+
+                onConfirm: (dateTime, selectedIndex) {
+                  pickDate = dateTime;
+                },
+                onChange: (dateTime, selectedIndex) {
+                },
+                onCancel: () {
+                },
+              ),
+            )
+
+            /*CupertinoDatePicker(
+              minimumYear: 1900,
+              mode: CupertinoDatePickerMode.time,
+              initialDateTime: date,
+              onDateTimeChanged: (value) {
+
+              },
+            ),*/
+          ),
+        );
+
+      },
+
+    );
+    return pickDate;
+  }
 }

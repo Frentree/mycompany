@@ -9,6 +9,7 @@ import 'package:mycompany/login/widget/login_widget_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:mycompany/public/word/app_version.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 
 class SignInView extends StatefulWidget {
   @override
@@ -68,7 +69,7 @@ class SignInViewState extends State<SignInView> {
                   height: 74.53.h,
                 ),
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SplashViewBlue()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleView()));
                 },
               ),
             ),

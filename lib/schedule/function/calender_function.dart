@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -10,7 +11,7 @@ class CalenderFunction{
   final ScheduleFirebaseReository _reository = ScheduleFirebaseReository();
 
   Future<List<Appointment>> getSheduleData(String? companyCode) async {
-    var _color = [Colors.red, Colors.green, Colors.teal, Colors.lightBlueAccent, Colors.deepPurpleAccent, Colors.limeAccent, Colors.cyanAccent];
+    var _color = [checkColor, outWorkColor, Colors.teal, annualColor, annualColor, Colors.limeAccent, Colors.cyanAccent];
     int typeChoise = 1;
     var typeList = ["내근", "외근", "미팅", "연차", "반차", "휴가", "기타"];
 
@@ -36,7 +37,7 @@ class CalenderFunction{
       }
 
       final DateTime startTime = DateTime.parse(startTimes.toDate().toString());
-      final DateTime endTime = doc.data()['endTime'] == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(doc.data()['endTime'] .toDate().toString());
+      final DateTime endTime = doc.data()['endTime'] == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(doc.data()['endTime'].toDate().toString());
 
       shedules.add(Appointment(
         startTime: startTime,
@@ -60,6 +61,13 @@ class CalenderFunction{
     if(appointment != null){
       ScheduleDialogWidget().showScheduleDetail(context: context, data: appointment, date: date!);
     }
+  }
+
+  Future<DateTime> dateTimeSet(DateTime date, BuildContext context) async{
+    DateTime pickTime = await ScheduleDialogWidget().showDatePicker(context: context, date: date);
+    //CalendarElement element = details.targetElement; //  달력 요소
+
+    return pickTime;
   }
 
   void mainNavigator(CalendarTapDetails details, BuildContext context){
