@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/jh_test/jh_localDB/localDB_main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/schedule/view/schedule_registration_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
@@ -7,7 +8,7 @@ import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
 
 PublicFunctionReprository _reprository = PublicFunctionReprository();
 
-Widget getMainCircularMenu({required BuildContext context,required String navigator}) {
+Widget getMainCircularMenu({required BuildContext  context,required String navigator}) {
   return CircularMenu(
       alignment: Alignment.bottomRight,
       radius: 170.0,
@@ -29,7 +30,9 @@ Widget getMainCircularMenu({required BuildContext context,required String naviga
         CircularMenuItem(
             icon: Icons.star,
             color: navigator != 'good' ? Colors.blue : Colors.black38,
-            onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
+            // onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: LocalDBMain(), isMove: false) : {}
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LocalDBMain()))
+            ),
         CircularMenuItem(
             icon: Icons.settings,
             color: navigator != 'setting' ? Colors.blue : Colors.black38,

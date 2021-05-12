@@ -6,6 +6,15 @@ import 'package:mycompany/jh_test/jh_localDB/expenseModel.dart';
 class FirebaseIORepository{
   final FirebaseIOMethods _firebaseIOMethods = FirebaseIOMethods();
 
+  Future<DocumentReference> saveExpense(ExpenseModel expenseModel) =>
+      _firebaseIOMethods.saveExpense(expenseModel);
+
+  Stream<QuerySnapshot> getExpense(String companyCode, String uid) =>
+      _firebaseIOMethods.getExpense(companyCode, uid);
+
+  Future<void> deleteExpense(String companyCode, String documentID, String uid) =>
+      _firebaseIOMethods.deleteExpense(companyCode, documentID, uid);
+
 
 }
 
@@ -27,6 +36,29 @@ class FirebaseIOMethods{
         .add(stringMap);
 
     return doc;
+  }
+
+  Stream<QuerySnapshot> getExpense(String companyCode, String uid) {
+    return _firestore
+        .collection("company")
+        .doc(companyCode)
+        .collection("user")
+        .doc(uid)
+        .collection("expense")
+        .orderBy("buyDate", descending: true)
+        .snapshots();
+  }
+
+  Future<void> deleteExpense(
+      String companyCode, String documentID, String uid) async {
+    return await _firestore
+        .collection("company")
+        .doc(companyCode)
+        .collection("user")
+        .doc(uid)
+        .collection("expense")
+        .doc(documentID)
+        .delete();
   }
 
 

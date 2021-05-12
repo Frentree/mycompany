@@ -23,7 +23,7 @@ class ExpenseModel {
   int cost;
   String? memo;
   String? imageUrl;
-  int status;
+  String status;
   String detailNote;
 
   ExpenseModel(
@@ -36,7 +36,7 @@ class ExpenseModel {
         required this.cost,
         this.memo,
         this.imageUrl,
-        this.status = 0,
+        this.status = "",
         required this.detailNote});
 
   ExpenseModel.fromMap(Map snapshot, String id)
