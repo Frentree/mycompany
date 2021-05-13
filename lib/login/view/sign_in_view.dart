@@ -3,22 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/login/function/login_function_repository.dart';
-import 'package:mycompany/login/function/sign_in_function.dart';
-import 'package:mycompany/login/style/loing_style_repository.dart';
-import 'package:mycompany/login/widget/login_widget_repository.dart';
+import 'package:mycompany/login/style/decoration_style.dart';
+import 'package:mycompany/login/view/sign_up_view.dart';
+import 'package:mycompany/login/widget/button_widget.dart';
+import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:mycompany/public/word/app_version.dart';
+import 'package:mycompany/run_app/view/splash_view_blue.dart';
 
+
+/*
 class SignInView extends StatefulWidget {
   @override
   SignInViewState createState() => SignInViewState();
 }
 
 class SignInViewState extends State<SignInView> {
-  LoginStyleRepository _loginStyleRepository = LoginStyleRepository();
-  LoginWidgetRepository _loginWidgetRepository = LoginWidgetRepository();
   LoginFunctionRepository _loginFunctionRepository = LoginFunctionRepository();
+  PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
   late TextEditingController _passwordController;
   @override
@@ -79,7 +81,7 @@ class SignInViewState extends State<SignInView> {
               ),
               child: Container(
                 child: Text(
-                  'sign_in'.tr(),
+                  'signIn'.tr(),
                   style: TextStyle(
                     fontSize: 18.0.sp,
                     fontWeight: FontWeight.w700,
@@ -97,7 +99,7 @@ class SignInViewState extends State<SignInView> {
                 width: 305.0.w,
                 height: 40.0.h,
                 child: TextFormField(
-                  decoration: _loginStyleRepository.textFormDecoration(hintText: 'email'.tr()),
+                  decoration: loginTextFormDecoration(hintText: 'email'.tr()),
                   style: TextStyle(
                     fontSize: 13.0.sp,
                     color: textColor,
@@ -116,9 +118,9 @@ class SignInViewState extends State<SignInView> {
                 height: 40.0.h,
                 child: TextFormField(
                   controller: _passwordController,
-                  decoration: _loginStyleRepository.textFormDecoration(
+                  decoration: loginTextFormDecoration(
                     hintText: 'password'.tr(),
-                    suffixIcon: _loginWidgetRepository.textFormClearButton(textEditingController: _passwordController),
+                    suffixIcon: textFormClearButton(textEditingController: _passwordController),
                   ),
                   style: TextStyle(
                     fontSize: 13.0.sp,
@@ -127,8 +129,8 @@ class SignInViewState extends State<SignInView> {
                 ),
               ),
             ),
-            _loginWidgetRepository.elevatedButton(topPadding: 20.0.h, buttonName: 'sign_in'.tr(), buttonAction: () => _loginFunctionRepository.signInFunction(context: context, email: "", password: "")),
-            _loginWidgetRepository.outlinedButton(topPadding: 12.0.h, buttonName: 'sign_up'.tr(), /*buttonAction: () => SignInFunction().page(context)*/),
+            elevatedButton(topPadding: 20.0.h, buttonName: 'signIn'.tr(), buttonAction: () => _loginFunctionRepository.signInFunction(context: context, email: "min@naver.com", password: "fren1212")),
+            outlinedButton(topPadding: 12.0.h, buttonName: 'signUp'.tr(), buttonAction: () => _publicFunctionRepository.pageMove(context: context, pageName: SignUpView())),
             Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
@@ -150,7 +152,7 @@ class SignInViewState extends State<SignInView> {
                           width: 8.0.w,
                         ),
                         Text(
-                          'forgot_password'.tr(),
+                          'forgotPassword'.tr(),
                           style: TextStyle(
                             fontSize: 13.0.sp,
                             color: hintTextColor,
@@ -164,7 +166,7 @@ class SignInViewState extends State<SignInView> {
                     child: TextButton(
                       onPressed: (){},
                       child: Text(
-                        'find_password'.tr(),
+                        'findPassword'.tr(),
                       ),
                       style: TextButton.styleFrom(
                           textStyle: TextStyle(
@@ -182,5 +184,66 @@ class SignInViewState extends State<SignInView> {
         ),
       ),
     );
+  }
+}*/
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var inputText = "";
+  var _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _controller,
+              textInputAction: TextInputAction.search,
+              maxLength: 60,
+              textCapitalization: TextCapitalization.words,
+              onChanged: (text) {
+                setState(() {
+                  inputText = text;
+                });
+              },
+              decoration: InputDecoration(
+                  filled: true,
+                  prefixIcon: IconButton(icon: Icon(Icons.search), onPressed: (){},),
+                  suffixIcon: hidingIcon()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget? hidingIcon() {
+    if (inputText.length > 0) {
+      return IconButton(
+          icon: Icon(
+            Icons.clear,
+            color: Colors.red,
+          ),
+          splashColor: Colors.redAccent,
+          onPressed: () {
+            setState(() {
+              _controller.clear();
+              inputText = "";
+            });
+          });
+    } else {
+      return null;
+    }
   }
 }

@@ -6,4 +6,5 @@ class LoginServiceRepository {
 
   String changeMessageToErrorCode() => _firebaseAuthService.changeMessageToErrorCode();
   Future<bool> signInWithEmailAndPassword({required String email, required String password}) => _firebaseAuthService.signInWithEmailAndPassword(email: email, password: password);
+  Future<bool> signUpWithEmailAndPassword({required String email, required String password}) => _firebaseAuthService.signUpWithEmailAndPassword(email: email, password: password);
 }

@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
 
-class LoginDialogWidget {
-  Future<dynamic> loginDialogWidget({required BuildContext context, String? title, required Widget content, required List<Widget> actions}){
-    return showDialog(
+Future<dynamic> loginDialogWidget({required BuildContext context, String? title, required Widget content, required List<Widget> actions}){
+  return showDialog(
       context: context,
       /*barrierDismissible: false,*/
       builder: (BuildContext context){
         return AlertDialog(
-          content: content,
-          actions: actions
+            content: content,
+            actions: actions
         );
       }
-    );
-  }
+  );
+}
 
-  Future<dynamic> firebaseAuthErrorDialogWidget({required BuildContext context, required String errorMessage,}) {
-    return showDialog(
+Future<dynamic> firebaseAuthErrorDialogWidget({required BuildContext context, required String errorMessage,}) {
+  return showDialog(
       context: context,
       builder: (BuildContext context){
         return Dialog(
@@ -72,6 +71,5 @@ class LoginDialogWidget {
           ),
         );
       }
-    );
-  }
+  );
 }

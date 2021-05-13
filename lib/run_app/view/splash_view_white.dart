@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/view/sign_in_view.dart';
+import 'package:mycompany/login/view/sign_up_view.dart';
 
 class SplashViewWhite extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
                 height: 74.53.h,
               ),
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignInView()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView()));
               },
             ),
           ),

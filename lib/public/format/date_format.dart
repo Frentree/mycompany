@@ -13,4 +13,16 @@ class DateFormat {
 
     return timestamp;
   }
+
+  DateTime changeStringToDateTime({required String dateString}) {
+    DateTime dateTime = DateTime.parse(dateString);
+
+    return dateTime;
+  }
+
+  Timestamp changeStringToTimeStamp({required String dateString}) {
+    Timestamp timestamp = Timestamp.fromDate(changeStringToDateTime(dateString: dateString));
+
+    return timestamp;
+  }
 }
