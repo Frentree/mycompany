@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class CalenderFunction{
   final ScheduleFirebaseReository _reository = ScheduleFirebaseReository();

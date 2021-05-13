@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -12,10 +13,7 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.da
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_theme.dart';
 import 'package:mycompany/schedule/widget/schedule_calender_widget.dart';
-import 'package:mycompany/schedule/widget/schedule_popup_widget.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleView extends StatefulWidget {
   @override
@@ -33,7 +31,6 @@ class _ScheduleViewState extends State<ScheduleView> {
   String _headerText = '';
   DateTime _time = DateTime.now();
 
-
   @override
   void initState() {
     _key = GlobalKey<ScaffoldState>();
@@ -46,7 +43,7 @@ class _ScheduleViewState extends State<ScheduleView> {
     List<Appointment> schedules = await ScheduleFunctionReprository().getSheduleData(companyCode: "0S9YLBX");
 
     setState(() {
-      scheduleList= schedules;
+      scheduleList = schedules;
     });
   }
 
@@ -85,21 +82,16 @@ class _ScheduleViewState extends State<ScheduleView> {
                       ),
                       onTap: () {
                         _key.currentState!.openDrawer();
-
                       },
                     ),
                     GestureDetector(
                       child: Center(
                         child: Row(
                           children: [
-                            Text(_headerText,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: checkColor,
-                                  fontSize: 21.0.sp,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto'
-                                ),
+                            Text(
+                              _headerText,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: checkColor, fontSize: 21.0.sp, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
                             ),
                             Icon(
                               isDatePopup ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
@@ -136,30 +128,23 @@ class _ScheduleViewState extends State<ScheduleView> {
                       view: CalendarView.month,
                       headerDateFormat: 'yyyy.MM',
                       headerHeight: 0.0.h,
-                      headerStyle: CalendarHeaderStyle(
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyle(
-                            color: checkColor,
-                            fontSize: 21.0.sp,
-                            fontWeight: FontWeight.bold
-                        ),
-                      ),
-                      appointmentBuilder: (context, details) => ScheduleCalenderWidget().setAppointMentBuilder(context, details, _controller),
                       //monthCellBuilder: (context, details) => ScheduleCalenderWidget().setMonthCellBuilder(context, details, _controller),
+                      appointmentBuilder: (context, details) => ScheduleCalenderWidget().setAppointMentBuilder(context: context, details: details, selectTime: _time),
+                      //cellBorderColor: whiteColor,
                       monthViewSettings: MonthViewSettings(
-                        appointmentDisplayMode:
-                        MonthAppointmentDisplayMode.appointment,
-                        appointmentDisplayCount: 5,
-                        showTrailingAndLeadingDates: false,
-
-                        //showAgenda: true,
+                          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                          appointmentDisplayCount: 5,
+                          showTrailingAndLeadingDates: true,
+                          /*monthCellStyle: MonthCellStyle(
+                            textStyle: TextStyle(fontSize: 9.sp, color: Colors.black87, fontFamily: 'Roboto'),
+                            trailingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
+                            leadingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
+                          ),*/
                       ),
                       onViewChanged: (viewChangedDetails) {
                         if (_controller.view == CalendarView.month) {
-                          _headerText = DateFormat('yyyy.MM')
-                              .format(viewChangedDetails
-                              .visibleDates[viewChangedDetails.visibleDates.length ~/ 2])
-                              .toString();
+                          _headerText =  DateFormat('yyyy.MM').format(viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2]).toString();
+                          _time = DateTime.parse(viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2].toString());
                         }
                         SchedulerBinding.instance!.addPostFrameCallback((duration) {
                           setState(() {});
@@ -168,32 +153,29 @@ class _ScheduleViewState extends State<ScheduleView> {
                       todayHighlightColor: checkColor,
                       onTap: (CalendarTapDetails details) => ScheduleFunctionReprository().getScheduleDetail(details: details, context: context),
                     ),
-                    isDatePopup ? Container(
-                      height: 200.0.h,
-                      color: whiteColor,
-                      child: DatePickerWidget(
-                        dateFormat: "yyyy년 MMMM",
-                        minDateTime: DateTime(1900),
-                        maxDateTime: DateTime(3000),
-                        onMonthChangeStartWithFirstDate: true,
-                        pickerTheme: DateTimePickerTheme(
-                          pickerHeight: 200.0.h,
-                          showTitle: false,
-                        ),
-                        locale: DateTimePickerLocale.ko,
-                        initialDateTime: _time,
-                        onCancel: () {},
-                        onConfirm: (dateTime, selectedIndex) {},
-                        onChange: (dateTime, selectedIndex) {
-                            _time = dateTime;
-                            _headerText = DateFormat('yyyy.MM')
-                                .format(_time)
-                                .toString();
-                            _controller.view;
-                            setState(() {});
-                        },
-                      ),
-                    ) : Container(),
+                    isDatePopup
+                        ? Container(
+                            height: 200.0.h,
+                            color: whiteColor,
+                            child: DatePickerWidget(
+                              dateFormat: "yyyy MM",
+                              minDateTime: DateTime(1900),
+                              maxDateTime: DateTime(3000),
+                              onMonthChangeStartWithFirstDate: true,
+                              pickerTheme: DateTimePickerTheme(
+                                pickerHeight: 200.0.h,
+                                showTitle: false,
+                              ),
+                              locale: DateTimePickerLocale.ko,
+                              initialDateTime: _time,
+                              onCancel: () {},
+                              onConfirm: (dateTime, selectedIndex) {},
+                              onChange: (dateTime, selectedIndex) {
+                                _controller.displayDate = dateTime;
+                              },
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),

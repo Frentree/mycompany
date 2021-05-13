@@ -2,7 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:mycompany/schedule/function/calender_function.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleFunctionReprository {
   CalenderFunction _calenderFunction = CalenderFunction();
