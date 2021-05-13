@@ -10,6 +10,7 @@ import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/word/app_version.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 
 
 /*
@@ -70,7 +71,7 @@ class SignInViewState extends State<SignInView> {
                   height: 74.53.h,
                 ),
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SplashViewBlue()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleView()));
                 },
               ),
             ),

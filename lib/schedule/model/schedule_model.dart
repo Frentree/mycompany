@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleModel extends CalendarDataSource {
   ScheduleModel(List<Appointment> source/*, List<CalendarResource> resourceColl*/) {
