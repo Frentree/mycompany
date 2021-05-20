@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-class PageRouting{
-  void pageMove({required BuildContext context, required Widget pageName}){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => pageName)
-    );
-  }
+pageMove({required BuildContext context, required Widget pageName}) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => pageName));
+}
 
-  void backPage({required BuildContext context}) {
-    Navigator.pop(context);
-  }
+void backPage({required BuildContext context}) {
+  Navigator.pop(context);
+}
 
-
+void pageMoveAndRemoveBackPage(
+    {required BuildContext context, required Widget pageName}) {
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => pageName),
+        (route) => false,
+  );
 }

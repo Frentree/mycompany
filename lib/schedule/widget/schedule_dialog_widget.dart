@@ -10,7 +10,7 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widget.dart';
 
 class ScheduleDialogWidget {
-  DateFormat _format = DateFormat();
+  DateFormatCustom _format = DateFormatCustom();
 
   Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
     showDialog(

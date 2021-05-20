@@ -3,13 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mycompany/login/function/sign_in_function.dart';
-import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/login/widget/button_widget.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_text_form_widget.dart';
-import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/login/function/login_function_repository.dart';
+import 'package:mycompany/login/view/sign_in_view.dart';
 
 class SignUpView extends StatefulWidget {
   @override
@@ -18,14 +17,13 @@ class SignUpView extends StatefulWidget {
 
 class SignUpViewState extends State<SignUpView> {
   LoginFunctionRepository _loginFunctionRepository = LoginFunctionRepository();
-  PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  final _nameFormKey = GlobalKey<FormState>();
-  final _emailFormKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
-  final _confirmPasswordFormKey = GlobalKey<FormState>();
-  final _birthdayFormKey = GlobalKey<FormState>();
-  final _phoneFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _nameFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _emailFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _confirmPasswordFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _birthdayFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _phoneFormKey = GlobalKey<FormState>();
 
   TextEditingController _nameTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
@@ -52,10 +50,8 @@ class SignUpViewState extends State<SignUpView> {
                 top: 68.0.h,
               ),
               child: SizedBox(
-                width: 186.0.w,
                 height: 26.0.h,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
                       constraints: BoxConstraints(),
@@ -64,17 +60,21 @@ class SignUpViewState extends State<SignUpView> {
                       ),
                       iconSize: 24.0.h,
                       splashRadius: 24.0.r,
-                      onPressed: () {},
+                      onPressed: () => backPage(context: context),
                       padding: EdgeInsets.zero,
                       alignment: Alignment.centerLeft,
                       color: Color(0xff2093F0),
                     ),
-                    Text(
-                      'signUp'.tr(),
-                      style: TextStyle(
-                        fontSize: 18.0.sp,
-                        fontWeight: FontWeight.w700,
-                        color: textColor,
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'signUp'.tr(),
+                          style: TextStyle(
+                            fontSize: 18.0.sp,
+                            fontWeight: FontWeight.w700,
+                            color: textColor,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -89,7 +89,7 @@ class SignUpViewState extends State<SignUpView> {
                   builder: (context, snapshot) {
                     return Column(
                       children: [
-                        loginValidationForm(
+                        signUpViewValidationForm(
                           index: 0,
                           context: context,
                           topPadding: 47.0.h,
@@ -97,7 +97,7 @@ class SignUpViewState extends State<SignUpView> {
                           textEditingController: _nameTextController,
                           type: "name",
                         ),
-                        loginValidationForm(
+                        signUpViewValidationForm(
                           index: 1,
                           context: context,
                           topPadding: 12.0.h,
@@ -105,7 +105,7 @@ class SignUpViewState extends State<SignUpView> {
                           textEditingController: _emailTextController,
                           type: "email",
                         ),
-                        loginValidationForm(
+                        signUpViewValidationForm(
                           index: 2,
                           context: context,
                           topPadding: 12.0.h,
@@ -116,7 +116,7 @@ class SignUpViewState extends State<SignUpView> {
                           maxLength: 20,
                           obscureText: true,
                         ),
-                        loginValidationForm(
+                        signUpViewValidationForm(
                           index: 3,
                           context: context,
                           topPadding: 12.0.h,
@@ -126,7 +126,7 @@ class SignUpViewState extends State<SignUpView> {
                           comparisonValue: _passwordTextController,
                           obscureText: true,
                         ),
-                        loginValidationForm(
+                        signUpViewValidationForm(
                           index: 4,
                           context: context,
                           topPadding: 12.0.h,
@@ -135,7 +135,7 @@ class SignUpViewState extends State<SignUpView> {
                           type: "birthday",
                           hintText: 'birthdayHint'.tr(),
                         ),
-                        loginValidationForm(
+                        signUpViewValidationForm(
                           index: 5,
                           context: context,
                           topPadding: 12.0.h,
@@ -146,11 +146,11 @@ class SignUpViewState extends State<SignUpView> {
                         ValueListenableBuilder(
                           valueListenable: isFormValid,
                           builder: (BuildContext context, List<bool> value, Widget? child){
-                            return elevatedButton(
+                            return loginElevatedButton(
                                 topPadding: 20.0.h,
                                 buttonName: 'signUp'.tr(),
                                 buttonAction: value.contains(false) ? null : () async {
-                                  await _loginFunctionRepository.signUpFunction(
+                                  bool _isSignUpSuccess = await _loginFunctionRepository.signUpFunction(
                                     context: context,
                                     name: _nameTextController.text.replaceAll(" ", ""),
                                     email: _emailTextController.text.replaceAll(" ", ""),
@@ -158,7 +158,10 @@ class SignUpViewState extends State<SignUpView> {
                                     birthday: _birthdayTextController.text != "" ? _birthdayTextController.text.replaceAll(".", "") : "",
                                     phone: _phoneTextController.text,
                                   );
-                                  Navigator.pop(context);
+
+                                  if(_isSignUpSuccess){
+                                    pageMoveAndRemoveBackPage(context: context, pageName: SignInView());
+                                  }
                                 }
                             );
                           },

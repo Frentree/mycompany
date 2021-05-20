@@ -22,16 +22,17 @@ class FirebaseAuthService {
     String _returnMessage = "";
 
     switch(_errorCode) {
-      case 'ERROR_EMAIL_ALREADY_IN_USE' :
+      case 'email-already-in-use' :
         _returnMessage = 'errorEmailAlreadyInUse'.tr();
         break;
 
-      case 'ERROR_INVALID_EMAIL' :
-      case 'ERROR_WRONG_PASSWORD' :
+      case 'user-not-found' :
+      case 'wrong-password' :
+      case 'invalid-email':
         _returnMessage = 'errorIncorrectLoginInformation'.tr();
         break;
 
-      case 'ERROR_TOO_MANY_REQUESTS' :
+      case 'too-many-requests' :
         _returnMessage = 'errorTooManyRequests'.tr();
         break;
 
@@ -55,6 +56,7 @@ class FirebaseAuthService {
         return false;
       }
     } on FirebaseAuthException catch (error) {
+      print(error.code);
       setFirebaseAuthErrorCode(errorCode: error.code);
 
       return false;
@@ -66,6 +68,7 @@ class FirebaseAuthService {
       UserCredential _newUserCredential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
       if(_newUserCredential.user != null) {
+        _newUserCredential.user!.updateProfile();
         return true;
       }
 

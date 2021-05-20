@@ -45,7 +45,7 @@ class EmployeeModel {
   int? team;
   int? position;
   List<int>? authority;
-  List<String> userSearch;
+  List<dynamic> userSearch;
 
   EmployeeModel({
     this.tokenId,

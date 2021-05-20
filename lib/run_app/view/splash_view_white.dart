@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mycompany/login/view/sign_in_view.dart';
-import 'package:mycompany/login/view/sign_up_view.dart';
+import 'dart:async';
+import 'package:mycompany/public/provider/user_info_provider.dart';
+import 'package:mycompany/public/function/page_route.dart';
+import 'package:provider/provider.dart';
+import 'package:mycompany/run_app/view/auth_view.dart';
 
 class SplashViewWhite extends StatefulWidget {
   @override
@@ -11,7 +14,21 @@ class SplashViewWhite extends StatefulWidget {
 
 class SplashViewWhiteState extends State<SplashViewWhite> {
   @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () => pageMoveAndRemoveBackPage(context: context, pageName: AuthView()));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+    userInfoProvider.loadUserDataToPhone();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -21,15 +38,12 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
               horizontal: 105.7.w,
               vertical: 340.7.h,
             ),
-            child: GestureDetector(
+            child: SizedBox(
+              width: 148.5.w,
+              height: 74.53.h,
               child: SvgPicture.asset(
                 'assets/images/logo_blue.svg',
-                width: 148.5.w,
-                height: 74.53.h,
               ),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView()));
-              },
             ),
           ),
         ],

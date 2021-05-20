@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
 
-InputDecoration loginTextFormDecoration({String? hintText, Widget? suffixIcon}) {
+InputDecoration loginTextFormRoundBorderDecoration({String? hintText, Widget? suffixIcon}) {
   return InputDecoration(
     contentPadding: EdgeInsets.symmetric(horizontal: 12.0.w),
     filled: true,
@@ -16,10 +16,32 @@ InputDecoration loginTextFormDecoration({String? hintText, Widget? suffixIcon}) 
     ),
     hintText: hintText,
     hintStyle: TextStyle(
-      fontSize: 13.0.sp,
+      fontSize: 14.0.sp,
       color: hintTextColor,
     ),
     counterText: "",
+    suffixIcon: suffixIcon,
+    suffixIconConstraints: BoxConstraints(),
+  );
+}
+
+InputDecoration loginTextFormUnderlineBorderDecoration({String? hintText, Widget? suffixIcon}) {
+  return InputDecoration(
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color(0xffC4C4C4)
+      ),
+    ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color(0xffC4C4C4)
+      ),
+    ),
+    hintText: hintText,
+    hintStyle: TextStyle(
+      fontSize: 14.0.sp,
+      color: hintTextColor,
+    ),
     suffixIcon: suffixIcon,
     suffixIconConstraints: BoxConstraints(),
   );

@@ -3,8 +3,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/service/login_service_repository.dart';
-import 'package:mycompany/public/provider/public_provider_repository.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
+import 'package:provider/provider.dart';
 
 class SignInFunction {
   Future<void> signInFunction({
@@ -15,7 +19,8 @@ class SignInFunction {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     LoginServiceRepository loginServiceRepository = LoginServiceRepository();
     LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
-    PublicProviderRepository publicProviderRepository = PublicProviderRepository();
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+
 
     UserModel _userModel;
     bool _firebaseAuthResult;
@@ -29,37 +34,45 @@ class SignInFunction {
       if (_userModel.tokenId == "") {
         _userModel.tokenId = await firebaseMessaging.getToken(); //토큰값 가져오기
         await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
-        publicProviderRepository.saveUserDataToPhone(userModel: _userModel); //로그인 정보 핸드폰에 저장
+        userInfoProvider.saveUserDataToPhone(userModel: _userModel); //로그인 정보 핸드폰에 저장
       }
       //저장된 토큰값이 있을 때(다른 기기에서 로그인 되어 있음)
       else {
         await loginDialogWidget(
-            context: context,
-            title: "다른 기기에서 로그인 중입니다.",
-            content: Text("강제 로그아웃하고, 현재 기기에서 로그인 하시겠습니까?"),
-            actions: [
-              TextButton(
-                child: Text("확인"),
-                onPressed: () async {
-                  _userModel.tokenId = await firebaseMessaging.getToken();
-                  await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
-                  publicProviderRepository.saveUserDataToPhone(userModel: _userModel);
-                },
-              ),
-              TextButton(
-                child: Text("취소"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ]);
+          context: context,
+          message: 'duplicateLoginWarning'.tr(),
+          actions: [
+            loginDialogButton(
+              buttonName: 'dialogConfirm'.tr(),
+              buttonAction: () async {
+                _userModel.tokenId = await firebaseMessaging.getToken();
+                await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
+                userInfoProvider.saveUserDataToPhone(userModel: _userModel);
+                backPage(context: context);
+              }
+            ),
+            loginDialogButton(
+              buttonName: 'dialogCancel'.tr(),
+              buttonAction: () {
+                backPage(context: context);
+              }
+            ),
+          ],
+        );
       }
     }
     //firebase 인증 실패
     else {
-      firebaseAuthErrorDialogWidget(
-        context: context,
-        errorMessage: loginServiceRepository.changeMessageToErrorCode(),
+      String errorMessage = loginServiceRepository.changeMessageToErrorCode();
+      await loginDialogWidget(
+          context: context,
+          message: errorMessage,
+          actions: [
+            loginDialogButton(
+                buttonName: 'dialogConfirm'.tr(),
+                buttonAction: () => backPage(context: context)
+            )
+          ]
       );
     }
   }

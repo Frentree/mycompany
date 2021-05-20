@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mycompany/login/function/sign_in_function.dart';
 import 'package:mycompany/login/function/form_validation_function.dart';
 import 'package:mycompany/login/function/sign_up_function.dart';
-import 'package:mycompany/login/model/user_model.dart';
 
 class LoginFunctionRepository {
   SignInFunction _signInFunction = SignInFunction();
@@ -20,7 +19,7 @@ class LoginFunctionRepository {
         password: password,
       );
 
-  Future<void> signUpFunction({
+  Future<bool> signUpFunction({
     required BuildContext context,
     required String name,
     required String email,

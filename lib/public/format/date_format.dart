@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DateFormat {
+class DateFormatCustom {
   DateTime changeTimeStampToDateTime({required Timestamp timestamp}) {
     DateTime dateTime = timestamp.toDate();
 
