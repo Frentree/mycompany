@@ -1,12 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
+import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:mycompany/login/view/sign_in_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.black.withOpacity(0),
+    statusBarIconBrightness: Brightness.dark,
+  ));
+
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();

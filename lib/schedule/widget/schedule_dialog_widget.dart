@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
@@ -17,34 +18,37 @@ class ScheduleDialogWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Row(
-            children: [
-              Text(
-                _format.dateFormat(date: date) + " 일정",
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      /*Navigator.pop(context);
-                      Navigator.push(context,  MaterialPageRoute(
-                        builder: (context) => ViewSchedules(date: date,),
-                      ),);*/
-                    },
+          titlePadding: EdgeInsets.only(top: 21.0.h, left: 17.0.w, right: 17.0.w),
+          title: Container(
+            width: 313.0.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _format.dateFormat(date: date),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Noto Sans'
                   ),
                 ),
-              )
-            ],
+                GestureDetector(
+                  child: SvgPicture.asset(
+                    'assets/icons/close.svg',
+                    width: 13.17.w,
+                    height: 13.17.h,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
-          contentPadding: EdgeInsets.only(top: 20, bottom: 20),
+          //contentPadding: EdgeInsets.only(top: 21.0.h, bottom: 5.0.h),
           content: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height/2,
+            width: 313.0.w,
+            height: 571.0.h,
             child: ListView(
               children: data.map((e) => Column(
                 children: [

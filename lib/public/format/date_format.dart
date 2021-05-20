@@ -7,6 +7,29 @@ class DateFormat {
     return dateTime;
   }
 
+  String cangeWeekDay({required DateTime date}){
+    late String dateText;
+
+    switch(date.weekday){
+      case 1: dateText = "월";
+        break;
+      case 2: dateText = "화";
+        break;
+      case 3: dateText = "수";
+        break;
+      case 4: dateText = "목";
+        break;
+      case 5: dateText = "금";
+        break;
+      case 6: dateText = "토";
+        break;
+      case 7: dateText = "일";
+        break;
+    }
+
+    return dateText;
+  }
+
   Timestamp changeDateTimeToTimeStamp({required DateTime dateTime}) {
 
     Timestamp timestamp = Timestamp.fromDate(dateTime);
@@ -17,7 +40,7 @@ class DateFormat {
   String dateFormat({required DateTime date}){
     String dateText;
 
-    dateText = date.year.toString() + "년 " + twoDigitsFormat(date.month) + "월 " + twoDigitsFormat(date.day) + "일";
+    dateText = /*date.year.toString() + "년 " + */twoDigitsFormat(date.month) + "월 " + twoDigitsFormat(date.day) + "일 (" + cangeWeekDay(date: date) +")";
     return dateText;
   }
 

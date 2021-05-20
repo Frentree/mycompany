@@ -786,7 +786,7 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
 
         textStyle = TextStyle(
             fontSize: 11.sp,
-            color: calenderLineColor.withOpacity(0.6),
+            color: calendarLineColor.withOpacity(0.6),
             fontFamily: 'Roboto'
         );
         _linePainter.color = monthCellStyle.leadingDatesBackgroundColor ??
@@ -816,7 +816,7 @@ class _MonthViewRenderObject extends CustomCalendarRenderObject {
 
         textStyle = TextStyle(
             fontSize: 11.sp,
-            color: calenderLineColor.withOpacity(0.6),
+            color: calendarLineColor.withOpacity(0.6),
             fontFamily: 'Roboto'
         );
         _linePainter.color = monthCellStyle.trailingDatesBackgroundColor ??
