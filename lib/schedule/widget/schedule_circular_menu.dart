@@ -11,7 +11,7 @@ import 'package:mycompany/schedule/model/testcompany_model.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
-getClipOverProfile({required BuildContext context, required String ImageUri, String? name, String? mail, required bool isChks, required getDataSource}) {
+getClipOverProfile({required BuildContext context, required String ImageUri, CompanyUserModel? user, required bool isChks, required getDataSource}) {
   return StatefulBuilder(
     builder: (context, setState) {
       return GestureDetector(
@@ -56,7 +56,7 @@ getClipOverProfile({required BuildContext context, required String ImageUri, Str
               ),
             ),
             Text(
-              name!,
+              user!.name.toString(),
               style: TextStyle(
                 fontSize: 12.sp,
                 color: isChks ? checkColor : textColor,
@@ -67,11 +67,14 @@ getClipOverProfile({required BuildContext context, required String ImageUri, Str
         onTap: () {
           isChks = !isChks;
           if(isChks){
-            if(!mailChkList.contains(mail)){
-              mailChkList.add(mail!);
+            if(!mailChkList.contains(user.mail)){
+              mailChkList.add(user.mail);
             }
           }else {
-            mailChkList.remove(mail!);
+            mailChkList.remove(user.mail);
+            if(teamChkList.contains(user.team)){
+              teamChkList.remove(user.team);
+            }
           }
           getDataSource();
           setState((){});

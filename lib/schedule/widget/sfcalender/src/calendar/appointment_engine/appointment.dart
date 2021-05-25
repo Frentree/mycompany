@@ -55,6 +55,10 @@ class Appointment with Diagnosticable {
     this.recurrenceRule,
     this.isAllDay = false,
     this.notes,
+    this.type,
+    this.profile,
+    this.team,
+    this.position,
     this.location,
     this.resourceIds,
     required this.startTime,
@@ -652,6 +656,11 @@ class Appointment with Diagnosticable {
   /// ```
   List<Object>? resourceIds;
 
+  String? type;
+  String? profile;
+  String? team;
+  String? position;
+
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(dynamic other) {
@@ -676,6 +685,10 @@ class Appointment with Diagnosticable {
         otherStyle.resourceIds == resourceIds &&
         otherStyle.subject == subject &&
         otherStyle.color == color &&
+        otherStyle.type == type &&
+        otherStyle.profile == profile &&
+        otherStyle.team == team &&
+        otherStyle.position == position &&
         otherStyle.recurrenceExceptionDates == recurrenceExceptionDates;
   }
 
@@ -694,6 +707,10 @@ class Appointment with Diagnosticable {
       endTime,
       subject,
       color,
+      type,
+      profile,
+      team,
+      position,
       hashList(recurrenceExceptionDates),
     );
   }
@@ -708,6 +725,10 @@ class Appointment with Diagnosticable {
     properties.add(StringProperty('location', location));
     properties.add(StringProperty('subject', subject));
     properties.add(ColorProperty('color', color));
+    properties.add(StringProperty('type', type));
+    properties.add(StringProperty('profile', profile));
+    properties.add(StringProperty('team', team));
+    properties.add(StringProperty('position', position));
     properties.add(DiagnosticsProperty<DateTime>('startTime', startTime));
     properties.add(DiagnosticsProperty<DateTime>('endTime', endTime));
     properties.add(IterableDiagnostics<DateTime>(recurrenceExceptionDates)

@@ -11,3 +11,4 @@ const Color outWorkColor = Color(0xffF23662);
 const Color annualColor = Color(0xff20F06C);
 const Color calendarLineColor = Color(0xff707070);
 const Color cirecularLineColor = Color(0xffECECEC);
+const Color calendarDetailLineColor = Color(0xffF7F7F7);

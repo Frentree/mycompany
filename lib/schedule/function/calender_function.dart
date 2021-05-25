@@ -48,6 +48,7 @@ class CalenderFunction{
         subject: name,
         color: _color[typeChoise],
         notes: notes,
+        type: type,
         location: location != null ? location : "",
         resourceIds:<Object> [mail.hashCode],
       ));

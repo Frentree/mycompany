@@ -48,8 +48,10 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   @override
   void initState() {
-    mailChkList.clear();
-    mailChkList.add("bsc2079@naver.com");
+    if(mailChkList.isEmpty){
+      mailChkList.add("bsc2079@naver.com");
+    }
+
     _key = GlobalKey<ScaffoldState>();
     _controller = CalendarController();
     super.initState();
@@ -101,10 +103,20 @@ class _ScheduleViewState extends State<ScheduleView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      child: SvgPicture.asset(
-                        'assets/icons/close.svg',
-                        width: 13.17.w,
-                        height: 13.17.h,
+                      child: Container(
+                        color: whiteColor,
+                        width: 60.0.w,
+                        height: 30.0.h,
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          child: Container(
+                            child: SvgPicture.asset(
+                              'assets/icons/close.svg',
+                              width: 13.17.w,
+                              height: 13.17.h,
+                            ),
+                          ),
+                        ),
                       ),
                       onTap: () {
                         setState(() {
@@ -119,8 +131,8 @@ class _ScheduleViewState extends State<ScheduleView> {
                             _isColleagueChk ? "선택 해제" : "전체 선택",
                             style: TextStyle(
                                 color: _isColleagueChk ? checkColor : textColor,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600
+                                fontSize: 12.sp,
+                                /*fontWeight: FontWeight.w600*/
                             ),
                           ),
                           onTap: () {
@@ -149,6 +161,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                                   }
                                 }
                               }else {
+                                teamChkList.clear();
                                 mailChkList = ["bsc2079@naver.com"];
                               }
                             }
@@ -180,8 +193,8 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 _isTeamAndEmployeeChk ? "부서" : "직원",
                                 style: TextStyle(
                                     color: textColor,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w600
+                                    fontSize: 12.sp,
+                                    /*fontWeight: FontWeight.w600*/
                                 ),
                               ),
                             ],
@@ -246,45 +259,45 @@ class _ScheduleViewState extends State<ScheduleView> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 20.0.h,
-              ),
               Expanded(
                 child: Stack(
                   children: [
-                    SfCalendar(
-                      //allowViewNavigation: true,
-                      controller: _controller,
-                      showDatePickerButton: true,
-                      showNavigationArrow: false,
-                      dataSource: ScheduleModel(scheduleList),
-                      view: CalendarView.month,
-                      headerDateFormat: 'yyyy.MM',
-                      headerHeight: 0.0.h,
-                      //monthCellBuilder: (context, details) => ScheduleCalenderWidget().setMonthCellBuilder(context, details, _controller),
-                      appointmentBuilder: (context, details) => ScheduleCalenderWidget().setAppointMentBuilder(context: context, details: details, selectTime: _time),
-                      //cellBorderColor: whiteColor,
-                      monthViewSettings: MonthViewSettings(
-                        appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
-                        appointmentDisplayCount: 5,
-                        showTrailingAndLeadingDates: true,
-                        /*monthCellStyle: MonthCellStyle(
-                            textStyle: TextStyle(fontSize: 9.sp, color: Colors.black87, fontFamily: 'Roboto'),
-                            trailingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
-                            leadingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
-                          ),*/
+                    Container(
+                      padding: EdgeInsets.only(top: 20.0.h),
+                      child: SfCalendar(
+                        //allowViewNavigation: true,
+                        controller: _controller,
+                        showDatePickerButton: true,
+                        showNavigationArrow: false,
+                        dataSource: ScheduleModel(scheduleList),
+                        view: CalendarView.month,
+                        headerDateFormat: 'yyyy.MM',
+                        headerHeight: 0.0.h,
+                        //monthCellBuilder: (context, details) => ScheduleCalenderWidget().setMonthCellBuilder(context, details, _controller),
+                        appointmentBuilder: (context, details) => ScheduleCalenderWidget().setAppointMentBuilder(context: context, details: details, selectTime: _time),
+                        //cellBorderColor: whiteColor,
+                        monthViewSettings: MonthViewSettings(
+                          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                          appointmentDisplayCount: 5,
+                          showTrailingAndLeadingDates: true,
+                          /*monthCellStyle: MonthCellStyle(
+                              textStyle: TextStyle(fontSize: 9.sp, color: Colors.black87, fontFamily: 'Roboto'),
+                              trailingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
+                              leadingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
+                            ),*/
+                        ),
+                        onViewChanged: (viewChangedDetails) {
+                          if (_controller.view == CalendarView.month) {
+                            _headerText =  DateFormat('yyyy.MM').format(viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2]).toString();
+                            _time = DateTime.parse(viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2].toString());
+                          }
+                          SchedulerBinding.instance!.addPostFrameCallback((duration) {
+                            setState(() {});
+                          });
+                        },
+                        todayHighlightColor: checkColor,
+                        onTap: (CalendarTapDetails details) => ScheduleFunctionReprository().getScheduleDetail(details: details, context: context),
                       ),
-                      onViewChanged: (viewChangedDetails) {
-                        if (_controller.view == CalendarView.month) {
-                          _headerText =  DateFormat('yyyy.MM').format(viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2]).toString();
-                          _time = DateTime.parse(viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2].toString());
-                        }
-                        SchedulerBinding.instance!.addPostFrameCallback((duration) {
-                          setState(() {});
-                        });
-                      },
-                      todayHighlightColor: checkColor,
-                      onTap: (CalendarTapDetails details) => ScheduleFunctionReprository().getScheduleDetail(details: details, context: context),
                     ),
                     _isDatePopup
                         ? Container(
@@ -318,7 +331,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                         : Container(),
                     _isColleague ? Container(
                         width: double.infinity,
-                        height: 92.0.h,
+                        height: 83.0.h,
                         decoration: BoxDecoration(
                             color: whiteColor,
                             border: Border(
@@ -328,20 +341,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 )
                             )
                         ),
-                        child: _isTeamAndEmployeeChk ? /*FutureBuilder<QuerySnapshot>(
-                          future: ScheduleFirebaseReository().getCompanyUser(companyCode: "0S9YLBX"),
-                          builder: (context, snapshot) {
-                            if(!snapshot.hasData){
-                              return Container();
-                            }
-                            List<QueryDocumentSnapshot> doc = snapshot.data!.docs;
-
-                            return ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: doc.map((data) => _buildColleague(context, data, _getDataSource, _isColleagueChk, _isTeamAndEmployeeChk)).toList(),
-                            );
-                          },
-                        )*/
+                        child: _isTeamAndEmployeeChk ?
                           ListView(
                             scrollDirection: Axis.horizontal,
                             children: employeeList.map((data) => _buildColleague(
@@ -385,12 +385,13 @@ Widget _buildColleague({
 }) {
 
   return Row(
+    /*mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,*/
     children: [
       isTeamAndEmployeeChk ? getClipOverProfile(
           context: context,
           ImageUri: data.profilePhoto ?? '',
-          name: data.name,
-          mail: data.mail,
+          user: data,
           isChks: mailChkList.contains(data.mail),
           getDataSource: getDataSource
       ) : getTeamProfile(

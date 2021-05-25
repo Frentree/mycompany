@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class DateFormat {
   DateTime changeTimeStampToDateTime({required Timestamp timestamp}) {
@@ -63,5 +64,25 @@ class DateFormat {
     }
 
     return newDate;
+  }
+
+  String amAndPm(DateTime date){
+    String dateText = "";
+
+    if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(date).inHours){
+      dateText = "AM";
+    } else {
+      dateText = "PM";
+    }
+
+    return dateText;
+
+  }
+
+  String calendarDetailTime({required DateTime date}){
+    String dateText;
+
+    dateText = twoDigitsFormat(date.hour).toString() + " : " + twoDigitsFormat(date.month).toString() + " " + amAndPm(date);
+    return dateText;
   }
 }
