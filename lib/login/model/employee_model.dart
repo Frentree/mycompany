@@ -45,7 +45,7 @@ class EmployeeModel {
   int? team;
   int? position;
   List<int>? authority;
-  List<dynamic> userSearch;
+  List<dynamic>? userSearch;
 
   EmployeeModel({
     this.tokenId,
@@ -62,7 +62,7 @@ class EmployeeModel {
     this.team,
     this.position,
     this.authority = const <int>[1, 0, 0, 0, 0],
-    required this.userSearch,
+    this.userSearch,
   });
 
   EmployeeModel.fromMap({required Map mapData})
@@ -98,7 +98,7 @@ class EmployeeModel {
       "team": team,
       "position": position,
       "authority": authority,
-      "userSearch": userSearch,
+      "userSearch": name.split(""),
     };
   }
 }

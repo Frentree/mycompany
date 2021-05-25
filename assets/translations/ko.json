@@ -43,5 +43,9 @@
   "createCompanyViewMainMessage": "새로운 회사명을\n입력해 주세요.",
   "createCompanyViewHintMessage": "회사 이름을 입력한 후\n '회사생성' 버튼을 눌러 주세요.",
   "enterCompanyName": "회사 이름을 입력해 주세요.",
-  "createButton": "회사생성"
+  "enterCompanyAddress": "주소를 입력해주세요.",
+  "createButton": "회사생성",
+  "createCompanySuccessViewMainMessage": "회사 생성이\n완료되었습니다!",
+  "createCompanySuccessViewHintMessage": "이제 새롭게 생성한 회사에서\n마이컴퍼니 서비스를 이용하실 수 있습니다.",
+  "searchAddress": "주소 검색"
 }

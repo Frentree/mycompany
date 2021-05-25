@@ -101,7 +101,7 @@ IconButton textFormSearchButton({VoidCallback? buttonAction}) {
   );
 }
 
-Container loginDialogButton({required String buttonName, VoidCallback? buttonAction}){
+Container loginDialogConfirmButton({required String buttonName, VoidCallback? buttonAction,}){
   return Container(
     padding: EdgeInsets.only(top: 24.0.h),
     child: SizedBox(
@@ -120,6 +120,33 @@ Container loginDialogButton({required String buttonName, VoidCallback? buttonAct
           style: TextStyle(
             fontSize: 13.0.sp,
             color: whiteColor,
+          ),
+        ),
+        onPressed: buttonAction,
+      ),
+    ),
+  );
+}
+
+Container loginDialogCancelButton({required String buttonName, VoidCallback? buttonAction,}){
+  return Container(
+    padding: EdgeInsets.only(top: 24.0.h),
+    child: SizedBox(
+      width: 75.0.w,
+      height: 26.0.h,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xffECECEC),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0.r),
+          ),
+          elevation: 0.0,
+        ),
+        child: Text(
+          buttonName,
+          style: TextStyle(
+            fontSize: 13.0.sp,
+            color: textColor,
           ),
         ),
         onPressed: buttonAction,

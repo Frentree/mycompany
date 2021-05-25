@@ -4,8 +4,8 @@ pageMove({required BuildContext context, required Widget pageName}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => pageName));
 }
 
-void backPage({required BuildContext context}) {
-  Navigator.pop(context);
+void backPage({required BuildContext context, bool? returnValue}) {
+  Navigator.pop(context, returnValue);
 }
 
 void pageMoveAndRemoveBackPage(

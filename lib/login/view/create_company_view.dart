@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/login/function/create_company_function.dart';
 import 'package:mycompany/login/model/company_model.dart';
+import 'package:mycompany/login/view/create_company_success_view.dart';
+import 'package:mycompany/login/view/search_company_address_view.dart';
+import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
@@ -14,11 +18,14 @@ class CreateCompanyView extends StatefulWidget {
 }
 
 class CreateCompanyViewState extends State<CreateCompanyView> {
+  CreateCompanyFunction _createCompanyFunction = CreateCompanyFunction();
+
   TextEditingController _companyNameTextController = TextEditingController();
+  TextEditingController _companyAddressTextController = TextEditingController();
 
   CompanyModel selectCompany = CompanyModel(companyId: "", companyName: "", companyAddress: "");
 
-  ValueNotifier<List<bool>> isFormValid = ValueNotifier<List<bool>>([false]);
+  ValueNotifier<List<bool>> isFormValid = ValueNotifier<List<bool>>([false, false]);
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +121,50 @@ class CreateCompanyViewState extends State<CreateCompanyView> {
                 valueNotifier: isFormValid,
                 index: 0,
               ),
+              companyViewTextFormField(
+                topPadding: 12.0.h,
+                textEditingController: _companyAddressTextController,
+                hintText: 'enterCompanyAddress'.tr(),
+                valueNotifier: isFormValid,
+                index: 1,
+                readOnly: true,
+                suffixIcon: textFormSearchButton(),
+                onTab: () async {
+                  pageMove(context: context, pageName: SearchCompanyAddressView());
+                }
+              ),
               ValueListenableBuilder(
                 valueListenable: isFormValid,
                 builder: (BuildContext context, List<bool> value, Widget? child){
                   return loginElevatedButton(
-                      topPadding: 45.0.h,
-                      buttonName: 'createButton'.tr(),
-                      buttonAction: _companyNameTextController.text == "" ? null : () => {print("합류하기")}
+                    topPadding: 45.0.h,
+                    buttonName: 'createButton'.tr(),
+                    buttonAction: _companyNameTextController.text == "" ? null : () async {
+                      bool result = false;
+                      result = await loginDialogWidget(
+                        context: context,
+                        message: "회사를 생성하시겠습니까?",
+                        actions: [
+                          loginDialogCancelButton(
+                            buttonName: 'dialogCancel'.tr(),
+                            buttonAction: () {
+                              backPage(context: context, returnValue: false);
+                            }
+                          ),
+                          loginDialogConfirmButton(
+                            buttonName: 'dialogConfirm'.tr(),
+                            buttonAction: () async {
+                              await _createCompanyFunction.createCompanyFunction(context: context, companyName: _companyNameTextController.text);
+                              backPage(context: context, returnValue: true,);
+                            }
+                          ),
+                        ]
+                      );
+
+                      if(result){
+                        pageMoveAndRemoveBackPage(context: context, pageName: CreateCompanySuccessView());
+                      }
+                    }
                   );
                 },
               )

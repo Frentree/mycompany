@@ -44,7 +44,7 @@ class SignUpFunction {
         context: context,
         message: 'signUpSuccess'.tr(),
         actions: [
-          loginDialogButton(
+          loginDialogConfirmButton(
             buttonName: 'dialogConfirm'.tr(),
             buttonAction: () => backPage(context: context)
           )
@@ -58,7 +58,7 @@ class SignUpFunction {
         context: context,
         message: errorMessage,
         actions: [
-          loginDialogButton(
+          loginDialogConfirmButton(
             buttonName: 'dialogConfirm'.tr(),
             buttonAction: () => backPage(context: context)
           )

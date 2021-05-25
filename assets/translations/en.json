@@ -43,5 +43,9 @@
   "createCompanyViewMainMessage": "Enter New Company Name",
   "createCompanyViewHintMessage": "Enter a new company name and click the 'Create Company' button.",
   "enterCompanyName": "Enter a new company name",
-  "createButton": "Create Company"
+  "enterCompanyAddress": "Enter a new company address",
+  "createButton": "Create Company",
+  "createCompanySuccessViewMainMessage": "Company creation is complete!",
+  "createCompanySuccessViewHintMessage": "Now you can use the MY COMPANY service in the newly created company.",
+  "searchAddress": "Address search"
 }

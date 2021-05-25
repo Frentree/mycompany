@@ -147,22 +147,21 @@ class SignUpViewState extends State<SignUpView> {
                           valueListenable: isFormValid,
                           builder: (BuildContext context, List<bool> value, Widget? child){
                             return loginElevatedButton(
-                                topPadding: 20.0.h,
-                                buttonName: 'signUp'.tr(),
-                                buttonAction: value.contains(false) ? null : () async {
-                                  bool _isSignUpSuccess = await _loginFunctionRepository.signUpFunction(
-                                    context: context,
-                                    name: _nameTextController.text.replaceAll(" ", ""),
-                                    email: _emailTextController.text.replaceAll(" ", ""),
-                                    password: _passwordTextController.text.replaceAll(" ", ""),
-                                    birthday: _birthdayTextController.text != "" ? _birthdayTextController.text.replaceAll(".", "") : "",
-                                    phone: _phoneTextController.text,
-                                  );
-
-                                  if(_isSignUpSuccess){
-                                    pageMoveAndRemoveBackPage(context: context, pageName: SignInView());
-                                  }
+                              topPadding: 20.0.h,
+                              buttonName: 'signUp'.tr(),
+                              buttonAction: value.contains(false) ? null : () async {
+                                bool _isSignUpSuccess = await _loginFunctionRepository.signUpFunction(
+                                  context: context,
+                                  name: _nameTextController.text.replaceAll(" ", ""),
+                                  email: _emailTextController.text.replaceAll(" ", ""),
+                                  password: _passwordTextController.text.replaceAll(" ", ""),
+                                  birthday: _birthdayTextController.text != "" ? _birthdayTextController.text.replaceAll(".", "") : "",
+                                  phone: _phoneTextController.text,
+                                );
+                                if(_isSignUpSuccess){
+                                  pageMoveAndRemoveBackPage(context: context, pageName: SignInView());
                                 }
+                              }
                             );
                           },
                         ),

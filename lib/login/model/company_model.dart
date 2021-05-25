@@ -62,7 +62,7 @@ class CompanyModel {
       "companyLogo": companyLogo,
       "businessNumber": businessNumber,
       "webUrl": webUrl,
-      "companySearch": companySearch
+      "companySearch": companyName.split(""),
     };
   }
 }

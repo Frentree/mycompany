@@ -21,7 +21,6 @@ class SignInFunction {
     LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
 
-
     UserModel _userModel;
     bool _firebaseAuthResult;
 
@@ -42,7 +41,7 @@ class SignInFunction {
           context: context,
           message: 'duplicateLoginWarning'.tr(),
           actions: [
-            loginDialogButton(
+            loginDialogConfirmButton(
               buttonName: 'dialogConfirm'.tr(),
               buttonAction: () async {
                 _userModel.tokenId = await firebaseMessaging.getToken();
@@ -51,7 +50,7 @@ class SignInFunction {
                 backPage(context: context);
               }
             ),
-            loginDialogButton(
+            loginDialogCancelButton(
               buttonName: 'dialogCancel'.tr(),
               buttonAction: () {
                 backPage(context: context);
@@ -68,7 +67,7 @@ class SignInFunction {
           context: context,
           message: errorMessage,
           actions: [
-            loginDialogButton(
+            loginDialogConfirmButton(
                 buttonName: 'dialogConfirm'.tr(),
                 buttonAction: () => backPage(context: context)
             )

@@ -20,7 +20,6 @@ class UserInfoProvider with ChangeNotifier {
 
   void setUserData({UserModel? userModel}) {
     _userModel = userModel;
-    print(_userModel);
     notifyListeners();
   }
 
