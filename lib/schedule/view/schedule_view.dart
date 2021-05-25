@@ -7,12 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
 import 'package:mycompany/public/word/database_name.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
+import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/schedule/model/testcompany_model.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_theme.dart';
@@ -26,12 +29,17 @@ class ScheduleView extends StatefulWidget {
 }
 
 class _ScheduleViewState extends State<ScheduleView> {
+
   List<Appointment> scheduleList = <Appointment>[];
+  List<TeamModel> teamList = <TeamModel>[];
+  List<CompanyUserModel> employeeList = <CompanyUserModel>[];
   List<CalendarResource> resource = <CalendarResource>[];
-  bool _isDatePopup = false;
-  bool _isColleague = false;
-  bool _isColleagueChk = false;
-  bool _isPersonalChk = false;
+
+  bool _isDatePopup = false;           // 스케줄 날자 선택 창
+  bool _isColleague = false;           // 동료 선택 창
+  bool _isColleagueChk = false;        // 동료 전체 선택
+  bool _isTeamAndEmployeeChk = false;  // 부서 & 직원 선택
+
   late CalendarController _controller;
   late GlobalKey<ScaffoldState> _key;
 
@@ -46,15 +54,23 @@ class _ScheduleViewState extends State<ScheduleView> {
     _controller = CalendarController();
     super.initState();
     _getDataSource();
+    _getPersonalDataSource();
     setState(() {});
   }
-
 
   _getDataSource() async {
     List<Appointment> schedules = await ScheduleFunctionReprository().getSheduleData(companyCode: "0S9YLBX");
     setState(() {
       scheduleList = schedules;
     });
+  }
+
+  _getPersonalDataSource() async {
+    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");
+    List<CompanyUserModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: "0S9YLBX");
+
+    teamList = team;
+    employeeList = employee;
   }
 
   @override
@@ -85,51 +101,99 @@ class _ScheduleViewState extends State<ScheduleView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      child: Text(
-                        "전체 선택",
-                        style: TextStyle(
-                          color: _isColleagueChk ? checkColor : textColor,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600
-                        ),
-                      ),
-                      onTap: () {
-                        _isColleagueChk = !_isColleagueChk;
-                        _getDataSource();
-                        setState(() {});
-                      },
-                    ),
-                    GestureDetector(
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 50.0.h,
-                            child: SizedBox(
-                              width: 16.51.w,
-                              height: 11.37.h,
-                              child: SvgPicture.asset(
-                                'assets/icons/switch.svg',
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4.0.w,
-                          ),
-                          Text(
-                            "직원",
-                            style: TextStyle(
-                                color: _isColleagueChk ? checkColor : textColor,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600
-                            ),
-                          ),
-                        ],
+                      child: SvgPicture.asset(
+                        'assets/icons/close.svg',
+                        width: 13.17.w,
+                        height: 13.17.h,
                       ),
                       onTap: () {
                         setState(() {
                           _isColleague = !_isColleague;
                         });
                       },
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          child: Text(
+                            _isColleagueChk ? "선택 해제" : "전체 선택",
+                            style: TextStyle(
+                                color: _isColleagueChk ? checkColor : textColor,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600
+                            ),
+                          ),
+                          onTap: () {
+                            _isColleagueChk = !_isColleagueChk;
+
+                            if(!_isTeamAndEmployeeChk) {
+                              if(_isColleagueChk) {
+                                mailChkList = ["bsc2079@naver.com"];
+                                for(var team in teamList){
+                                  teamChkList.add(team.teamName.toString());
+                                }
+                                for(var emp in employeeList){
+                                  if(!mailChkList.contains(emp.mail.toString())){
+                                    mailChkList.add(emp.mail.toString());
+                                  }
+                                }
+                              }else {
+                                teamChkList.clear();
+                                mailChkList = ["bsc2079@naver.com"];
+                              }
+                            } else {
+                              if(_isColleagueChk) {
+                                for(var emp in employeeList){
+                                  if(!mailChkList.contains(emp.mail.toString())){
+                                    mailChkList.add(emp.mail.toString());
+                                  }
+                                }
+                              }else {
+                                mailChkList = ["bsc2079@naver.com"];
+                              }
+                            }
+
+                            _getDataSource();
+                            setState(() {});
+                          },
+                        ),
+                        SizedBox(
+                          width: 18.0.w,
+                        ),
+                        GestureDetector(
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 50.0.h,
+                                child: SizedBox(
+                                  width: 16.51.w,
+                                  height: 11.37.h,
+                                  child: SvgPicture.asset(
+                                    'assets/icons/switch.svg',
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4.0.w,
+                              ),
+                              Text(
+                                _isTeamAndEmployeeChk ? "부서" : "직원",
+                                style: TextStyle(
+                                    color: textColor,
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _isTeamAndEmployeeChk = !_isTeamAndEmployeeChk;
+                              _isColleagueChk = false;
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ) :
@@ -201,10 +265,10 @@ class _ScheduleViewState extends State<ScheduleView> {
                       appointmentBuilder: (context, details) => ScheduleCalenderWidget().setAppointMentBuilder(context: context, details: details, selectTime: _time),
                       //cellBorderColor: whiteColor,
                       monthViewSettings: MonthViewSettings(
-                          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
-                          appointmentDisplayCount: 5,
-                          showTrailingAndLeadingDates: true,
-                          /*monthCellStyle: MonthCellStyle(
+                        appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                        appointmentDisplayCount: 5,
+                        showTrailingAndLeadingDates: true,
+                        /*monthCellStyle: MonthCellStyle(
                             textStyle: TextStyle(fontSize: 9.sp, color: Colors.black87, fontFamily: 'Roboto'),
                             trailingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
                             leadingDatesTextStyle: TextStyle(fontSize: 9.sp, color: calenderLineColor.withOpacity(0.6), fontFamily: 'Roboto'),
@@ -224,39 +288,8 @@ class _ScheduleViewState extends State<ScheduleView> {
                     ),
                     _isDatePopup
                         ? Container(
-                            height: 200.0.h,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: calendarLineColor.withOpacity(0.1),
-                                  width: 0.5.w
-                                )
-                              )
-                            ),
-                            child: DatePickerWidget(
-                              dateFormat: "yyyy MM",
-                              minDateTime: DateTime(1900),
-                              maxDateTime: DateTime(3000),
-                              onMonthChangeStartWithFirstDate: true,
-                              pickerTheme: DateTimePickerTheme(
-                                pickerHeight: 200.0.h,
-                                showTitle: false,
-                              ),
-                              locale: DateTimePickerLocale.ko,
-                              initialDateTime: _time,
-                              onCancel: () {},
-                              onConfirm: (dateTime, selectedIndex) {},
-                              onChange: (dateTime, selectedIndex) {
-                                _controller.displayDate = dateTime;
-                              },
-                            ),
-                          )
-                        : Container(),
-                    _isColleague ? Container(
-                      width: double.infinity,
-                      height: 92.0.h,
+                      height: 200.0.h,
                       decoration: BoxDecoration(
-                        color: whiteColor,
                           border: Border(
                               bottom: BorderSide(
                                   color: calendarLineColor.withOpacity(0.1),
@@ -264,20 +297,70 @@ class _ScheduleViewState extends State<ScheduleView> {
                               )
                           )
                       ),
-                      child: FutureBuilder<QuerySnapshot>(
-                        future: ScheduleFirebaseReository().getCompanyUser(companyCode: "0S9YLBX"),
-                        builder: (context, snapshot) {
-                          if(!snapshot.hasData){
-                            return Container();
-                          }
-                          List<QueryDocumentSnapshot> doc = snapshot.data!.docs;
-
-                          return ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: doc.map((data) => _buildColleague(context, data, _getDataSource, _isColleagueChk)).toList(),
-                          );
+                      child: DatePickerWidget(
+                        dateFormat: "yyyy MM",
+                        minDateTime: DateTime(1900),
+                        maxDateTime: DateTime(3000),
+                        onMonthChangeStartWithFirstDate: true,
+                        pickerTheme: DateTimePickerTheme(
+                          pickerHeight: 200.0.h,
+                          showTitle: false,
+                        ),
+                        locale: DateTimePickerLocale.ko,
+                        initialDateTime: _time,
+                        onCancel: () {},
+                        onConfirm: (dateTime, selectedIndex) {},
+                        onChange: (dateTime, selectedIndex) {
+                          _controller.displayDate = dateTime;
                         },
-                      )
+                      ),
+                    )
+                        : Container(),
+                    _isColleague ? Container(
+                        width: double.infinity,
+                        height: 92.0.h,
+                        decoration: BoxDecoration(
+                            color: whiteColor,
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: calendarLineColor.withOpacity(0.1),
+                                    width: 0.5.w
+                                )
+                            )
+                        ),
+                        child: _isTeamAndEmployeeChk ? /*FutureBuilder<QuerySnapshot>(
+                          future: ScheduleFirebaseReository().getCompanyUser(companyCode: "0S9YLBX"),
+                          builder: (context, snapshot) {
+                            if(!snapshot.hasData){
+                              return Container();
+                            }
+                            List<QueryDocumentSnapshot> doc = snapshot.data!.docs;
+
+                            return ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: doc.map((data) => _buildColleague(context, data, _getDataSource, _isColleagueChk, _isTeamAndEmployeeChk)).toList(),
+                            );
+                          },
+                        )*/
+                          ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: employeeList.map((data) => _buildColleague(
+                                context: context,
+                                data: data,
+                                getDataSource: _getDataSource,
+                                isTeamAndEmployeeChk: _isTeamAndEmployeeChk
+                            )).toList(),
+                          )
+                            : ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: teamList.map((data) => _buildColleague(
+                              context: context,
+                              data: data,
+                              getDataSource: _getDataSource,
+                              isTeamAndEmployeeChk: _isTeamAndEmployeeChk,
+                              user: employeeList
+                          )).toList(),
+                        )
                     ) : Container(),
                   ],
                 ),
@@ -291,19 +374,31 @@ class _ScheduleViewState extends State<ScheduleView> {
 }
 
 List<String> mailChkList = [];
+List<String> teamChkList = [];
 
-Widget _buildColleague(BuildContext context, QueryDocumentSnapshot data, getDataSource, bool _isColleagueChk) {
-  String mail = data.data()['mail'];
+Widget _buildColleague({
+  required BuildContext context,
+  required data,
+  required getDataSource,
+  required bool isTeamAndEmployeeChk,
+  List<CompanyUserModel>? user
+}) {
 
   return Row(
     children: [
-      getClipOverProfile(
+      isTeamAndEmployeeChk ? getClipOverProfile(
           context: context,
-          ImageUri: data.data()['profilePhoto'] ?? '',
-          name: data.data()['name'].toString(),
-          mail: mail,
-          isChks: mailChkList.contains(mail),
+          ImageUri: data.profilePhoto ?? '',
+          name: data.name,
+          mail: data.mail,
+          isChks: mailChkList.contains(data.mail),
           getDataSource: getDataSource
+      ) : getTeamProfile(
+        context: context,
+        getDataSource: getDataSource,
+        isChks: teamChkList.contains(data.teamName),
+        teamName: data.teamName,
+        user: user!
       ),
       SizedBox(width: 26.0.w,)
     ],

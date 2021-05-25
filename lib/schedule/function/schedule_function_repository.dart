@@ -1,7 +1,10 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/schedule/function/calender_function.dart';
+import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/schedule/model/testcompany_model.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleFunctionReprository {
@@ -15,5 +18,11 @@ class ScheduleFunctionReprository {
 
   Future<DateTime> dateTimeSet({required DateTime date, required BuildContext context}) =>
       _calenderFunction.dateTimeSet(date, context);
+
+  Future<List<TeamModel>> getTeam({required companyCode}) =>
+      _calenderFunction.getTeam(companyCode);
+
+  Future<List<CompanyUserModel>> getEmployee({required companyCode}) =>
+      _calenderFunction.getEmployee(companyCode);
 
 }
