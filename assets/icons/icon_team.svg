@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="42" height="42" viewBox="0 0 42 42">
+  <defs>
+    <clipPath id="clip-path">
+      <circle id="타원_313" cx="21" cy="21" r="21" transform="translate(4644 279)" fill="#c4c4c4"/>
+    </clipPath>
+  </defs>
+  <g id="그룹_1920" transform="translate(-25 -88)">
+    <g id="그룹_1934" transform="translate(-4619 -191)">
+      <circle id="타원_308" cx="21" cy="21" r="21" transform="translate(4644 279)" fill="#c4c4c4"/>
+      <g id="그룹_1931" transform="translate(4393 191)">
+        <path id="교차_1" d="M-464.51-1262.819A15.007,15.007,0,0,1-450-1274a15.007,15.007,0,0,1,14.51,11.181A20.928,20.928,0,0,1-450-1257,20.928,20.928,0,0,1-464.51-1262.819Z" transform="translate(722 1387)" fill="#fff"/>
+        <g id="그룹_1744" >
+          <circle id="타원_274" cx="7" cy="7" r="7" transform="translate(265 97)" fill="#fff"/>
+          <circle id="타원_301" cx="4" cy="4" r="4" transform="translate(281 103)" fill="#fff"/>
+          <circle id="타원_302" cx="4" cy="4" r="4" transform="translate(255 103)" fill="#f7f7f7"/>
+        </g>
+      </g>
+      <g id="마스크_그룹_11" clip-path="url(#clip-path)">
+        <path id="빼기_15" d="M6.1,16.774h0A8.038,8.038,0,0,1,1.738,13.98,7.915,7.915,0,0,1,0,9,8,8,0,0,1,12.684,2.514,14.983,14.983,0,0,0,6,15a15.216,15.216,0,0,0,.1,1.772Z" transform="translate(4643 303)" fill="#fff"/>
+        <path id="빼기_16" d="M6.1,0h0A8.038,8.038,0,0,0,1.738,2.794,7.915,7.915,0,0,0,0,7.774,8,8,0,0,0,12.685,14.26,14.983,14.983,0,0,1,6,1.774,15.216,15.216,0,0,1,6.1,0Z" transform="translate(4687 319.774) rotate(180)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

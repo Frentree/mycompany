@@ -1,8 +1,5 @@
-/*
-
-
 import 'package:easy_localization/easy_localization.dart';
-import 'package:mycompany/login/style/loing_style_repository.dart';
+import 'package:mycompany/login/style/decoration_style.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +14,7 @@ class ScheduleRegisrationView extends StatefulWidget {
 }
 
 class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
-  LoginStyleRepository _loginStyleRepository = LoginStyleRepository();
-  PublicFunctionReprository _publicFunctionReprository = PublicFunctionReprository();
+  PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
   late TextEditingController _startTimeController;
   late TextEditingController _endTimeController;
@@ -61,7 +57,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return WillPopScope(
-      onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
+      onWillPop: () => _publicFunctionRepository.onBackPressed(context: context),
       child: Scaffold(
         floatingActionButton: getMainCircularMenu(context: context, navigator: 'schedule'),
         body: Container(
@@ -140,7 +136,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                   width: 305.0.w,
                   height: 40.0.h,
                   child: TextFormField(
-                    decoration: _loginStyleRepository.textFormDecoration(hintText: 'titles'.tr()),
+                    decoration: loginTextFormRoundBorderDecoration(hintText: 'titles'.tr()),
                     style: TextStyle(
                       fontSize: 13.0.sp,
                       color: textColor,
@@ -159,7 +155,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                     child: TextFormField(
                       controller: _startTimeController,
                       enabled: false,
-                      decoration: _loginStyleRepository.textFormDecoration(hintText: "시작시간"),
+                      decoration: loginTextFormRoundBorderDecoration(hintText: "시작시간"),
                       style: TextStyle(
                         fontSize: 13.0.sp,
                         color: textColor,
@@ -185,7 +181,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                     child: TextFormField(
                       controller: _endTimeController,
                       enabled: false,
-                      decoration: _loginStyleRepository.textFormDecoration(hintText: "종료  시간"),
+                      decoration: loginTextFormRoundBorderDecoration(hintText: "종료  시간"),
                       style: TextStyle(
                         fontSize: 13.0.sp,
                         color: textColor,
@@ -207,4 +203,3 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     );
   }
 }
-*/

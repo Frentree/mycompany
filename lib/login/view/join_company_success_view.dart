@@ -93,8 +93,6 @@ class JoinCompanySuccessViewState extends State<JoinCompanySuccessView> {
 
                 //EmployeeInfoProvider 저장
                 employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: loginEmployeeData);
-
-                pageMoveAndRemoveBackPage(context: context, pageName: SplashViewBlue());
               }
             )
           ],

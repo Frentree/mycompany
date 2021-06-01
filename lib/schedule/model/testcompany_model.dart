@@ -1,7 +1,7 @@
 /*
 회사 가입 사용자 모델
-기기토큰값 : tokenId
-이메일 : email
+기기토큰값 : token
+이메일 : mail
 이름 : name
 전화번호 : phone
 생일 : birthday
@@ -30,28 +30,28 @@ List[4] : 최고관리자
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EmployeeModel {
-  String? tokenId;
-  String email;
+class CompanyUserModel {
+  String? token;
+  String mail;
   String name;
   String? phone;
-  Timestamp? birthday;
+  String? birthday;
   String? account;
   String companyId;
   Timestamp joinedDate;
-  Timestamp? enteredDate;
+  String? enteredDate;
   Timestamp? modifiedDate;
-  String? profile;
+  String? profilePhoto;
+  int? teamNum;
   String? team;
-  int? teamNumber;
+  int? positionNum;
   String? position;
-  int? positionNumber;
-  List<dynamic>? authority;
-  List<dynamic>? userSearch;
+  List<int>? authority;
+  List<dynamic> userSearch;
 
-  EmployeeModel({
-    this.tokenId,
-    required this.email,
+  CompanyUserModel({
+    this.token,
+    required this.mail,
     required this.name,
     this.phone,
     this.birthday,
@@ -60,38 +60,38 @@ class EmployeeModel {
     required this.joinedDate,
     this.enteredDate,
     this.modifiedDate,
-    this.profile,
-    this.teamNumber,
+    this.profilePhoto,
+    this.teamNum,
     this.team,
-    this.positionNumber,
+    this.positionNum,
     this.position,
     this.authority = const <int>[1, 0, 0, 0, 0],
-    this.userSearch,
+    required this.userSearch,
   });
 
-  EmployeeModel.fromMap({required Map mapData})
-      : tokenId = mapData["tokenId"] ?? "",
-        email = mapData["email"] ?? "",
+  CompanyUserModel.fromMap({required Map mapData})
+      : token = mapData["token"] ?? "",
+        mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",
         phone = mapData["phone"] ?? "",
-        birthday = mapData["birthday"] ?? null,
+        birthday = mapData["birthday"] ?? "",
         account = mapData["account"] ?? "",
         companyId = mapData["companyId"] ?? "",
         joinedDate = mapData["joinedDate"] ?? Timestamp.now(),
         enteredDate = mapData["enteredDate"] ?? Timestamp.now(),
         modifiedDate = mapData["modifiedDate"] ?? Timestamp.now(),
-        profile = mapData["profile"] ?? "",
+        profilePhoto = mapData["profilePhoto"] ?? "",
+        teamNum = mapData["teamNum"] ?? 999,
         team = mapData["team"] ?? "",
-        teamNumber = mapData["teamNum"] ?? 999,
+        positionNum = mapData["positionNum"] ?? 999,
         position = mapData["position"] ?? "",
-        positionNumber = mapData["positionNum"] ?? 999,
         authority = mapData["authority"] ?? [1, 0, 0, 0, 0],
         userSearch = mapData["userSearch"] ?? [];
 
   toJson(){
     return {
-      "tokenId": tokenId,
-      "email": email,
+      "token": token,
+      "mail": mail,
       "name": name,
       "phone": phone,
       "birthday": birthday,
@@ -100,13 +100,13 @@ class EmployeeModel {
       "joinedDate": joinedDate,
       "enteredDate": enteredDate,
       "modifiedDate": modifiedDate,
-      "profile": profile ?? "",
+      "profilePhoto": profilePhoto ?? "",
+      "teamNum" : teamNum ?? 999,
       "team": team ?? "",
-      "teamNumber" : teamNumber ?? 999,
+      "positionNum" : positionNum ?? 999,
       "position": position ?? "",
-      "positionNumber" : positionNumber ?? 999,
       "authority": authority,
-      "userSearch": name.split(""),
+      "userSearch": userSearch,
     };
   }
 }

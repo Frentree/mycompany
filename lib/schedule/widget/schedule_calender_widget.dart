@@ -53,7 +53,7 @@ class ScheduleCalenderWidget {
             SizedBox(
               height: 1.0.h,
               child: Container(
-                color: calenderLineColor.withOpacity(0.1),
+                color: calendarLineColor.withOpacity(0.1),
               ),
             ),
             Expanded(
@@ -83,7 +83,7 @@ class ScheduleCalenderWidget {
                       details.date.day.toString(),
                       style: TextStyle(
                           fontSize: 9.sp,
-                          color: calenderLineColor.withOpacity(0.6),
+                          color: calendarLineColor.withOpacity(0.6),
                           fontFamily: 'Roboto'
                       ),
                     ),
@@ -103,7 +103,7 @@ class ScheduleCalenderWidget {
             SizedBox(
               height: 1.0.h,
               child: Container(
-                color: calenderLineColor.withOpacity(0.1),
+                color: calendarLineColor.withOpacity(0.1),
               ),
             ),
             Center(
@@ -127,7 +127,7 @@ class ScheduleCalenderWidget {
                     details.date.day.toString(),
                     style: TextStyle(
                         fontSize: 9.sp,
-                        color: calenderLineColor.withOpacity(0.6),
+                        color: calendarLineColor.withOpacity(0.6),
                         fontFamily: 'Roboto'
                     ),
                   ),

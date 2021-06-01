@@ -10,4 +10,6 @@ const Color hintTextColor = Color(0xff9C9C9C);
 const Color checkColor = Color(0xff2093F0);
 const Color outWorkColor = Color(0xffF23662);
 const Color annualColor = Color(0xff20F06C);
-const Color calenderLineColor = Color(0xff707070);
+const Color calendarLineColor = Color(0xff707070);
+const Color cirecularLineColor = Color(0xffECECEC);
+const Color calendarDetailLineColor = Color(0xffF7F7F7);

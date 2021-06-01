@@ -10,6 +10,7 @@ import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:provider/provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/login/model/user_model.dart';
@@ -19,6 +20,7 @@ class AuthView extends StatelessWidget {
   String? deviceToken;
 
   AuthView({this.deviceToken});
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,9 @@ class AuthView extends StatelessWidget {
       return SignInView();
     }
 
-    else if(loginUserData.tokenId != deviceToken){
+    /*else if(loginUserData.tokenId != deviceToken){
       return ForceSignOutView();
-    }
+    }*/
 
     else{
       switch(loginUserData.joinStatus){
@@ -49,7 +51,7 @@ class AuthView extends StatelessWidget {
             return JoinCompanySuccessView();
           }
           else{
-            return SplashViewBlue();
+            return ScheduleView();
           }
 
         case 3:

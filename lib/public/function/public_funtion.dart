@@ -10,8 +10,8 @@ class PublicFunction {
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => navigator), (route) => isMove);
   }
 
-  /*Future<bool> onBackPressed(BuildContext context) async {
+  Future<bool> onBackPressed(BuildContext context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleView(),));
     return true;
-  }*/
+  }
 }

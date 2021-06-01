@@ -1,10 +1,9 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
-import 'package:mycompany/schedule/view/schedule_registration_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_item.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
+import 'package:mycompany/schedule/view/schedule_registration_view.dart';
 
 PublicFunctionRepository _reprository = PublicFunctionRepository();
 
@@ -37,4 +36,3 @@ Widget getMainCircularMenu({required BuildContext context,required String naviga
             onTap: () => navigator != 'setting' ?  _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
       ]);
 }
-*/

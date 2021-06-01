@@ -2,8 +2,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
+import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/schedule/model/testcompany_model.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
@@ -45,6 +48,7 @@ class CalenderFunction{
         subject: name,
         color: _color[typeChoise],
         notes: notes,
+        type: type,
         location: location != null ? location : "",
         resourceIds:<Object> [mail.hashCode],
       ));
@@ -77,6 +81,32 @@ class CalenderFunction{
     if(appointment != null){
       ScheduleDialogWidget().showScheduleDetail(context: context, data: appointment, date: date!);
     }
+  }
+
+  Future<List<TeamModel>> getTeam(String? companyCode) async {
+    List<TeamModel> teamList = [];
+    var teamData = await _reository.getTeamDocument(companyCode: companyCode);
+
+    List<QueryDocumentSnapshot> teamSnapshot = teamData.docs;
+
+    for (var doc in teamSnapshot) {
+      teamList.add(TeamModel.fromMap(mapData: doc.data()));
+    }
+
+    return teamList;
+  }
+
+  Future<List<CompanyUserModel>> getEmployee(String? companyCode) async {
+    List<CompanyUserModel> empList = [];
+    var empData = await _reository.getCompanyUser(companyCode: companyCode);
+
+    List<QueryDocumentSnapshot> empSnapshot = empData.docs;
+
+    for (var doc in empSnapshot) {
+      empList.add(CompanyUserModel.fromMap(mapData: doc.data()));
+    }
+
+    return empList;
   }
 
 }

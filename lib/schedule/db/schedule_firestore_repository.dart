@@ -7,4 +7,10 @@ class ScheduleFirebaseReository {
 
   Future<QuerySnapshot> getSchedules({String? companyCode}) =>
       _curd.getSchedules(companyCode);
+
+  Future<QuerySnapshot> getCompanyUser({String? companyCode}) =>
+      _curd.getCompanyUser(companyCode);
+
+  Future<QuerySnapshot> getTeamDocument({String? companyCode}) =>
+      _curd.getTeamDocument(companyCode);
 }
