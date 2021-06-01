@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-pageMove({required BuildContext context, required Widget pageName}) {
+pageMove({required BuildContext context, required  pageName}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => pageName));
 }
 

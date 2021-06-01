@@ -13,12 +13,12 @@ import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:provider/provider.dart';
 
-class CreateCompanySuccessView extends StatefulWidget {
+class JoinCompanySuccessView extends StatefulWidget {
   @override
-  CreateCompanySuccessViewState createState() => CreateCompanySuccessViewState();
+  JoinCompanySuccessViewState createState() => JoinCompanySuccessViewState();
 }
 
-class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
+class JoinCompanySuccessViewState extends State<JoinCompanySuccessView> {
   @override
   Widget build(BuildContext context) {
     LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
@@ -54,7 +54,7 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
               ),
               child: SizedBox(
                   child: Text(
-                    'createCompanySuccessViewMainMessage'.tr(),
+                    'joinCompanySuccessViewMainMessage'.tr(),
                     style: TextStyle(
                       fontSize: 22.0.sp,
                       fontWeight: FontWeight.w700,
@@ -71,7 +71,7 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
               ),
               child: SizedBox(
                   child: Text(
-                    'createCompanySuccessViewHintMessage'.tr(),
+                    'joinCompanySuccessViewHintMessage'.tr(),
                     style: TextStyle(
                       fontSize: 13.0.sp,
                       fontWeight: fontWeight['Medium'],

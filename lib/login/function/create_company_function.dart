@@ -6,7 +6,6 @@ import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -75,9 +74,9 @@ class CreateCompanyFunction {
   Future<void> createCompanyFunction({
     required BuildContext context,
     required String companyName,
+    required String companyAddress,
   }) async {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false,);
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false,);
     DateFormatCustom dateFormatCustom = DateFormatCustom();
 
     UserModel loginUserData = userInfoProvider.getUserData()!;
@@ -86,7 +85,9 @@ class CreateCompanyFunction {
     CompanyModel companyModel = CompanyModel(
       companyId: companyId,
       companyName: companyName,
-      companyAddress: "",
+      companyAddress: companyAddress,
+      createDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      modifiedDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
     );
 
     await loginFirestoreRepository.createCompanyData(companyModel: companyModel);
@@ -111,11 +112,5 @@ class CreateCompanyFunction {
     loginUserData.modifiedDate = dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now());
 
     await loginFirestoreRepository.updateUserData(userModel: loginUserData);
-
-/*    //UserInfoProvider 업데이트
-    userInfoProvider.saveUserDataToPhone(userModel: loginUserData);
-
-    //EmployeeInfoProvider 저장
-    employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: employeeModel);*/
   }
 }

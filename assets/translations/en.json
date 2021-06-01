@@ -27,6 +27,7 @@
   "duplicateLoginWarning": "다른기기에서 로그인 중 입니다. 강제 로그아웃하고, 현재 기기에서 로그인 하시겠습니까?",
   "dialogConfirm": "Confirm",
   "dialogCancel": "Cancel",
+  "dialogSelection": "Selection",
   "userTypeSelectViewMainMessage": "Select Create Company\nor Join Company.",
   "userTypeSelectViewHintMessage": "You can create a new company or\njoin companies that have already been created.",
   "createCompanyButton": "Create New Company",
@@ -47,5 +48,14 @@
   "createButton": "Create Company",
   "createCompanySuccessViewMainMessage": "Company creation is complete!",
   "createCompanySuccessViewHintMessage": "Now you can use the MY COMPANY service in the newly created company.",
-  "searchAddress": "Address search"
+  "searchAddress": "Address search",
+  "startButton": "Start",
+  "waitJoinCompanyApprovalViewMainMessage": "Waiting for administrator's approval.",
+  "waitJoinCompanyApprovalViewHintMessage": "When the manager's approval is completed, you can use the MY COMPANY service.",
+  "closeAppButton": "Close App",
+  "rejectJoinCompanyApprovalViewMainMessage": "Company join is reject.",
+  "rejectJoinCompanyApprovalViewHintMessage": "Please contact the person in charge of the company and join the company again.",
+  "rejoinButton": "Rejoin Company",
+  "joinCompanySuccessViewMainMessage": "Company join is complete!",
+  "joinCompanySuccessViewHintMessage": "Now you can use the MY COMPANY service in the company you joined."
 }

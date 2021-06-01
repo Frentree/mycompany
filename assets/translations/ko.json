@@ -27,6 +27,7 @@
   "duplicateLoginWarning": "다른기기에서 로그인 중 입니다. 강제 로그아웃하고, 현재 기기에서 로그인 하시겠습니까?",
   "dialogConfirm": "확인",
   "dialogCancel": "취소",
+  "dialogSelection": "선택",
   "userTypeSelectViewMainMessage": "회사 생성 또는\n합류할 회사를 선택해 주세요.",
   "userTypeSelectViewHintMessage": "새로운 회사를 생성하거나\n이미 생성된 회사에 합류할 수 있습니다.",
   "createCompanyButton": "새로운 회사 생성",
@@ -43,9 +44,18 @@
   "createCompanyViewMainMessage": "새로운 회사명을\n입력해 주세요.",
   "createCompanyViewHintMessage": "회사 이름을 입력한 후\n '회사생성' 버튼을 눌러 주세요.",
   "enterCompanyName": "회사 이름을 입력해 주세요.",
-  "enterCompanyAddress": "주소를 입력해주세요.",
+  "enterCompanyAddress": "주소를 입력해 주세요.",
   "createButton": "회사생성",
   "createCompanySuccessViewMainMessage": "회사 생성이\n완료되었습니다!",
   "createCompanySuccessViewHintMessage": "이제 새롭게 생성한 회사에서\n마이컴퍼니 서비스를 이용하실 수 있습니다.",
-  "searchAddress": "주소 검색"
+  "searchAddress": "주소 검색",
+  "startButton": "시작하기",
+  "waitJoinCompanyApprovalViewMainMessage": "관리자의\n승인 대기중입니다.",
+  "waitJoinCompanyApprovalViewHintMessage": "관리자의 승인이 완료되면\n마이컴퍼니 서비스를 이용하실 수 있습니다.",
+  "closeAppButton": "앱 종료하기",
+  "rejectJoinCompanyApprovalViewMainMessage": "회사 가입이\n거절되었습니다.",
+  "rejectJoinCompanyApprovalViewHintMessage": "회사 담당자에게 문의 후\n다시 회사에 가입해 주세요.",
+  "rejoinButton": "다시 가입하기",
+  "joinCompanySuccessViewMainMessage": "회사 가입이\n완료되었습니다!",
+  "joinCompanySuccessViewHintMessage": "이제 합류한 회사에서\n마이컴퍼니 서비스를 이용하실 수 있습니다."
 }

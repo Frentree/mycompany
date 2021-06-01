@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/word/database_name.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserInfoProvider with ChangeNotifier {

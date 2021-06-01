@@ -101,7 +101,7 @@ class SignInViewState extends State<SignInView> {
                 return loginElevatedButton(
                   topPadding: 20.0.h,
                   buttonName: 'signIn'.tr(),
-                  buttonAction: () {
+                  buttonAction: value.contains(false) ? null : () {
                     FocusScope.of(context).unfocus();
                     _loginFunctionRepository.signInFunction(
                       context: context,

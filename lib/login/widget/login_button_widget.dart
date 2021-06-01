@@ -76,7 +76,7 @@ Container loginOutlinedButton({required double topPadding, required String butto
   );
 }
 
-IconButton textFormClearButton({required TextEditingController textEditingController}) {
+Widget textFormClearButton({required TextEditingController textEditingController}) {
   return IconButton(
     icon: Icon(
       Icons.cancel,
@@ -89,7 +89,7 @@ IconButton textFormClearButton({required TextEditingController textEditingContro
   );
 }
 
-IconButton textFormSearchButton({VoidCallback? buttonAction}) {
+IconButton textFormSearchButton() {
   return IconButton(
     icon: Icon(
       Icons.search,
@@ -97,7 +97,7 @@ IconButton textFormSearchButton({VoidCallback? buttonAction}) {
     color: Color(0xff2093F0),
     disabledColor: Color(0xff2093F0),
     iconSize: 15.0.w,
-    onPressed: buttonAction,
+    onPressed: null,
   );
 }
 
@@ -207,3 +207,4 @@ Container userTypeSelectButton({required BuildContext context, required double t
     ),
   );
 }
+

@@ -2,28 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
-import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
-import 'package:mycompany/public/provider/employee_Info_provider.dart';
-import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:provider/provider.dart';
 
-class CreateCompanySuccessView extends StatefulWidget {
+class RejectJoinCompanyApprovalView extends StatefulWidget {
   @override
-  CreateCompanySuccessViewState createState() => CreateCompanySuccessViewState();
+  RejectJoinCompanyApprovalViewState createState() => RejectJoinCompanyApprovalViewState();
 }
 
-class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
+class RejectJoinCompanyApprovalViewState extends State<RejectJoinCompanyApprovalView> {
+  LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
+
   @override
   Widget build(BuildContext context) {
-    LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
+    UserModel userModel = userInfoProvider.getUserData()!;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -41,8 +38,8 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
               ),
               child: Container(
                 child: Icon(
-                  Icons.check_circle,
-                  color: Color(0xff2093F0),
+                  Icons.cancel,
+                  color: Color(0xffDC0101),
                   size: 44.0.w,
                 ),
               ),
@@ -54,7 +51,7 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
               ),
               child: SizedBox(
                   child: Text(
-                    'createCompanySuccessViewMainMessage'.tr(),
+                    'rejectJoinCompanyApprovalViewMainMessage'.tr(),
                     style: TextStyle(
                       fontSize: 22.0.sp,
                       fontWeight: FontWeight.w700,
@@ -70,31 +67,24 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
                 top: 8.0.h,
               ),
               child: SizedBox(
-                  child: Text(
-                    'createCompanySuccessViewHintMessage'.tr(),
-                    style: TextStyle(
-                      fontSize: 13.0.sp,
-                      fontWeight: fontWeight['Medium'],
-                      color: hintTextColor,
-                    ),
-                    textAlign: TextAlign.center,
-                  )
+                child: Text(
+                  'rejectJoinCompanyApprovalViewHintMessage'.tr(),
+                  style: TextStyle(
+                    fontSize: 13.0.sp,
+                    fontWeight: fontWeight['Medium'],
+                    color: hintTextColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             loginElevatedButton(
               topPadding: 81.0.h,
-              buttonName: 'startButton'.tr(),
+              buttonName: 'rejoinButton'.tr(),
               buttonAction: () async {
-                UserModel loginUserData = await loginFirestoreRepository.readUserData(email: userInfoProvider.getUserData()!.email);
-                EmployeeModel loginEmployeeData = await loginFirestoreRepository.readEmployeeData(companyId: loginUserData.companyId!, email: loginUserData.email);
-
-                //UserInfoProvider 업데이트
-                userInfoProvider.saveUserDataToPhone(userModel: loginUserData);
-
-                //EmployeeInfoProvider 저장
-                employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: loginEmployeeData);
-
-                pageMoveAndRemoveBackPage(context: context, pageName: SplashViewBlue());
+                userModel.joinStatus = 0;
+                await loginFirestoreRepository.updateUserData(userModel: userModel); //토큰값 DB에 업데이트
+                userInfoProvider.saveUserDataToPhone(userModel: userModel);
               }
             )
           ],

@@ -44,7 +44,7 @@ class EmployeeModel {
   String? profile;
   int? team;
   int? position;
-  List<int>? authority;
+  List<dynamic>? authority;
   List<dynamic>? userSearch;
 
   EmployeeModel({
@@ -77,8 +77,8 @@ class EmployeeModel {
         enteredDate = mapData["enteredDate"] ?? Timestamp.now(),
         modifiedDate = mapData["modifiedDate"] ?? Timestamp.now(),
         profile = mapData["profile"] ?? "",
-        team = mapData["team"] ?? "",
-        position = mapData["position"] ?? "",
+        team = mapData["team"] ?? null,
+        position = mapData["position"] ?? null,
         authority = mapData["authority"] ?? [1, 0, 0, 0, 0],
         userSearch = mapData["userSearch"] ?? [];
 
