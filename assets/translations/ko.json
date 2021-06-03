@@ -34,5 +34,6 @@
   "other" : "기타",
   "registering_a_schedule" : "일정등록",
   "start_time" : "시작시간",
-  "end_time" : "종료시간"
+  "end_time" : "종료시간",
+  "Invite_colleague" : "동료초대"
 }

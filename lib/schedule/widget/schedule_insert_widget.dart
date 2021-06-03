@@ -1,15 +1,20 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
 
 class ScheduleInsertWidget {
   final BuildContext context;
@@ -23,6 +28,8 @@ class ScheduleInsertWidget {
   final ValueNotifier<DateTime> startDateTime;
   final ValueNotifier<DateTime> endDateTime;
   final ValueNotifier<bool> isAllDay;
+  final List<TeamModel> teamList;
+  final List<CompanyUserModel> employeeList;
 
   DateFormat _format = DateFormat();
 
@@ -36,6 +43,9 @@ class ScheduleInsertWidget {
     required this.startDateTime,
     required this.endDateTime,
     required this.isAllDay,
+    required this.teamList,
+    required this.employeeList,
+
   });
 
   scheduleNavigation() {
@@ -283,11 +293,100 @@ class ScheduleInsertWidget {
               height: 24.0.h,
             ),
           ),
-          Container(
-            child: Text("gdgd")
+          GestureDetector(
+            child: Container(
+              child: Text("gdgd")
+            ),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleColleagueView(employeeList: employeeList, teamList: teamList,)))
           ),
         ],
       ),
     );
   }
 }
+/*
+Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot, User user, isChk) {
+  return CustomScrollView(
+    slivers: [
+      SliverList(
+        delegate: SliverChildBuilderDelegate(
+                (context, index) => _buildListItem(context, snapshot[index], user, isChk),
+            childCount: snapshot.length),
+      ),
+    ],
+  );
+}
+
+Widget _buildListItem(BuildContext context, DocumentSnapshot data, UserModel user, isChk) {
+  final companyUser = CompanyUser.fromSnapshow(data);
+  if(companyUser.mail != user.email) {
+    return Container(
+      padding: cardPadding,
+      height: 5.0.h,
+      child: _buildUserList(context, companyUser, user.companyCode, isChk),
+    );
+  } else {
+    return Container();
+  }
+}
+
+Map<dynamic,dynamic> chkUser = Map();
+
+
+Widget _buildUserList(BuildContext context, CompanyUser user, String companyCode, isChk) {
+  isChk = chkUser.containsKey(user.mail);
+  return StatefulBuilder(
+    builder: (context, setState) {
+      return InkWell(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+              value: isChk,
+              onChanged: (val){
+                setState((){
+                  isChk = val;
+                  if(isChk) {
+                    chkUser[user.mail] = user.name;
+                  } else {
+                    chkUser.remove(user.mail);
+                  }
+                });
+              },
+            ),
+            CircleAvatar(
+              backgroundColor: whiteColor,
+              radius: SizerUtil.deviceType == DeviceType.Tablet ? 4.5.w : 6.0.w,
+              backgroundImage: NetworkImage(user.profilePhoto),
+            ),
+            Text(
+              user.team,
+              style: defaultRegularStyleGray,
+            ),
+            cardSpace,
+            Text(
+              user.name,
+              style: defaultRegularStyle,
+            ),
+            cardSpace,
+            Text(
+              user.position,
+              style: defaultRegularStyleGray,
+            ),
+          ],
+        ),
+        onTap: () {
+          setState((){
+            isChk = !isChk;
+            if(isChk) {
+              chkUser[user.mail] = user.name;
+            } else {
+              chkUser.remove(user.mail);
+            }
+          });
+        },
+      );
+    },
+  );
+}*/

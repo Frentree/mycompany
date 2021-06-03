@@ -20,6 +20,7 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_them
 import 'package:mycompany/schedule/widget/schedule_calender_widget.dart';
 import 'package:mycompany/schedule/widget/schedule_circular_menu.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ScheduleView extends StatefulWidget {
   @override
@@ -418,7 +419,6 @@ Widget _buildColleague({
   required bool isTeamAndEmployeeChk,
   List<CompanyUserModel>? user
 }) {
-
   return Row(
     /*mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,*/
