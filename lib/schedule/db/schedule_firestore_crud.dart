@@ -8,8 +8,12 @@ class ScheduleFirebaseCurd {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
 
   Future<QuerySnapshot> getSchedules(String? companyCode) async {
-    print(mailChkList);
-    return await _store.collection("company").doc(companyCode).collection("work").where("createUid", whereIn: mailChkList).get();
+    List<String> mailList = [];
+    for(var data in mailChkList){
+      mailList.add(data.mail);
+    }
+
+    return await _store.collection("company").doc(companyCode).collection("work").where("createUid", whereIn: mailList).get();
   }
 
   Future<QuerySnapshot> getCompanyUser(String? companyCode) async {

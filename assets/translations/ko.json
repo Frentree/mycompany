@@ -14,5 +14,25 @@
   "error_incorrect_login_information": "가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.",
   "error_too_many_requests": "요청이 너무 많습니다. 잠시후 다시 시도해 주세요.",
   "error_undefined": "알 수 없는 오류가 발생 했습니다.",
-  "titles": "제목"
+  "titles": "제목",
+
+
+  "shedule_language" : "스케줄 관련 언어",
+  "deselect" : "선택 해제",
+  "select_all" : "전체 선택",
+  "department" : "부서",
+  "employee" : "직원",
+  "am" : "오전",
+  "pm" : "오후",
+  "all_day" : "종일",
+  "internal_work" : "내근",
+  "outside_work" : "외근",
+  "home_job" : "재택",
+  "going_out" : "외출",
+  "vacation" : "휴가",
+  "annual" : "연차",
+  "other" : "기타",
+  "registering_a_schedule" : "일정등록",
+  "start_time" : "시작시간",
+  "end_time" : "종료시간"
 }

@@ -14,5 +14,24 @@
   "error_incorrect_login_information": "The ID is not registered, or the password is incorrect.",
   "error_too_many_requests": "Too many requests. Try again later.",
   "error_undefined": "An undefined error happened.",
-  "titles": "제목"
+  "titles": "title",
+
+  "shedule_language" : "스케줄 관련 언어",
+  "deselect" : "deselect",
+  "select_all" : "Select All",
+  "department" : "Department",
+  "employee" : "Employee",
+  "am" : "AM",
+  "pm" : "PM",
+  "all_day" : "All Day",
+  "internal_work" : "Internal Work",
+  "outside_work" : "Outside Work",
+  "home_job" : "Home Job",
+  "going_out" : "Going Out",
+  "vacation" : "Vacation",
+  "annual" : "Annual",
+  "other" : "Other",
+  "registering_a_schedule" : "Registering a Schedule",
+  "start_time" : "Start Time",
+  "end_time" : "End Time"
 }

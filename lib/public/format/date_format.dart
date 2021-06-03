@@ -79,10 +79,19 @@ class DateFormat {
 
   }
 
-  String calendarDetailTime({required DateTime date}){
+
+  // ex) 09 : 05 AM
+  String getTime({required DateTime date}){
     String dateText;
 
-    dateText = twoDigitsFormat(date.hour).toString() + " : " + twoDigitsFormat(date.month).toString() + " " + amAndPm(date);
+    dateText = twoDigitsFormat(date.hour).toString() + " : " + twoDigitsFormat(date.minute).toString() + " " + amAndPm(date);
     return dateText;
   }
+
+  // ex) 2020.10.15(수)
+  String getDate({required DateTime date}) {
+
+    return date.year.toString() + "." +  twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + cangeWeekDay(date: date) +")";
+  }
+
 }
