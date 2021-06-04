@@ -30,6 +30,8 @@ class ScheduleInsertWidget {
   final ValueNotifier<bool> isAllDay;
   final List<TeamModel> teamList;
   final List<CompanyUserModel> employeeList;
+  final List<CompanyUserModel> workColleagueChkList;
+  final List<String> workTeamChkList;
 
   DateFormat _format = DateFormat();
 
@@ -45,6 +47,8 @@ class ScheduleInsertWidget {
     required this.isAllDay,
     required this.teamList,
     required this.employeeList,
+    required this.workColleagueChkList,
+    required this.workTeamChkList,
 
   });
 
@@ -295,9 +299,25 @@ class ScheduleInsertWidget {
           ),
           GestureDetector(
             child: Container(
-              child: Text("gdgd")
+              width: double.infinity,
+              child: GridView.count(
+                crossAxisCount: 4,
+                children: workColleagueChkList.map((user) =>
+                  Container(
+                    width: 57.0.w,
+                    height: 20.0.h,
+                    child: Text(user.name),
+                  )
+                ).toList(),
+              )
             ),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleColleagueView(employeeList: employeeList, teamList: teamList,)))
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                ScheduleColleagueView(
+                  employeeList: employeeList,
+                  teamList: teamList,
+                  workColleagueChkList: workColleagueChkList,
+                  workTeamChkList: workTeamChkList,
+                )))
           ),
         ],
       ),

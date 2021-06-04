@@ -25,6 +25,9 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   List<TeamModel> teamList = <TeamModel>[];
   List<CompanyUserModel> employeeList = <CompanyUserModel>[];
 
+  List<CompanyUserModel> workColleagueChkList = [];
+  List<String> workTeamChkList = [];
+
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");
@@ -173,6 +176,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                               return Padding(
                                   padding: EdgeInsets.all(7.0),
                                   child: Container(
+                                    width: 58.0.w,
+                                    height: 37.0.h,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(Radius.circular(17.0.r)),
                                       boxShadow: <BoxShadow>[
@@ -234,7 +239,9 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                               startDateTime: _startDateTime,
                               endDateTime: _endDateTime,
                               employeeList: employeeList,
-                              teamList: teamList
+                              teamList: teamList,
+                              workColleagueChkList: workColleagueChkList,
+                              workTeamChkList: workTeamChkList,
                             ).scheduleNavigation(),
                           ),
                         ),

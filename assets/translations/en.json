@@ -34,5 +34,10 @@
   "registering_a_schedule" : "Registering a Schedule",
   "start_time" : "Start Time",
   "end_time" : "End Time",
-  "Invite_colleague" : "Invite colleague"
+  "Invite_colleague" : "Invite colleague",
+  "other_team" : "other team",
+  "cencel" : "Cencel",
+  "invite" : "Invite",
+  "deselect" : "deselect",
+  "team_selection" : "team selection"
 }

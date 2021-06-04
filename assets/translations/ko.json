@@ -35,5 +35,10 @@
   "registering_a_schedule" : "일정등록",
   "start_time" : "시작시간",
   "end_time" : "종료시간",
-  "Invite_colleague" : "동료초대"
+  "Invite_colleague" : "동료초대",
+  "other_team" : "기타팀",
+  "cencel" : "취소",
+  "invite" : "초대하기",
+  "deselect" : "선택 해제",
+  "team_selection" : "팀선택"
 }
