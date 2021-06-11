@@ -42,12 +42,12 @@ class EmployeeModel {
   Timestamp? enteredDate;
   Timestamp? modifiedDate;
   String? profile;
-  int? teamNum;
   String? team;
-  int? positionNum;
+  int? teamNumber;
   String? position;
-  List<int>? authority;
-  List<String> userSearch;
+  int? positionNumber;
+  List<dynamic>? authority;
+  List<dynamic>? userSearch;
 
   EmployeeModel({
     this.tokenId,
@@ -61,12 +61,12 @@ class EmployeeModel {
     this.enteredDate,
     this.modifiedDate,
     this.profile,
-    this.teamNum,
+    this.teamNumber,
     this.team,
-    this.positionNum,
+    this.positionNumber,
     this.position,
     this.authority = const <int>[1, 0, 0, 0, 0],
-    required this.userSearch,
+    this.userSearch,
   });
 
   EmployeeModel.fromMap({required Map mapData})
@@ -81,10 +81,10 @@ class EmployeeModel {
         enteredDate = mapData["enteredDate"] ?? Timestamp.now(),
         modifiedDate = mapData["modifiedDate"] ?? Timestamp.now(),
         profile = mapData["profile"] ?? "",
-        teamNum = mapData["teamNum"] ?? 999,
         team = mapData["team"] ?? "",
-        positionNum = mapData["positionNum"] ?? 999,
+        teamNumber = mapData["teamNum"] ?? 999,
         position = mapData["position"] ?? "",
+        positionNumber = mapData["positionNum"] ?? 999,
         authority = mapData["authority"] ?? [1, 0, 0, 0, 0],
         userSearch = mapData["userSearch"] ?? [];
 
@@ -101,12 +101,12 @@ class EmployeeModel {
       "enteredDate": enteredDate,
       "modifiedDate": modifiedDate,
       "profile": profile ?? "",
-      "teamNum" : teamNum ?? 999,
       "team": team ?? "",
-      "positionNum" : positionNum ?? 999,
+      "teamNumber" : teamNumber ?? 999,
       "position": position ?? "",
+      "positionNumber" : positionNumber ?? 999,
       "authority": authority,
-      "userSearch": userSearch,
+      "userSearch": name.split(""),
     };
   }
 }

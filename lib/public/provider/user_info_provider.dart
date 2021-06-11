@@ -1,16 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/word/database_name.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserInfoProvider with ChangeNotifier {
-  DateFormat _dateFormat = DateFormat();
+  DateFormatCustom _dateFormatCustom = DateFormatCustom();
   LoginFirestoreRepository _loginFirestoreRepository = LoginFirestoreRepository();
   UserModel? _userModel;
 
@@ -27,9 +24,9 @@ class UserInfoProvider with ChangeNotifier {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     dynamic encodeData = userModel.toJson();
 
-    encodeData['birthday'] = _dateFormat.changeTimeStampToDateTime(timestamp: encodeData['birthday']).toIso8601String();
-    encodeData['createDate'] = _dateFormat.changeTimeStampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
-    encodeData['modifiedDate'] = _dateFormat.changeTimeStampToDateTime(timestamp: encodeData['modifiedDate']).toIso8601String();
+    encodeData['birthday'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['birthday']).toIso8601String();
+    encodeData['createDate'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
+    encodeData['modifiedDate'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['modifiedDate']).toIso8601String();
 
     _sharedPreferences.setString(USER, jsonEncode(encodeData));
     setUserData(userModel: userModel);
@@ -40,9 +37,9 @@ class UserInfoProvider with ChangeNotifier {
     if(_sharedPreferences.getString(USER) != null){
       dynamic decodeData = jsonDecode(_sharedPreferences.getString(USER)!);
 
-      decodeData['birthday'] = _dateFormat.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['birthday']));
-      decodeData['createDate'] = _dateFormat.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['createDate']));
-      decodeData['modifiedDate'] = _dateFormat.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['modifiedDate']));
+      decodeData['birthday'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['birthday']));
+      decodeData['createDate'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['createDate']));
+      decodeData['modifiedDate'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['modifiedDate']));
 
       _userModel = UserModel.fromMap(mapData: decodeData);
 

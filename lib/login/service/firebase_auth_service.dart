@@ -22,21 +22,22 @@ class FirebaseAuthService {
     String _returnMessage = "";
 
     switch(_errorCode) {
-      case 'ERROR_EMAIL_ALREADY_IN_USE' :
-        _returnMessage = 'error_email_already_in_use'.tr();
+      case 'email-already-in-use' :
+        _returnMessage = 'errorEmailAlreadyInUse'.tr();
         break;
 
-      case 'ERROR_INVALID_EMAIL' :
-      case 'ERROR_WRONG_PASSWORD' :
-        _returnMessage = 'error_incorrect_login_information'.tr();
+      case 'user-not-found' :
+      case 'wrong-password' :
+      case 'invalid-email':
+        _returnMessage = 'errorIncorrectLoginInformation'.tr();
         break;
 
-      case 'ERROR_TOO_MANY_REQUESTS' :
-        _returnMessage = 'error_too_many_requests'.tr();
+      case 'too-many-requests' :
+        _returnMessage = 'errorTooManyRequests'.tr();
         break;
 
       default :
-        _returnMessage = 'error_undefined'.tr();
+        _returnMessage = 'errorUndefined'.tr();
         break;
     }
 
@@ -48,6 +49,26 @@ class FirebaseAuthService {
       dynamic _result = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
 
       if(_result != null) {
+        return true;
+      }
+
+      else {
+        return false;
+      }
+    } on FirebaseAuthException catch (error) {
+      print(error.code);
+      setFirebaseAuthErrorCode(errorCode: error.code);
+
+      return false;
+    }
+  }
+
+  Future<bool> signUpWithEmailAndPassword({required String email, required String password}) async {
+    try {
+      UserCredential _newUserCredential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+
+      if(_newUserCredential.user != null) {
+        _newUserCredential.user!.updateProfile();
         return true;
       }
 

@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/login/function/login_function_repository.dart';
-import 'package:mycompany/login/function/sign_in_function.dart';
-import 'package:mycompany/login/style/loing_style_repository.dart';
-import 'package:mycompany/login/widget/login_widget_repository.dart';
+import 'package:mycompany/login/view/sign_up_view.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/login/widget/login_text_form_widget.dart';
+import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:mycompany/public/word/app_version.dart';
-import 'package:mycompany/schedule/view/schedule_view.dart';
 
 class SignInView extends StatefulWidget {
   @override
@@ -17,17 +16,13 @@ class SignInView extends StatefulWidget {
 }
 
 class SignInViewState extends State<SignInView> {
-  LoginStyleRepository _loginStyleRepository = LoginStyleRepository();
-  LoginWidgetRepository _loginWidgetRepository = LoginWidgetRepository();
   LoginFunctionRepository _loginFunctionRepository = LoginFunctionRepository();
 
-  late TextEditingController _passwordController;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _passwordController = TextEditingController();
-  }
+  TextEditingController _emailTextController = TextEditingController();
+  TextEditingController _passwordTextController = TextEditingController();
+
+  ValueNotifier<List<bool>> isFormValid =
+      ValueNotifier<List<bool>>([false, false]);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +34,7 @@ class SignInViewState extends State<SignInView> {
           horizontal: 27.5.w,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               alignment: Alignment.centerRight,
@@ -54,33 +50,28 @@ class SignInViewState extends State<SignInView> {
                       fontSize: 14.0.sp,
                       color: Color(0xff585858),
                     ),
-                  )
-              ),
+                  )),
             ),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(
                 top: 49.0.h,
               ),
-              child: GestureDetector(
+              child: SizedBox(
+                width: 148.5.w,
+                height: 74.53.h,
                 child: SvgPicture.asset(
                   'assets/images/logo_blue.svg',
-                  width: 148.5.w,
-                  height: 74.53.h,
                 ),
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleView()));
-                },
               ),
             ),
             Container(
-              alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
                 top: 60.7.h,
               ),
               child: Container(
                 child: Text(
-                  'sign_in'.tr(),
+                  'signIn'.tr(),
                   style: TextStyle(
                     fontSize: 18.0.sp,
                     fontWeight: FontWeight.w700,
@@ -89,49 +80,50 @@ class SignInViewState extends State<SignInView> {
                 ),
               ),
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(
-                top: 21.0.h,
-              ),
-              child: SizedBox(
-                width: 305.0.w,
-                height: 40.0.h,
-                child: TextFormField(
-                  decoration: _loginStyleRepository.textFormDecoration(hintText: 'email'.tr()),
-                  style: TextStyle(
-                    fontSize: 13.0.sp,
-                    color: textColor,
-                  ),
-                ),
-              ),
+            signInViewTextFormField(
+              topPadding: 21.0.h,
+              textEditingController: _emailTextController,
+              type: "email",
+              valueNotifier: isFormValid,
+              index: 0,
+            ),
+            signInViewTextFormField(
+              topPadding: 12.0.h,
+              textEditingController: _passwordTextController,
+              type: "password",
+              obscureText: true,
+              valueNotifier: isFormValid,
+              index: 1,
+            ),
+            ValueListenableBuilder(
+              valueListenable: isFormValid,
+              builder: (BuildContext context, List<bool> value, Widget? child) {
+                return loginElevatedButton(
+                  topPadding: 20.0.h,
+                  buttonName: 'signIn'.tr(),
+                  buttonAction: value.contains(false) ? null : () {
+                    FocusScope.of(context).unfocus();
+                    _loginFunctionRepository.signInFunction(
+                      context: context,
+                      email: _emailTextController.text,
+                      password: _passwordTextController.text,
+                    );
+                  },
+                );
+              },
+            ),
+            loginOutlinedButton(
+              topPadding: 12.0.h,
+              buttonName: 'signUp'.tr(),
+              buttonAction: () {
+                _passwordTextController.clear();
+                pageMove(
+                  context: context,
+                  pageName: SignUpView(),
+                );
+              },
             ),
             Container(
-              alignment: Alignment.centerLeft,
-              width: 1.0.sw,
-              padding: EdgeInsets.only(
-                top: 12.0.h,
-              ),
-              child: SizedBox(
-                width: 305.0.w,
-                height: 40.0.h,
-                child: TextFormField(
-                  controller: _passwordController,
-                  decoration: _loginStyleRepository.textFormDecoration(
-                    hintText: 'password'.tr(),
-                    suffixIcon: _loginWidgetRepository.textFormClearButton(textEditingController: _passwordController),
-                  ),
-                  style: TextStyle(
-                    fontSize: 13.0.sp,
-                    color: textColor,
-                  ),
-                ),
-              ),
-            ),
-            _loginWidgetRepository.elevatedButton(topPadding: 20.0.h, buttonName: 'sign_in'.tr(), buttonAction: () => _loginFunctionRepository.signInFunction(context: context, email: "", password: "")),
-            _loginWidgetRepository.outlinedButton(topPadding: 12.0.h, buttonName: 'sign_up'.tr(), /*buttonAction: () => SignInFunction().page(context)*/),
-            Container(
-              alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
                 top: 20.0.h,
               ),
@@ -151,7 +143,7 @@ class SignInViewState extends State<SignInView> {
                           width: 8.0.w,
                         ),
                         Text(
-                          'forgot_password'.tr(),
+                          'forgotPassword'.tr(),
                           style: TextStyle(
                             fontSize: 13.0.sp,
                             color: hintTextColor,
@@ -163,16 +155,16 @@ class SignInViewState extends State<SignInView> {
                   SizedBox(
                     height: 19.0.h,
                     child: TextButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       child: Text(
-                        'find_password'.tr(),
+                        'findPassword'.tr(),
                       ),
                       style: TextButton.styleFrom(
-                          textStyle: TextStyle(
-                            color: titleTextColor,
-                            fontSize: 13.0.sp,
-                          ),
-                          padding: EdgeInsets.all(0.0)
+                        textStyle: TextStyle(
+                          color: titleTextColor,
+                          fontSize: 13.0.sp,
+                        ),
+                        padding: EdgeInsets.all(0.0),
                       ),
                     ),
                   ),

@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 
-class PublicFunctionReprository {
+
+class PublicFunctionRepository {
   PublicFunction _function = PublicFunction();
 
   void mainNavigator({required BuildContext context,required Widget navigator, required isMove}) =>
