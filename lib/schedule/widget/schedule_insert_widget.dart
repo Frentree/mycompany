@@ -14,62 +14,136 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/view/schedule_approval_view.dart';
 import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
+import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
+import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
-class ScheduleInsertWidget {
-  final BuildContext context;
+class ScheduleInsertWidget extends StatefulWidget {
   //final DateTime timeZone;
-
+  Key? key;
   final String workName;
   final TextEditingController titleController;
   final TextEditingController noteController;
   final TextEditingController locationController;
-  final List<String> colleagueList;
   final ValueNotifier<DateTime> startDateTime;
   final ValueNotifier<DateTime> endDateTime;
   final ValueNotifier<bool> isAllDay;
+  final ValueNotifier<bool> isHalfway;
   final List<TeamModel> teamList;
   final List<CompanyUserModel> employeeList;
   final List<CompanyUserModel> workColleagueChkList;
   final List<String> workTeamChkList;
-
-  DateFormat _format = DateFormat();
+  final ValueNotifier<CompanyUserModel> approvalUser;
 
   ScheduleInsertWidget({
-    required this.context,
     required this.workName,
     required this.titleController,
     required this.noteController,
     required this.locationController,
-    required this.colleagueList,
     required this.startDateTime,
     required this.endDateTime,
     required this.isAllDay,
+    required this.isHalfway,
     required this.teamList,
     required this.employeeList,
     required this.workColleagueChkList,
     required this.workTeamChkList,
-
+    required this.approvalUser,
   });
 
+
+  @override
+  _ScheduleInsertWidgetState createState() => _ScheduleInsertWidgetState();
+}
+
+class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
+  DateFormat _format = DateFormat();
+
   scheduleNavigation() {
-    switch (this.workName) {
+    switch (widget.workName) {
       case "내근":
-        break;
+        return setInWork(context);
       case "외근":
-        break;
+        return setOutWork(context);
       case "미팅":
         return setMeeting(context);
-        break;
       case "재택":
-        break;
+        return setHomeWork(context);
       case "외출":
         break;
-      case "연차":
-        break;
+      case "연차" : case "Annual":
+        return setAnnual(context);
       case "기타":
-        break;
+        return setOhter(context);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return scheduleNavigation();
+  }
+
+  Widget setInWork(BuildContext context) {
+    widget.locationController.text = "";
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getTitleWidget(),
+          getDateTime(),
+          getNote(),
+          getColleague()
+        ],
+      ),
+    );
+  }
+
+  Widget setOutWork(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getTitleWidget(),
+          getDateTime(),
+          getLocation(),
+          getNote(),
+          getColleague(),
+          getApproval()
+        ],
+      ),
+    );
+  }
+
+  Widget setHomeWork(BuildContext context) {
+    widget.workColleagueChkList.clear();
+    widget.locationController.text = "";
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getTitleWidget(),
+          getDateTime(),
+          getNote(),
+          getApproval()
+        ],
+      ),
+    );
+  }
+
+  Widget setAnnual(BuildContext context) {
+    widget.workColleagueChkList.clear();
+    widget.locationController.text = "";
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getAnnual(),
+          getNote(),
+          getApproval()
+        ],
+      ),
+    );
   }
 
   Widget setMeeting(BuildContext context) {
@@ -80,7 +154,24 @@ class ScheduleInsertWidget {
           getTitleWidget(),
           getDateTime(),
           getNote(),
+          getColleague()
+        ],
+      ),
+    );
+  }
+
+  Widget setOhter(BuildContext context) {
+    widget.locationController.text = "";
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getTitleWidget(),
+          getDateTime(),
+          getLocation(),
+          getNote(),
           getColleague(),
+          getApproval()
         ],
       ),
     );
@@ -91,18 +182,18 @@ class ScheduleInsertWidget {
     return Column(
       children: [
         TextFormField(
-          controller: titleController,
-          decoration: InputDecoration(
-            hintText: "제목을 입력하세요",
-            hintStyle: getNotoSantRegular(
-              fontSize: 18.0,
-              color: hintTextColor,
+            controller: widget.titleController,
+            decoration: InputDecoration(
+              hintText: "제목을 입력하세요",
+              hintStyle: getNotoSantRegular(
+                fontSize: 18.0,
+                color: hintTextColor,
+              ),
             ),
-          ),
-          style: getNotoSantRegular(
-              fontSize: 18.0,
-              color: textColor
-          )
+            style: getNotoSantRegular(
+                fontSize: 18.0,
+                color: textColor
+            )
         ),
         SizedBox(
           height: 38.0.h,
@@ -128,7 +219,7 @@ class ScheduleInsertWidget {
             ),
             InkWell(
                 child: ValueListenableBuilder(
-                  valueListenable: startDateTime,
+                  valueListenable: widget.startDateTime,
                   child: null,
                   builder: (context, DateTime value, child) {
                     return Column(
@@ -153,8 +244,8 @@ class ScheduleInsertWidget {
                   },
                 ),
                 onTap: () async {
-                  startDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: startDateTime.value);
-                  isAllDay.value = false;
+                  widget.startDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: widget.startDateTime.value);
+                  widget.isAllDay.value = false;
                 }),
             Container(
               padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 20.2.w),
@@ -166,21 +257,21 @@ class ScheduleInsertWidget {
             ),
             InkWell(
                 child: ValueListenableBuilder(
-                  valueListenable: endDateTime,
+                  valueListenable: widget.endDateTime,
                   child: null,
                   builder: (context, DateTime value, child) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _format.getDate(date: endDateTime.value),
+                          _format.getDate(date: widget.endDateTime.value),
                           style: getRobotoRegular(
                             fontSize: 13.0,
                             color: textColor,
                           ),
                         ),
                         Text(
-                          _format.getTime(date: endDateTime.value),
+                          _format.getTime(date: widget.endDateTime.value),
                           style: getRobotoBold(
                             fontSize: 21.0,
                             color: textColor,
@@ -191,8 +282,8 @@ class ScheduleInsertWidget {
                   },
                 ),
                 onTap: () async {
-                  endDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: endDateTime.value);
-                  isAllDay.value = false;
+                  widget.endDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: widget.endDateTime.value);
+                  widget.isAllDay.value = false;
                 }),
           ],
         ),
@@ -200,7 +291,7 @@ class ScheduleInsertWidget {
           height: 10.0.h,
         ),
         ValueListenableBuilder(
-          valueListenable: isAllDay,
+          valueListenable: widget.isAllDay,
           builder: (context, bool value, child) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -209,7 +300,7 @@ class ScheduleInsertWidget {
                   "all_day".tr(),
                   style: getNotoSantRegular(
                       fontSize: 14.0,
-                      color: isAllDay.value ? workInsertColor : hintTextColor
+                      color: widget.isAllDay.value ? workInsertColor : hintTextColor
                   ),
                 ),
                 SizedBox(
@@ -222,10 +313,10 @@ class ScheduleInsertWidget {
                   padding: 0,
                   value: value,
                   onToggle: (values){
-                    isAllDay.value = values;
+                    widget.isAllDay.value = values;
                     if(values){
-                      startDateTime.value = DateTime(startDateTime.value.year, startDateTime.value.month, startDateTime.value.day, 9, 00, 00);
-                      endDateTime.value = DateTime(startDateTime.value.year, startDateTime.value.month, startDateTime.value.day, 18, 00, 00);
+                      widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9, 00, 00);
+                      widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18, 00, 00);
                     }
                   },
                 ),
@@ -240,14 +331,195 @@ class ScheduleInsertWidget {
     );
   }
 
-  Widget getNote() {
+  // 시간
+  Widget getAnnual() {
     return Column(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 10.0.h, right: 8.0.w),
+              padding: EdgeInsets.only(top: 5.0.h, right: 12.0.w),
+              child: SvgPicture.asset(
+                'assets/icons/time.svg',
+                width: 18.0.w,
+                height: 18.0.h,
+              ),
+            ),
+            InkWell(
+                child: ValueListenableBuilder(
+                  valueListenable: widget.startDateTime,
+                  child: null,
+                  builder: (context, DateTime value, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _format.getDate(date: value),
+                          style: getRobotoRegular(
+                            fontSize: 13.0,
+                            color: textColor,
+                          ),
+                        ),
+                        Text(
+                          _format.getTime(date: value),
+                          style: getRobotoBold(
+                            fontSize: 21.0,
+                            color: textColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                onTap: () async {
+                  widget.startDateTime.value = await showDatesPicker(context: context, date: widget.startDateTime.value);
+                }),
+            Container(
+              padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 20.2.w),
+              child: SvgPicture.asset(
+                'assets/icons/arrow_right.svg',
+                width: 11.55.w,
+                height: 21.83.h,
+              ),
+            ),
+            InkWell(
+                child: ValueListenableBuilder(
+                  valueListenable: widget.endDateTime,
+                  child: null,
+                  builder: (context, DateTime value, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _format.getDate(date: widget.endDateTime.value),
+                          style: getRobotoRegular(
+                            fontSize: 13.0,
+                            color: textColor,
+                          ),
+                        ),
+                        Text(
+                          _format.getTime(date: widget.endDateTime.value),
+                          style: getRobotoBold(
+                            fontSize: 21.0,
+                            color: textColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                onTap: () async {
+                  widget.endDateTime.value = await showDatesPicker(context: context, date: widget.endDateTime.value);
+                }),
+          ],
+        ),
+        SizedBox(
+          height: 10.0.h,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ValueListenableBuilder(
+              valueListenable: widget.isAllDay,
+              builder: (context, bool value, child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "halfway".tr(),
+                      style: getNotoSantRegular(
+                          fontSize: 14.0,
+                          color: widget.isAllDay.value ? workInsertColor : hintTextColor
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.0.w,
+                    ),
+                    FlutterSwitch(
+                      width: 30.0.w,
+                      height: 15.0.h,
+                      toggleSize: 16.0.w,
+                      padding: 0,
+                      value: value,
+                      onToggle: (values){
+                        widget.isAllDay.value = values;
+
+                        if(!values){
+                          widget.isHalfway.value = false;
+
+                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
+                        } else {
+                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                  ],
+                );
+              },
+            ),
+            ValueListenableBuilder(
+              valueListenable: widget.isHalfway,
+              builder: (context, bool value, child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "pm".tr(),
+                      style: getNotoSantRegular(
+                          fontSize: 14.0,
+                          color: value ? workInsertColor : hintTextColor
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.0.w,
+                    ),
+                    FlutterSwitch(
+                      width: 30.0.w,
+                      height: 15.0.h,
+                      toggleSize: 16.0.w,
+                      padding: 0,
+                      value: value,
+                      onToggle: (values){
+                        widget.isHalfway.value = values;
+
+                        if(!values){
+                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
+                        } else {
+                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
+                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+
+
+        SizedBox(
+          height: 11.0.h,
+        )
+      ],
+    );
+  }
+
+  Widget getNote() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.only(right: 8.0.w),
               child: SvgPicture.asset(
                 'assets/icons/note.svg',
                 width: 24.0.w,
@@ -256,7 +528,8 @@ class ScheduleInsertWidget {
             ),
             Expanded(
               child: TextFormField(
-                  controller: noteController,
+                  controller: widget.noteController,
+                  autofocus: false,
                   minLines: 1,
                   maxLines: 4,
                   keyboardType: TextInputType.multiline,
@@ -284,129 +557,221 @@ class ScheduleInsertWidget {
   }
 
   Widget getColleague() {
-    return Container(
-      width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 5.0.h, right: 8.0.w),
-            child: SvgPicture.asset(
-              'assets/icons/colleague.svg',
-              width: 24.0.w,
-              height: 24.0.h,
-            ),
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.only(right: 8.0.w),
+                child: SvgPicture.asset(
+                  'assets/icons/colleague.svg',
+                  width: 24.0.w,
+                  height: 24.0.h,
+                ),
+              ),
+              Expanded(
+                child: GestureDetector(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Container(
+                              width: double.infinity,
+                              height: 48.0.h,
+                              child: widget.workColleagueChkList.length == 0 ? Text("동료 초대",style: getNotoSantRegular(
+                                fontSize: 14.0,
+                                color: hintTextColor,
+                              ),) : GridView(
+                                scrollDirection: Axis.horizontal,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 5.0,
+                                    mainAxisExtent: 80.0.w
+                                ),
+                                children: widget.workColleagueChkList.map((user) =>
+                                    Row(
+                                      children: [
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              getProfileImage(ImageUri: user.profilePhoto,size: 14),
+                                              SizedBox(width: 5.0.w,),
+                                              Text(
+                                                user.name,
+                                                style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                ).toList(),
+                              )
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 5.0.h),
+                          child: SvgPicture.asset(
+                            'assets/icons/arrow_right.svg',
+                            width: 6.59.w,
+                            height: 10.66.h,
+                            color: calendarLineColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () async {
+                      final value = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          ScheduleColleagueView(
+                            employeeList: widget.employeeList,
+                            teamList: widget.teamList,
+                            workColleagueChkList: widget.workColleagueChkList,
+                            workTeamChkList: widget.workTeamChkList,
+                          ))
+                      );
+                      if(value){
+                        setState(() { });
+                      }
+                    }
+                ),
+              ),
+            ],
           ),
-          GestureDetector(
-            child: Container(
-              width: double.infinity,
-              child: GridView.count(
-                crossAxisCount: 4,
-                children: workColleagueChkList.map((user) =>
-                  Container(
-                    width: 57.0.w,
-                    height: 20.0.h,
-                    child: Text(user.name),
-                  )
-                ).toList(),
-              )
-            ),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                ScheduleColleagueView(
-                  employeeList: employeeList,
-                  teamList: teamList,
-                  workColleagueChkList: workColleagueChkList,
-                  workTeamChkList: workTeamChkList,
-                )))
-          ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 31.0.h,
+        )
+      ],
     );
   }
-}
-/*
-Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot, User user, isChk) {
-  return CustomScrollView(
-    slivers: [
-      SliverList(
-        delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildListItem(context, snapshot[index], user, isChk),
-            childCount: snapshot.length),
-      ),
-    ],
-  );
-}
 
-Widget _buildListItem(BuildContext context, DocumentSnapshot data, UserModel user, isChk) {
-  final companyUser = CompanyUser.fromSnapshow(data);
-  if(companyUser.mail != user.email) {
-    return Container(
-      padding: cardPadding,
-      height: 5.0.h,
-      child: _buildUserList(context, companyUser, user.companyCode, isChk),
-    );
-  } else {
-    return Container();
-  }
-}
-
-Map<dynamic,dynamic> chkUser = Map();
-
-
-Widget _buildUserList(BuildContext context, CompanyUser user, String companyCode, isChk) {
-  isChk = chkUser.containsKey(user.mail);
-  return StatefulBuilder(
-    builder: (context, setState) {
-      return InkWell(
-        child: Row(
+  Widget getLocation() {
+    return Column(
+      children: [
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Checkbox(
-              value: isChk,
-              onChanged: (val){
-                setState((){
-                  isChk = val;
-                  if(isChk) {
-                    chkUser[user.mail] = user.name;
-                  } else {
-                    chkUser.remove(user.mail);
-                  }
-                });
-              },
+            Container(
+              padding: EdgeInsets.only(top: 10.0.h, right: 8.0.w),
+              child: SvgPicture.asset(
+                'assets/icons/location.svg',
+                width: 22.0.w,
+                height: 22.0.h,
+              ),
             ),
-            CircleAvatar(
-              backgroundColor: whiteColor,
-              radius: SizerUtil.deviceType == DeviceType.Tablet ? 4.5.w : 6.0.w,
-              backgroundImage: NetworkImage(user.profilePhoto),
-            ),
-            Text(
-              user.team,
-              style: defaultRegularStyleGray,
-            ),
-            cardSpace,
-            Text(
-              user.name,
-              style: defaultRegularStyle,
-            ),
-            cardSpace,
-            Text(
-              user.position,
-              style: defaultRegularStyleGray,
+            Expanded(
+              child: TextFormField(
+                  controller: widget.locationController,
+                  minLines: 1,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "위치",
+                    hintStyle: getNotoSantRegular(
+                      fontSize: 14.0,
+                      color: hintTextColor,
+                    ),
+                  ),
+                  style: getNotoSantRegular(
+                      fontSize: 14.0,
+                      color: textColor
+                  )
+              ),
             ),
           ],
         ),
-        onTap: () {
-          setState((){
-            isChk = !isChk;
-            if(isChk) {
-              chkUser[user.mail] = user.name;
-            } else {
-              chkUser.remove(user.mail);
-            }
-          });
-        },
-      );
-    },
-  );
-}*/
+        SizedBox(
+          height: 31.0.h,
+        )
+      ],
+    );
+  }
+
+  Widget getApproval() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.only(right: 8.0.w),
+              child: SvgPicture.asset(
+                'assets/icons/icon_approval.svg',
+                width: 19.0.w,
+                height: 19.0.h,
+                color: workInsertColor,
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                            width: double.infinity,
+                            child: widget.approvalUser.value.mail == "" ?
+                            Text(
+                              "결재자 선택",
+                              style: getNotoSantRegular(
+                                fontSize: 14.0,
+                                color: hintTextColor,
+                              ),
+                            ) :
+                            Row(
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      getProfileImage(ImageUri: widget.approvalUser.value.profilePhoto,size: 14),
+                                      SizedBox(width: 5.0.w,),
+                                      Text(
+                                        widget.approvalUser.value.name.toString(),
+                                        style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 5.0.h),
+                        child: SvgPicture.asset(
+                          'assets/icons/arrow_right.svg',
+                          width: 6.59.w,
+                          height: 10.66.h,
+                          color: calendarLineColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () async {
+                    var value = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        ScheduleApprovalView(
+                          employeeList: widget.employeeList,
+                          teamList: widget.teamList,
+                          approvalUser: widget.approvalUser,
+                        ))
+                    );
+
+                    if(value){
+                      setState(() {});
+                    }
+
+                  }
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 31.0.h,
+        )
+      ],
+    );
+  }
+}

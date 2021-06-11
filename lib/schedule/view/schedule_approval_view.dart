@@ -11,27 +11,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ScheduleColleagueView extends StatefulWidget {
+class ScheduleApprovalView extends StatefulWidget {
 
   Key? key;
   final List<TeamModel> teamList;
   final List<CompanyUserModel> employeeList;
-  final List<CompanyUserModel> workColleagueChkList;
-  final List<String> workTeamChkList;
+  ValueNotifier<CompanyUserModel> approvalUser;
 
-  ScheduleColleagueView({key, required this.teamList, required this.employeeList, required this.workColleagueChkList, required this.workTeamChkList});
+  ScheduleApprovalView({key, required this.teamList, required this.employeeList, required this.approvalUser});
 
   @override
-  _ScheduleColleagueViewState createState() => _ScheduleColleagueViewState();
+  _ScheduleApprovalViewState createState() => _ScheduleApprovalViewState();
 }
 
-class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
+class _ScheduleApprovalViewState extends State<ScheduleApprovalView> {
 
   late List<TeamModel> teamList = widget.teamList;
   late List<CompanyUserModel> employeeList = widget.employeeList;
 
-  late List<CompanyUserModel> workColleague = List.from(widget.workColleagueChkList);
-  late List<String> workTeam = List.from(widget.workTeamChkList);
+  late CompanyUserModel approvalUsers = widget.approvalUser.value;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +76,7 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                         onTap: () => Navigator.pop(context,true),
                       ),
                       Text(
-                          "Invite_colleague".tr(),
+                          "결재자 선택",
                           style: getNotoSantRegular(
                               fontSize: 18.0,
                               color: textColor
@@ -100,8 +98,7 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                         color: workInsertColor,
                       ),
                     ),
-                    onTap: () {
-                    },
+                    onTap: () {},
                   ),*/
                 ],
               ),
@@ -160,7 +157,7 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                             style: getNotoSantMedium(fontSize: 15.0, color: textColor),
                           ),
                         ),
-                        onTap: () => Navigator.pop(context,true),
+                        onTap: () => Navigator.pop(context, true),
                       ),
                     ),
                   ),
@@ -170,24 +167,13 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                       child: InkWell(
                         child: Center(
                           child: Text(
-                            "invite".tr(),
+                            "chose".tr(),
                             style: getNotoSantMedium(fontSize: 15.0, color: whiteColor),
                           ),
                         ),
                         onTap: () {
-                          widget.workColleagueChkList.clear();
-                          widget.workTeamChkList.clear();
-
-                          workColleague.map((data) {
-                            if(!widget.workColleagueChkList.contains(data))
-                              widget.workColleagueChkList.add(data);
-                          }).toList();
-                          workTeam.map((data) {
-                            if(!widget.workTeamChkList.contains(data))
-                              widget.workTeamChkList.add(data);
-                          }).toList();
-
-                          Navigator.pop(context,true);
+                          widget.approvalUser.value = approvalUsers;
+                          Navigator.pop(context, true);
                         },
                       ),
                     ),
@@ -232,59 +218,10 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                     )
                   ],
                 ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      child: Text(workTeam.contains(teamName) ? "deselect".tr() : "team_selection".tr(),
-                        style: getNotoSantMedium(fontSize: 13.0, color: workTeam.contains(teamName) ? workInsertColor : hintTextColor),
-                      ),
-                      onTap: () {
-                        if(!workTeam.contains(teamName)){
-                          workTeam.add(teamName);
-                            list.map((user) {
-                              if(!workColleague.contains(user)) workColleague.add(user);
-                            }).toList();
-                        } else {
-                          workTeam.remove(teamName);
-                          list.map((user) => workColleague.remove(user)).toList();
-                        }
-                        setState(() {
-                        });
-                      },
-                    ),
-                    SizedBox(width: 6.0.w,),
-                    Center(
-                        child: Container(
-                          width: 18.0.w,
-                          height: 18.0.h,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: calendarLineColor.withOpacity(0.5)),
-                            shape: BoxShape.circle,
-                            color: workTeam.contains(teamName) ? workInsertColor : whiteColor,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.check,
-                              size: 16.0.w,
-                              color: whiteColor,
-                            )
-                          ),
-                        )
-                    ),
-                  ],
-                )
               ],
             ),
             onTap: () {
-              if(!workTeam.contains(teamName)){
-                workTeam.add(teamName);
-                list.map((user) {
-                  if(!workColleague.contains(user)) workColleague.add(user);
-                }).toList();
-              } else {
-                workTeam.remove(teamName);
-                list.map((user) => workColleague.remove(user)).toList();
-              }
+
               setState(() {
               });
             },
@@ -360,7 +297,7 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                             decoration: BoxDecoration(
                               border: Border.all(color: calendarLineColor.withOpacity(0.5)),
                               shape: BoxShape.circle,
-                              color: workColleague.contains(list[index]) ? workInsertColor : whiteColor,
+                              color:  approvalUsers == list[index] ? workInsertColor : whiteColor,
                             ),
                             child: Center(
                                 child: Icon(
@@ -375,12 +312,7 @@ class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
                   ),
                 ),
                 onTap: () {
-                  workTeam.remove(teamName);
-                  if(!workColleague.contains(list[index])){
-                    workColleague.add(list[index]);
-                  } else {
-                    workColleague.remove(list[index]);
-                  }
+                  approvalUsers = list[index];
                   setState(() {
                   });
                 },

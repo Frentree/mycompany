@@ -30,6 +30,7 @@
   "going_out" : "Going Out",
   "vacation" : "Vacation",
   "annual" : "Annual",
+  "halfway" : "Halfway",
   "other" : "Other",
   "registering_a_schedule" : "Registering a Schedule",
   "start_time" : "Start Time",
@@ -39,5 +40,6 @@
   "cencel" : "Cencel",
   "invite" : "Invite",
   "deselect" : "deselect",
-  "team_selection" : "team selection"
+  "team_selection" : "team selection",
+  "chose" : "Chose"
 }

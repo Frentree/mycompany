@@ -9,12 +9,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
+import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
-class ScheduleDialogWidget {
   DateFormat _format = DateFormat();
 
   Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
@@ -30,6 +30,9 @@ class ScheduleDialogWidget {
         //print("오후");
       }
     }
+
+    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
 
     showDialog(
       context: context,
@@ -239,8 +242,97 @@ class ScheduleDialogWidget {
     return list;
   }
 
+Future<DateTime> showDatesPicker({required BuildContext context, required DateTime date}) async {
+  DateTime pickDate = date;
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.only(top: 20, bottom: 20),
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 270.0.h,
+            child: Center(
+              child: DatePickerWidget(
+                minDateTime: DateTime.parse('1900-01-01'),
+                maxDateTime: DateTime.parse('3000-12-31'),
+                onMonthChangeStartWithFirstDate: true,
+                dateFormat: 'yyyy년 MM월 dd일',
+                locale: DateTimePickerLocale.ko,
+                initialDateTime: date,
+                onConfirm: (DateTime dateTime, selectedIndex) {
+                  pickDate = DateTime(dateTime.year, dateTime.month, dateTime.day, date.hour, date.minute, 00);
+                },
+                onChange: (dateTime, selectedIndex) {
+                },
+                onCancel: () {
+                },
+              ),
+            )
 
-  Future<DateTime> showDatePicker({required BuildContext context, required DateTime date}) async {
+          /*CupertinoDatePicker(
+              minimumYear: 1900,
+              mode: CupertinoDatePickerMode.time,
+              initialDateTime: date,
+              onDateTimeChanged: (value) {
+
+              },
+            ),*/
+        ),
+      );
+
+    },
+
+  );
+  return pickDate;
+}
+
+Future<DateTime> showTimesPicker({required BuildContext context, required DateTime date}) async {
+  DateTime pickDate = date;
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.only(top: 20, bottom: 20),
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 270.0.h,
+            child: Center(
+              child: DateTimePickerWidget(
+                minDateTime: DateTime.parse('1900-01-01'),
+                dateFormat: 'yyyy년 MM월 dd일 HH시 mm분',
+                locale: DateTimePickerLocale.ko,
+                initDateTime: date,
+
+                onConfirm: (dateTime, selectedIndex) {
+                  pickDate = dateTime;
+                },
+                onChange: (dateTime, selectedIndex) {
+                },
+                onCancel: () {
+                },
+              ),
+            )
+
+          /*CupertinoDatePicker(
+              minimumYear: 1900,
+              mode: CupertinoDatePickerMode.time,
+              initialDateTime: date,
+              onDateTimeChanged: (value) {
+
+              },
+            ),*/
+        ),
+      );
+
+    },
+
+  );
+  return pickDate;
+}
+
+
+  Future<DateTime> showDateTimePicker({required BuildContext context, required DateTime date}) async {
     DateTime pickDate = date;
     await showDialog(
       context: context,
@@ -283,4 +375,3 @@ class ScheduleDialogWidget {
     );
     return pickDate;
   }
-}

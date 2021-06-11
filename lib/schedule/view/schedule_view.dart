@@ -103,8 +103,10 @@ class _ScheduleViewState extends State<ScheduleView> {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");
     List<CompanyUserModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: "0S9YLBX");
 
-    teamList = team;
-    employeeList = employee;
+    setState(() {
+      teamList = team;
+      employeeList = employee;
+    });
   }
 
   @override
@@ -160,7 +162,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                       children: [
                         GestureDetector(
                           child: Text(
-                            _isColleagueChk ? "선택 해제" : "전체 선택",
+                            _isColleagueChk ? "deselect".tr() : "select_all".tr(),
                             style: TextStyle(
                                 color: _isColleagueChk ? checkColor : textColor,
                                 fontSize: 12.sp,
@@ -222,7 +224,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 width: 4.0.w,
                               ),
                               Text(
-                                _isTeamAndEmployeeChk ? "부서" : "직원",
+                                _isTeamAndEmployeeChk ? "department".tr() : "employee".tr(),
                                 style: TextStyle(
                                     color: textColor,
                                     fontSize: 12.sp,
@@ -386,8 +388,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 getDataSource: _getDataSource,
                                 isTeamAndEmployeeChk: _isTeamAndEmployeeChk,
                             )).toList(),
-                          )
-                            : ListView(
+                          ) : ListView(
                           scrollDirection: Axis.horizontal,
                           children: teamList.map((data) => _buildColleague(
                               context: context,

@@ -10,18 +10,18 @@ Widget getProfileImage({String? ImageUri, required double size}) {
     child: Container(
       color: cirecularLineColor,
       width: (size+1).w,
-      height: (size+1).h,
+      height: (size+1).w,
       child: Center(
         child: ClipOval(
           child: Container(
             width: (size).w,
-            height: (size).h,
+            height: (size).w,
             color: whiteColor,
             child: Center(
               child: ClipOval(
                 child: SizedBox(
                   width: size.w,
-                  height: size.h,
+                  height: size.w,
                   child: ImageUri != '' ?
                   FadeInImage.assetNetwork(
                     placeholder: 'assets/images/logo_blue.png',

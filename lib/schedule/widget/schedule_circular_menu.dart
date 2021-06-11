@@ -21,24 +21,23 @@ getClipOverProfile({required BuildContext context, required String ImageUri, Com
               child: Container(
                 color: isChks ? checkColor : cirecularLineColor,
                 width: 50.0.w,
-                height: 50.0.h,
+                height: 50.0.w,
                 child: Center(
                   child: ClipOval(
                     child: Container(
                       color: whiteColor,
                       width: 46.0.w,
-                      height: 46.0.h,
+                      height: 46.0.w,
                       child: Center(
                         child: ClipOval(
                           child: SizedBox(
                             width: 42.0.w,
-                            height: 42.0.h,
+                            height: 42.0.w,
                             child: ImageUri != '' ?
                             FadeInImage.assetNetwork(
                               placeholder: 'assets/images/logo_blue.png',
                               image: ImageUri,
-                              height: 50.0.h,
-
+                              height: 50.0.w,
                             )
                             : SvgPicture.asset(
                               'assets/icons/personal.svg',

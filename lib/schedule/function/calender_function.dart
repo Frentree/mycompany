@@ -64,12 +64,19 @@ class CalenderFunction{
     DateTime? date = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
     if(appointment != null){
-      ScheduleDialogWidget().showScheduleDetail(context: context, data: appointment, date: date!);
+      showScheduleDetail(context: context, data: appointment, date: date!);
     }
   }
 
+  Future<DateTime> dateSet(DateTime date, BuildContext context) async{
+    DateTime pickTime = await showDatesPicker(context: context, date: date);
+    //CalendarElement element = details.targetElement; //  달력 요소
+
+    return pickTime;
+  }
+
   Future<DateTime> dateTimeSet(DateTime date, BuildContext context) async{
-    DateTime pickTime = await ScheduleDialogWidget().showDatePicker(context: context, date: date);
+    DateTime pickTime = await showDateTimePicker(context: context, date: date);
     //CalendarElement element = details.targetElement; //  달력 요소
 
     return pickTime;
@@ -80,7 +87,7 @@ class CalenderFunction{
     DateTime? date = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
     if(appointment != null){
-      ScheduleDialogWidget().showScheduleDetail(context: context, data: appointment, date: date!);
+      showScheduleDetail(context: context, data: appointment, date: date!);
     }
   }
 
@@ -109,5 +116,31 @@ class CalenderFunction{
 
     return empList;
   }
+
+  Future<bool> insertWork(String? companyCode, String workName) async {
+    bool isInsert = false;
+
+    switch (workName) {
+      case "내근":
+        break;
+      case "외근":
+      break;
+      case "미팅":
+      break;
+      case "재택":
+
+      break;
+      case "외출":
+        break;
+      case "연차" : case "Annual":
+
+      break;
+      case "기타":
+
+        break;
+    }
+    return isInsert;
+  }
+
 
 }
