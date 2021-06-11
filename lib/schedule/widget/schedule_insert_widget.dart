@@ -58,7 +58,7 @@ class ScheduleInsertWidget extends StatefulWidget {
 }
 
 class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
-  DateFormat _format = DateFormat();
+  DateFormatCustom _format = DateFormatCustom();
 
   scheduleNavigation() {
     switch (widget.workName) {

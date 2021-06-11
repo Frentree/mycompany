@@ -15,7 +15,7 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widg
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
-  DateFormat _format = DateFormat();
+  DateFormatCustom _format = DateFormatCustom();
 
   Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
     List<Appointment> amAppointment = [];

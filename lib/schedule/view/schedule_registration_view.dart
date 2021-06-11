@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mycompany/login/style/loing_style_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -20,8 +19,7 @@ class ScheduleRegisrationView extends StatefulWidget {
 }
 
 class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
-  LoginStyleRepository _loginStyleRepository = LoginStyleRepository();
-  PublicFunctionReprository _publicFunctionReprository = PublicFunctionReprository();
+  PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
 
   // 전체 팀
   List<TeamModel> teamList = <TeamModel>[];
