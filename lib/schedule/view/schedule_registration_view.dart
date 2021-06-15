@@ -8,6 +8,7 @@ import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
+import 'package:mycompany/schedule/function/calender_function.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/testcompany_model.dart';
@@ -28,9 +29,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   // 선택된 직원
   List<CompanyUserModel> workColleagueChkList = [];
-
-
-  //CompanyUserModel approvalUser = ;
 
   // 선택된 팀
   List<String> workTeamChkList = [];
@@ -63,7 +61,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   // 결재자
   ValueNotifier<CompanyUserModel> approvalUser = ValueNotifier<CompanyUserModel>(CompanyUserModel(mail: "", name: "", companyId: "", joinedDate: Timestamp.now(), userSearch: []));
 
-  List _works = [
+  List workNames = [
     "내근",
     "외근",
     "재택",
@@ -72,7 +70,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     "미팅",
     "기타",
   ];
-  int _chkButton = 0;
+  int workChkCount = 0;
 
   late ScrollController _scrollController;
 
@@ -164,7 +162,27 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             color: whiteColor,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () async {
+                          var result = await CalenderFunction().insertWork(
+                              companyCode: "0S9YLBX",
+                              allDay: _isAllDay.value,
+                              workName: workNames[workChkCount],
+                              title: titleController.text,
+                              content: noteController.text,
+                              startTime: _startDateTime.value,
+                              endTime: _endDateTime.value,
+                              workColleagueChkList: workColleagueChkList,
+                              isAllDay: _isAllDay.value,
+                              location: locationController.text,
+                              approvalUser: approvalUser.value
+                          );
+
+                          if(result){
+                            _publicFunctionReprository.onBackPressed(context: context);
+                          } else {
+
+                          }
+                        }
 
                       ),
                     ],
@@ -184,7 +202,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               controller: _scrollController,
-                              itemCount: _works.length,
+                              itemCount: workNames.length,
                               itemBuilder: (context, index) {
                                 return Padding(
                                     padding: EdgeInsets.all(7.0),
@@ -204,7 +222,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                       child: ElevatedButton(
                                         style: ButtonStyle(
                                             backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                              if (_chkButton != index) {
+                                              if (workChkCount != index) {
                                                 return whiteColor;
                                               } else {
                                                 return workInsertColor;
@@ -220,10 +238,10 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                               0.0,
                                             )),
                                         child: Text(
-                                          _works[index],
+                                          workNames[index],
                                           style: getNotoSantMedium(
                                               fontSize: 13.0,
-                                              color: _chkButton != index ? calendarLineColor : whiteColor
+                                              color: workChkCount != index ? calendarLineColor : whiteColor
                                           )
                                         ),
                                         onPressed: () {
@@ -232,7 +250,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                           _isAllDay.value = false;
                                           _isHalfway.value = false;
 
-                                          if(_works[index] == "annual".tr()){
+                                          if(workNames[index] == "annual".tr()){
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 9, 0, 0);
                                             _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 18, 0, 0);
                                           } else {
@@ -240,7 +258,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                             _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
                                           }
                                           setState(() {
-                                            _chkButton = index;
+                                            workChkCount = index;
                                           });
                                         },
                                       ),
@@ -253,7 +271,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             child: Container(
                               width: 309.0.w,
                               child: ScheduleInsertWidget(
-                                workName: _works[_chkButton],
+                                workName: workNames[workChkCount],
                                 isAllDay: _isAllDay,
                                 isHalfway: _isHalfway,
                                 locationController: locationController,

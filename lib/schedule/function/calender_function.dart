@@ -7,6 +7,7 @@ import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
@@ -117,29 +118,45 @@ class CalenderFunction{
     return empList;
   }
 
-  Future<bool> insertWork(String? companyCode, String workName) async {
-    bool isInsert = false;
 
-    switch (workName) {
-      case "내근":
-        break;
-      case "외근":
-      break;
-      case "미팅":
-      break;
-      case "재택":
+  // 스케줄 입력
+  Future<bool> insertWork({
+    required String companyCode,
+    required bool allDay,
+    required String workName,
+    required String title,
+    required String content,
+    String? location,
+    required DateTime startTime,
+    required DateTime endTime,
+    required List<CompanyUserModel> workColleagueChkList,
+    required bool isAllDay,
+    CompanyUserModel? approvalUser,
+  }) async {
+    // 선택된 동료 리스트
+    List<String>? attendeesList;
 
-      break;
-      case "외출":
-        break;
-      case "연차" : case "Annual":
-
-      break;
-      case "기타":
-
-        break;
+    // 선택된 동료가 있으면
+    if(workColleagueChkList.length != 0){
+      attendeesList = ["bsc2079@naver.com"];
+      workColleagueChkList.map((e) => attendeesList!.add(e.mail.toString())).toList();
     }
-    return isInsert;
+
+
+    WorkModel workModel = WorkModel(
+      allDay: allDay,
+      type: workName,
+      title: title,
+      content: content,
+      location: location,
+      startTime: Timestamp.fromDate(startTime),
+      endTime: Timestamp.fromDate(endTime),
+      attendees: attendeesList,
+      name: "이윤혁",
+      createUid: "bsc2079@naver.com",
+    );
+
+    return await _reository.insertWorkDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser);
   }
 
 
