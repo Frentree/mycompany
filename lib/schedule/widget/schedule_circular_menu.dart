@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
@@ -18,34 +18,29 @@ getClipOverProfile({required BuildContext context, required String ImageUri, Com
         child: Column(
           children: [
             ClipOval(
-              child: SizedBox(
+              child: Container(
+                color: isChks ? checkColor : cirecularLineColor,
                 width: 50.0.w,
-                height: 50.0.h,
-                child: Container(
-                  color: isChks ? checkColor : cirecularLineColor,
-                  child: Center(
-                    child: ClipOval(
-                      child: SizedBox(
-                        width: 46.0.w,
-                        height: 46.0.h,
-                        child: Container(
-                          color: whiteColor,
-                          child: Center(
-                            child: ClipOval(
-                              child: SizedBox(
-                                width: 42.0.w,
-                                height: 42.0.h,
-                                child: ImageUri != '' ?
-                                FadeInImage.assetNetwork(
-                                  placeholder: 'assets/images/logo_blue.png',
-                                  image: ImageUri,
-                                  height: 50.0.h,
-
-                                )
-                                : SvgPicture.asset(
-                                  'assets/icons/personal.svg',
-                                ),
-                              ),
+                height: 50.0.w,
+                child: Center(
+                  child: ClipOval(
+                    child: Container(
+                      color: whiteColor,
+                      width: 46.0.w,
+                      height: 46.0.w,
+                      child: Center(
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 42.0.w,
+                            height: 42.0.w,
+                            child: ImageUri != '' ?
+                            FadeInImage.assetNetwork(
+                              placeholder: 'assets/images/logo_blue.png',
+                              image: ImageUri,
+                              height: 50.0.w,
+                            )
+                            : SvgPicture.asset(
+                              'assets/icons/personal.svg',
                             ),
                           ),
                         ),
@@ -67,13 +62,13 @@ getClipOverProfile({required BuildContext context, required String ImageUri, Com
         onTap: () {
           isChks = !isChks;
           if(isChks){
-            if(!mailChkList.contains(user.mail)){
-              mailChkList.add(user.mail);
+            if(!mailChkList.contains(user)){
+              mailChkList.add(user);
             }
           }else {
-            mailChkList.remove(user.mail);
-            if(teamChkList.contains(user.team)){
-              teamChkList.remove(user.team);
+            mailChkList.remove(user);
+            if(teamChkList.contains(user)){
+              teamChkList.remove(user);
             }
           }
           getDataSource();
@@ -138,8 +133,8 @@ getTeamProfile({required BuildContext context, String? teamName, required bool i
             }
             for(var mail in user){
               if(teamName == mail.team){
-                if(!mailChkList.contains(mail.mail)){
-                  mailChkList.add(mail.mail);
+                if(!mailChkList.contains(mail)){
+                  mailChkList.add(mail);
                 }
               }else {
                 continue;
@@ -149,8 +144,8 @@ getTeamProfile({required BuildContext context, String? teamName, required bool i
             teamChkList.remove(teamName);
             for(var mail in user){
               if(teamName == mail.team){
-                if(mailChkList.contains(mail.mail)){
-                  mailChkList.remove(mail.mail);
+                if(mailChkList.contains(mail)){
+                  mailChkList.remove(mail);
                 }
               }else {
               }

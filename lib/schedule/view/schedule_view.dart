@@ -7,21 +7,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
-import 'package:mycompany/public/word/database_name.dart';
-import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_theme.dart';
 import 'package:mycompany/schedule/widget/schedule_calender_widget.dart';
 import 'package:mycompany/schedule/widget/schedule_circular_menu.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ScheduleView extends StatefulWidget {
   @override
@@ -49,7 +48,22 @@ class _ScheduleViewState extends State<ScheduleView> {
   @override
   void initState() {
     if(mailChkList.isEmpty){
-      mailChkList.add("bsc2079@naver.com");
+      mailChkList.add(
+          CompanyUserModel(   // 로그인 유저로 변경 예정
+            mail: "bsc2079@naver.com",
+            name: "이윤혁",
+            companyId: "0S9YLBX",
+            phone: "010-7658-2079",
+            position: "대리",
+            team: "개발팀",
+            birthday: "1993.05.26",
+            profilePhoto: "",
+            teamNum: 999,
+            positionNum: 999,
+            joinedDate: Timestamp.now(),
+            userSearch: ['이', '윤', '혁']
+          )
+      );
     }
 
     _key = GlobalKey<ScaffoldState>();
@@ -58,6 +72,24 @@ class _ScheduleViewState extends State<ScheduleView> {
     _getDataSource();
     _getPersonalDataSource();
     setState(() {});
+  }
+
+  _getResetChose() {
+    mailChkList = [];
+    mailChkList.add(CompanyUserModel(
+        mail: "bsc2079@naver.com",
+        name: "이윤혁",
+        companyId: "0S9YLBX",
+        phone: "010-7658-2079",
+        position: "대리",
+        team: "개발팀",
+        birthday: "1993.05.26",
+        profilePhoto: "",
+        teamNum: 999,
+        positionNum: 999,
+        joinedDate: Timestamp.now(),
+        userSearch: ['이', '윤', '혁']
+    ));
   }
 
   _getDataSource() async {
@@ -71,8 +103,10 @@ class _ScheduleViewState extends State<ScheduleView> {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");
     List<CompanyUserModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: "0S9YLBX");
 
-    teamList = team;
-    employeeList = employee;
+    setState(() {
+      teamList = team;
+      employeeList = employee;
+    });
   }
 
   @override
@@ -128,7 +162,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                       children: [
                         GestureDetector(
                           child: Text(
-                            _isColleagueChk ? "선택 해제" : "전체 선택",
+                            _isColleagueChk ? "deselect".tr() : "select_all".tr(),
                             style: TextStyle(
                                 color: _isColleagueChk ? checkColor : textColor,
                                 fontSize: 12.sp,
@@ -140,29 +174,29 @@ class _ScheduleViewState extends State<ScheduleView> {
 
                             if(!_isTeamAndEmployeeChk) {
                               if(_isColleagueChk) {
-                                mailChkList = ["bsc2079@naver.com"];
+                                _getResetChose();
                                 for(var team in teamList){
                                   teamChkList.add(team.teamName.toString());
                                 }
                                 for(var emp in employeeList){
-                                  if(!mailChkList.contains(emp.mail.toString())){
-                                    mailChkList.add(emp.mail.toString());
+                                  if(!mailChkList.contains(emp)){
+                                    mailChkList.add(emp);
                                   }
                                 }
                               }else {
                                 teamChkList.clear();
-                                mailChkList = ["bsc2079@naver.com"];
+                                _getResetChose();
                               }
                             } else {
                               if(_isColleagueChk) {
                                 for(var emp in employeeList){
                                   if(!mailChkList.contains(emp.mail.toString())){
-                                    mailChkList.add(emp.mail.toString());
+                                    mailChkList.add(emp);
                                   }
                                 }
                               }else {
                                 teamChkList.clear();
-                                mailChkList = ["bsc2079@naver.com"];
+                                _getResetChose();
                               }
                             }
 
@@ -190,7 +224,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 width: 4.0.w,
                               ),
                               Text(
-                                _isTeamAndEmployeeChk ? "부서" : "직원",
+                                _isTeamAndEmployeeChk ? "department".tr() : "employee".tr(),
                                 style: TextStyle(
                                     color: textColor,
                                     fontSize: 12.sp,
@@ -228,7 +262,10 @@ class _ScheduleViewState extends State<ScheduleView> {
                             Text(
                               _headerText,
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: checkColor, fontSize: 21.0.sp, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+                              style: getRobotoBold(
+                                  fontSize: 21.0,
+                                  color: checkColor
+                              ),
                             ),
                             Icon(
                               _isDatePopup ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
@@ -256,6 +293,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                         });
                       },
                     ),
+
                   ],
                 ),
               ),
@@ -348,10 +386,9 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 context: context,
                                 data: data,
                                 getDataSource: _getDataSource,
-                                isTeamAndEmployeeChk: _isTeamAndEmployeeChk
+                                isTeamAndEmployeeChk: _isTeamAndEmployeeChk,
                             )).toList(),
-                          )
-                            : ListView(
+                          ) : ListView(
                           scrollDirection: Axis.horizontal,
                           children: teamList.map((data) => _buildColleague(
                               context: context,
@@ -373,7 +410,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   }
 }
 
-List<String> mailChkList = [];
+List<CompanyUserModel> mailChkList = [];
 List<String> teamChkList = [];
 
 Widget _buildColleague({
@@ -383,7 +420,6 @@ Widget _buildColleague({
   required bool isTeamAndEmployeeChk,
   List<CompanyUserModel>? user
 }) {
-
   return Row(
     /*mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,*/
@@ -392,7 +428,7 @@ Widget _buildColleague({
           context: context,
           ImageUri: data.profilePhoto ?? '',
           user: data,
-          isChks: mailChkList.contains(data.mail),
+          isChks: mailChkList.contains(data),
           getDataSource: getDataSource
       ) : getTeamProfile(
         context: context,

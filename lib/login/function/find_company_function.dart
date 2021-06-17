@@ -13,7 +13,7 @@ class FindCompanyFunction {
     QuerySnapshot getData = await loginFirestoreRepository.findCompanyDataWithName(keyWord: keyWord[0]);
 
     getData.docs.forEach((doc) {
-      CompanyModel _tempCompanyData = CompanyModel.fromMap(mapData: doc.data());
+      CompanyModel _tempCompanyData = CompanyModel.fromMap(mapData: (doc.data() as dynamic));
       if(keyWord.length == 1) {
         findCompanyData.add(_tempCompanyData);
       }

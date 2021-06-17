@@ -8,11 +8,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
+import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
-class ScheduleDialogWidget {
   DateFormatCustom _format = DateFormatCustom();
 
   Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
@@ -22,12 +24,15 @@ class ScheduleDialogWidget {
     for(Appointment appoint in data) {
       if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(DateTime.parse(appoint.startTime.toString())).inHours){
         amAppointment.add(appoint);
-        print("오전");
+        //print("오전");
       } else {
         pmAppointment.add(appoint);
-        print("오후");
+        //print("오후");
       }
     }
+
+    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
 
     showDialog(
       context: context,
@@ -54,7 +59,7 @@ class ScheduleDialogWidget {
                         style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Noto Sans'
+                            fontFamily: 'NotoSansKR'
                         ),
                       ),
                       GestureDetector(
@@ -117,7 +122,7 @@ class ScheduleDialogWidget {
             timeZone == 0 ? "종일" : timeZone == 1 ? "오전" : "오후",
             style: TextStyle(
                 fontSize: 12.0.sp,
-                fontFamily: "Noto Sans"
+                fontFamily: "NotoSansKR"
             ),
           ),
         ),
@@ -135,28 +140,37 @@ class ScheduleDialogWidget {
               padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
               child: Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        app.subject,
-                        style: TextStyle(
-                          fontSize: 14.0.sp,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Noto Sans"
+                  getProfileImage(
+                    size: 36.0,
+                    ImageUri: mailChkList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
+                  ),
+                  SizedBox(
+                    width: 6.0.w,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          app.subject,
+                          style: TextStyle(
+                            fontSize: 12.0.sp,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "NotoSansKR"
+                          ),
                         ),
-                      ),
-                      Text(
-                        "대리 / 개발팀",
-                        style: TextStyle(
-                          fontSize: 10.0.sp,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: "Noto Sans",
-                          color: hintTextColor
+                        Text(
+                          mailChkList.firstWhere((element) => element.mail == app.profile).position.toString(),
+                          style: TextStyle(
+                            fontSize: 10.0.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "NotoSansKR",
+                            color: hintTextColor
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(
                     width: 13.0.w,
@@ -174,7 +188,7 @@ class ScheduleDialogWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        _format.calendarDetailTime(date: app.startTime),
+                        _format.getTime(date: app.startTime),
                         style: TextStyle(
                             fontSize: 10.0.sp,
                             fontWeight: FontWeight.w800,
@@ -182,7 +196,7 @@ class ScheduleDialogWidget {
                         ),
                       ),
                       Text(
-                        _format.calendarDetailTime(date: app.endTime),
+                        _format.getTime(date: app.endTime),
                         style: TextStyle(
                             fontSize: 10.0.sp,
                             fontWeight: FontWeight.w800,
@@ -208,7 +222,8 @@ class ScheduleDialogWidget {
                             style: TextStyle(
                               fontSize: 10.0.sp,
                               color: whiteColor,
-                              fontFamily: "Noto Sans",
+                              fontFamily: "NotoSansKR",
+                              fontWeight: FontWeight.w500
                             ),
                           ),
                         ),
@@ -227,8 +242,97 @@ class ScheduleDialogWidget {
     return list;
   }
 
+Future<DateTime> showDatesPicker({required BuildContext context, required DateTime date}) async {
+  DateTime pickDate = date;
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.only(top: 20, bottom: 20),
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 270.0.h,
+            child: Center(
+              child: DatePickerWidget(
+                minDateTime: DateTime.parse('1900-01-01'),
+                maxDateTime: DateTime.parse('3000-12-31'),
+                onMonthChangeStartWithFirstDate: true,
+                dateFormat: 'yyyy년 MM월 dd일',
+                locale: DateTimePickerLocale.ko,
+                initialDateTime: date,
+                onConfirm: (DateTime dateTime, selectedIndex) {
+                  pickDate = DateTime(dateTime.year, dateTime.month, dateTime.day, date.hour, date.minute, 00);
+                },
+                onChange: (dateTime, selectedIndex) {
+                },
+                onCancel: () {
+                },
+              ),
+            )
 
-  Future<DateTime> showDatePicker({required BuildContext context, required DateTime date}) async {
+          /*CupertinoDatePicker(
+              minimumYear: 1900,
+              mode: CupertinoDatePickerMode.time,
+              initialDateTime: date,
+              onDateTimeChanged: (value) {
+
+              },
+            ),*/
+        ),
+      );
+
+    },
+
+  );
+  return pickDate;
+}
+
+Future<DateTime> showTimesPicker({required BuildContext context, required DateTime date}) async {
+  DateTime pickDate = date;
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.only(top: 20, bottom: 20),
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 270.0.h,
+            child: Center(
+              child: DateTimePickerWidget(
+                minDateTime: DateTime.parse('1900-01-01'),
+                dateFormat: 'yyyy년 MM월 dd일 HH시 mm분',
+                locale: DateTimePickerLocale.ko,
+                initDateTime: date,
+
+                onConfirm: (dateTime, selectedIndex) {
+                  pickDate = dateTime;
+                },
+                onChange: (dateTime, selectedIndex) {
+                },
+                onCancel: () {
+                },
+              ),
+            )
+
+          /*CupertinoDatePicker(
+              minimumYear: 1900,
+              mode: CupertinoDatePickerMode.time,
+              initialDateTime: date,
+              onDateTimeChanged: (value) {
+
+              },
+            ),*/
+        ),
+      );
+
+    },
+
+  );
+  return pickDate;
+}
+
+
+  Future<DateTime> showDateTimePicker({required BuildContext context, required DateTime date}) async {
     DateTime pickDate = date;
     await showDialog(
       context: context,
@@ -271,4 +375,3 @@ class ScheduleDialogWidget {
     );
     return pickDate;
   }
-}

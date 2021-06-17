@@ -42,7 +42,7 @@ class LoginFirestoreCrud {
 
   Future<List<CompanyModel>> readAllCompanyData() async {
     QuerySnapshot getData = await _firebaseFirestore.collection(COMPANY).get();
-    List<CompanyModel> allCompanyDataList = getData.docs.map((doc) => CompanyModel.fromMap(mapData: doc.data())).toList();
+    List<CompanyModel> allCompanyDataList = getData.docs.map((doc) => CompanyModel.fromMap(mapData: (doc.data() as dynamic))).toList();
 
     return allCompanyDataList;
   }
