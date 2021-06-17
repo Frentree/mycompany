@@ -82,7 +82,7 @@ class RejectJoinCompanyApprovalViewState extends State<RejectJoinCompanyApproval
               topPadding: 81.0.h,
               buttonName: 'rejoinButton'.tr(),
               buttonAction: () async {
-                userModel.joinStatus = 0;
+                userModel.state = 0;
                 await loginFirestoreRepository.updateUserData(userModel: userModel); //토큰값 DB에 업데이트
                 userInfoProvider.saveUserDataToPhone(userModel: userModel);
               }

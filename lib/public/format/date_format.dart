@@ -8,7 +8,7 @@ class DateFormatCustom {
     return dateTime;
   }
 
-  String cangeWeekDay({required DateTime date}){
+  String changeWeekDay({required DateTime date}){
     late String dateText;
 
     switch(date.weekday){
@@ -51,10 +51,17 @@ class DateFormatCustom {
     return timestamp;
   }
 
+  String todayStringFormat(){
+    DateTime todayDateTime = DateTime.now();
+    String today = "${todayDateTime.year}년 ${todayDateTime.month}월 ${todayDateTime.day}일 ${changeWeekDay(date: todayDateTime)}요일";
+
+    return today;
+  }
+
   String dateFormat({required DateTime date}){
     String dateText;
 
-    dateText = /*date.year.toString() + "년 " + */twoDigitsFormat(date.month) + "월 " + twoDigitsFormat(date.day) + "일 (" + cangeWeekDay(date: date) +")";
+    dateText = /*date.year.toString() + "년 " + */twoDigitsFormat(date.month) + "월 " + twoDigitsFormat(date.day) + "일 (" + changeWeekDay(date: date) +")";
     return dateText;
   }
 

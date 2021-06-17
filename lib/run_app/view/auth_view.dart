@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/attendance/view/attendance_dashboard_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/view/force_sign_out_view.dart';
 import 'package:mycompany/login/view/join_company_success_view.dart';
@@ -30,16 +31,18 @@ class AuthView extends StatelessWidget {
     UserModel? loginUserData = userInfoProvider.getUserData();
     EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
 
+    print("auth");
+
     if(loginUserData == null){
       return SignInView();
     }
 
-    /*else if(loginUserData.tokenId != deviceToken){
+    else if(loginUserData.token != deviceToken){
       return ForceSignOutView();
-    }*/
+    }
 
     else{
-      switch(loginUserData.joinStatus){
+      switch(loginUserData.state){
         case 0:
           return UserTypeSelectView();
 
@@ -47,12 +50,13 @@ class AuthView extends StatelessWidget {
           return WaitJoinCompanyApprovalView();
 
         case 2:
-          if(loginEmployeeData == null){
+          return AttendanceDashboardView();
+          /*if(loginEmployeeData == null){
             return JoinCompanySuccessView();
           }
           else{
-            return ScheduleView();
-          }
+            return AttendanceDashboardView();
+          }*/
 
         case 3:
           return RejectJoinCompanyApprovalView();

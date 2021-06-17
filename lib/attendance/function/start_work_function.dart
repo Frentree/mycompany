@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/company_model.dart';
@@ -9,12 +7,11 @@ import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:provider/provider.dart';
 
-class JoinCompanyFunction {
+class StartWorkFunction {
   LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
 
-  Future<void> joinCompanyFunction({
+  Future<void> startWorkFunction({
     required BuildContext context,
-    required CompanyModel company,
   }) async {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false,);
     DateFormatCustom dateFormatCustom = DateFormatCustom();
@@ -28,8 +25,6 @@ class JoinCompanyFunction {
       birthday: loginUserData.birthday,
       requestDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
     );
-
-    await loginFirestoreRepository.createJoinCompanyApprovalData(companyId: company.companyCode, joinCompanyApprovalModel: joinCompanyApprovalModel);
 
     //로그인 사용자 joinStatus 및 companyCode 업데이트
     loginUserData.state = 1;

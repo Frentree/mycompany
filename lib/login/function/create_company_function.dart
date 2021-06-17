@@ -51,7 +51,7 @@ class CreateCompanyFunction {
     bool isDuplicate = false;
 
     allCompanyData.forEach((element) {
-      if (element.companyId == newCompanyId) {
+      if (element.companyCode == newCompanyId) {
         isDuplicate = true;
       }
     });
@@ -83,33 +83,30 @@ class CreateCompanyFunction {
     String companyId = await createCompanyId();
 
     CompanyModel companyModel = CompanyModel(
-      companyId: companyId,
+      companyCode: companyId,
       companyName: companyName,
-      companyAddress: companyAddress,
-      createDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-      modifiedDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      companyAddr: companyAddress,
     );
 
     await loginFirestoreRepository.createCompanyData(companyModel: companyModel);
 
     EmployeeModel employeeModel = EmployeeModel(
-      tokenId: loginUserData.tokenId,
-      email: loginUserData.email,
+      token: loginUserData.token,
+      mail: loginUserData.mail,
       name: loginUserData.name,
       phone: loginUserData.phone,
       birthday: loginUserData.birthday,
-      account: loginUserData.account,
-      companyId: companyId,
-      joinedDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-      modifiedDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      companyCode: companyId,
+      createDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      lastModDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
     );
 
     await loginFirestoreRepository.createEmployeeData(employeeModel: employeeModel);
 
     //로그인 사용자 joinStatus 및 companyCode 업데이트
-    loginUserData.joinStatus = 2;
-    loginUserData.companyId = companyId;
-    loginUserData.modifiedDate = dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now());
+    loginUserData.state = 2;
+    loginUserData.companyCode = companyId;
+    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now());
 
     await loginFirestoreRepository.updateUserData(userModel: loginUserData);
   }

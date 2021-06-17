@@ -1,17 +1,17 @@
 /*
 App 가입 사용자 모델
-기기토큰값 : tokenId
-이메일 : email
+기기토큰값 : token
+이메일 : mail
 이름 : name
 전화번호 : phone
 생일 : birthday
-계좌 : account
 가입일 : createDate
-정보수정일 : modifiedDate
-회사ID : companyId
-회사가입상태 : joinStatus
+정보수정일 : lastModDate
+회사ID : companyCode
+회사가입상태 : state
+프로필사진 : profilePhoto
 
-joinStatus
+state
 0 : 가입신청안함(기본값)
 1 : 승인 대기
 2 : 승인 완료
@@ -21,54 +21,55 @@ joinStatus
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  String? tokenId;
-  String email;
+  String? token;
+  String mail;
   String name;
   String? phone;
-  Timestamp? birthday;
-  String? account;
+  String? birthday;
   Timestamp? createDate;
-  Timestamp? modifiedDate;
-  String? companyId;
-  int joinStatus;
+  Timestamp? lastModDate;
+  String? companyCode;
+  int state;
+  String? profilePhoto;
 
   UserModel({
-    this.tokenId,
-    required this.email,
+    this.token,
+    required this.mail,
     required this.name,
     this.phone,
     this.birthday,
-    this.account,
     this.createDate,
-    this.modifiedDate,
-    this.companyId,
-    this.joinStatus = 0,
+    this.lastModDate,
+    this.companyCode,
+    this.state = 0,
+    this.profilePhoto,
   });
 
   UserModel.fromMap({required Map mapData})
-      : tokenId = mapData["tokenId"] ?? "",
-        email = mapData["email"] ?? "",
+      : token = mapData["token"] ?? "",
+        mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",
         phone = mapData["phone"] ?? "",
-        birthday = mapData["birthday"] ?? null,
-        account = mapData["account"] ?? "",
+        birthday = mapData["birthday"] ?? "",
         createDate = mapData["createDate"] ?? Timestamp.now(),
-        modifiedDate = mapData["modifiedDate"] ?? Timestamp.now(),
-        companyId = mapData["companyId"] ?? "",
-        joinStatus = mapData["joinStatus"] ?? 0;
+        lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
+        companyCode = mapData["companyCode"] ?? "",
+        state = mapData["state"] ?? 0,
+        profilePhoto = mapData["profilePhoto"] ?? "";
+
 
   toJson() {
     return {
-      "tokenId": tokenId,
-      "email": email,
+      "token": token,
+      "mail": mail,
       "name": name,
       "phone": phone,
       "birthday": birthday,
-      "account": account,
       "createDate": createDate,
-      "modifiedDate": modifiedDate,
-      "companyId": companyId,
-      "joinStatus": joinStatus,
+      "lastModDate": lastModDate,
+      "companyCode": companyCode,
+      "state": state,
+      "profilePhoto": profilePhoto,
     };
   }
 }

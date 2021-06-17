@@ -15,22 +15,22 @@ Container loginElevatedButton({required double topPadding, required String butto
       height: 40.0.h,
       child: ElevatedButton(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.disabled)) {
-                return Color(0xff949494);
-              }
-              else {
-                return Color(0xff2573D5);
-              }
-            }),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0.r),
-              ),
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.disabled)) {
+              return Color(0xff949494);
+            }
+            else {
+              return Color(0xff2573D5);
+            }
+          }),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0.r),
             ),
-            elevation: MaterialStateProperty.all(
-              0.0,
-            )
+          ),
+          elevation: MaterialStateProperty.all(
+            0.0,
+          ),
         ),
         child: Text(
           buttonName,

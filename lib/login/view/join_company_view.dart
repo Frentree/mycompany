@@ -22,7 +22,7 @@ class JoinCompanyViewState extends State<JoinCompanyView> {
 
   TextEditingController _companyTextController = TextEditingController();
 
-  CompanyModel selectCompany = CompanyModel(companyId: "", companyName: "", companyAddress: "");
+  CompanyModel selectCompany = CompanyModel(companyCode: "", companyName: "", companyAddr: "");
   
   @override
   Widget build(BuildContext context) {
@@ -117,10 +117,10 @@ class JoinCompanyViewState extends State<JoinCompanyView> {
                   builder: (context) => FindCompanyView(companyModel: selectCompany)
                 )
               );
-              if(_companyModel.companyId != ""){
+              if(_companyModel.companyCode != ""){
                 setState(() {
                   selectCompany = _companyModel;
-                  _companyTextController.text = selectCompany.companyName +"(${selectCompany.companyAddress})";
+                  _companyTextController.text = selectCompany.companyName +"(${selectCompany.companyAddr})";
                 });
               }
             } ,

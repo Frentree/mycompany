@@ -30,12 +30,12 @@ class SignUpFunction {
     if (_firebaseAuthResult == true) {
       //userModel 생성
       UserModel userModel = UserModel(
-        email: email,
+        mail: email,
         name: name,
-        birthday: birthday != "" ? _dateFormatCustom.changeStringToTimeStamp(dateString: birthday!) : null,
+        birthday: birthday,
         phone: phone,
         createDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-        modifiedDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+        lastModDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
       );
 
       //User DB 생성

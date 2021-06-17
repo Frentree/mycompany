@@ -1,4 +1,3 @@
-const String USER = 'mycompany_user';
-const String EMPLOYEE = 'mycompany_employee';
-const String COMPANY = 'mycompany_company';
-const String JOINCOMPANYAPPROVAL = 'mycompany_joinCompanyApproval';
+const String USER = 'user';
+const String COMPANY = 'company';
+const String JOINCOMPANYAPPROVAL = 'approval';

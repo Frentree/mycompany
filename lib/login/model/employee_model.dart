@@ -1,112 +1,103 @@
 /*
 회사 가입 사용자 모델
-기기토큰값 : tokenId
-이메일 : email
+기기토큰값 : token
+이메일 : mail
 이름 : name
 전화번호 : phone
 생일 : birthday
 계좌 : account
-회사ID : companyId
-회사가입일 : joinedDate
+회사ID : companyCode
+회사가입일 : createDate
 입사일 : enteredDate
-정보수정일 : modifiedDate
-프로필사진 : profile
+정보수정일 : lastModDate
+프로필사진 : profilePhoto
 팀 : team
 직급 : position
-권한 : authority
+권한 : level
 사용자검색 : userSearch
-
-team
-
-position
-
-authority
-List[0] : 일반사용자
-List[1] : 업무관리자
-List[2] : 앱관리자
-List[3] : 회계담담자
-List[4] : 최고관리자
+상태 : status
+사번 : employeeNum
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EmployeeModel {
-  String? tokenId;
-  String email;
+  String? token;
+  String mail;
   String name;
   String? phone;
-  Timestamp? birthday;
+  String? birthday;
   String? account;
-  String companyId;
-  Timestamp joinedDate;
-  Timestamp? enteredDate;
-  Timestamp? modifiedDate;
-  String? profile;
+  String companyCode;
+  Timestamp createDate;
+  String? enteredDate;
+  Timestamp? lastModDate;
+  String? profilePhoto;
   String? team;
-  int? teamNumber;
   String? position;
-  int? positionNumber;
-  List<dynamic>? authority;
+  List<dynamic>? level;
   List<dynamic>? userSearch;
+  String? employeeNum;
+  int? status;
 
   EmployeeModel({
-    this.tokenId,
-    required this.email,
+    this.token,
+    required this.mail,
     required this.name,
     this.phone,
     this.birthday,
     this.account,
-    required this.companyId,
-    required this.joinedDate,
+    required this.companyCode,
+    required this.createDate,
     this.enteredDate,
-    this.modifiedDate,
-    this.profile,
-    this.teamNumber,
+    this.lastModDate,
+    this.profilePhoto,
     this.team,
-    this.positionNumber,
     this.position,
-    this.authority = const <int>[1, 0, 0, 0, 0],
+    this.level,
     this.userSearch,
+    this.employeeNum,
+    this.status,
   });
 
   EmployeeModel.fromMap({required Map mapData})
-      : tokenId = mapData["tokenId"] ?? "",
-        email = mapData["email"] ?? "",
+      : token = mapData["token"] ?? "",
+        mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",
         phone = mapData["phone"] ?? "",
         birthday = mapData["birthday"] ?? null,
         account = mapData["account"] ?? "",
-        companyId = mapData["companyId"] ?? "",
-        joinedDate = mapData["joinedDate"] ?? Timestamp.now(),
-        enteredDate = mapData["enteredDate"] ?? Timestamp.now(),
-        modifiedDate = mapData["modifiedDate"] ?? Timestamp.now(),
-        profile = mapData["profile"] ?? "",
+        companyCode = mapData["companyCode"] ?? "",
+        createDate = mapData["createDate"] ?? Timestamp.now(),
+        enteredDate = mapData["enteredDate"] ?? "",
+        lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
+        profilePhoto = mapData["profilePhoto"] ?? "",
         team = mapData["team"] ?? "",
-        teamNumber = mapData["teamNum"] ?? 999,
         position = mapData["position"] ?? "",
-        positionNumber = mapData["positionNum"] ?? 999,
-        authority = mapData["authority"] ?? [1, 0, 0, 0, 0],
-        userSearch = mapData["userSearch"] ?? [];
+        level = mapData["level"] ?? [],
+        userSearch = mapData["userSearch"] ?? [],
+        employeeNum = mapData["employeeNum"] ?? "",
+        status = mapData["status"] ?? 0;
 
   toJson(){
     return {
-      "tokenId": tokenId,
-      "email": email,
+      "token": token,
+      "mail": mail,
       "name": name,
       "phone": phone,
       "birthday": birthday,
       "account": account,
-      "companyId": companyId,
-      "joinedDate": joinedDate,
+      "companyCode": companyCode,
+      "createDate": createDate,
       "enteredDate": enteredDate,
-      "modifiedDate": modifiedDate,
-      "profile": profile ?? "",
+      "lastModDate": lastModDate,
+      "profilePhoto": profilePhoto ?? "",
       "team": team ?? "",
-      "teamNumber" : teamNumber ?? 999,
       "position": position ?? "",
-      "positionNumber" : positionNumber ?? 999,
-      "authority": authority,
+      "level": level,
       "userSearch": name.split(""),
+      "employeeNum": employeeNum,
+      "status": status,
     };
   }
 }
