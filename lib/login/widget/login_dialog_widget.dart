@@ -34,7 +34,7 @@ Future<dynamic> loginDialogWidget({required BuildContext context, required Strin
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: actions != null ? actions : [],
-              )
+              ),
             ],
           ),
         ),

@@ -212,7 +212,7 @@ class FindCompanyViewState extends State<FindCompanyView> {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        companyModelList[index].companyAddress,
+                        companyModelList[index].companyAddr,
                         style: TextStyle(
                           fontSize: 13.0.sp,
                           color: Color(0xffA4A4A4),

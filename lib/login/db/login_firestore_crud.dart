@@ -9,18 +9,18 @@ class LoginFirestoreCrud {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   //Employee 관련
   Future<void> createEmployeeData({required EmployeeModel employeeModel}) async {
-    await _firebaseFirestore.collection(COMPANY).doc(employeeModel.companyId).collection(EMPLOYEE).doc(employeeModel.email).set(employeeModel.toJson());
+    await _firebaseFirestore.collection(COMPANY).doc(employeeModel.companyCode).collection(USER).doc(employeeModel.mail).set(employeeModel.toJson());
   }
 
   Future<EmployeeModel> readEmployeeData({required String companyId, required String email}) async {
-    dynamic document = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(EMPLOYEE).doc(email).get();
+    dynamic document = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(USER).doc(email).get();
 
     return EmployeeModel.fromMap(mapData: document.data());
   }
 
   //User 관련
   Future<void> createUserData({required UserModel userModel}) async {
-    await _firebaseFirestore.collection(USER).doc(userModel.email).set(userModel.toJson());
+    await _firebaseFirestore.collection(USER).doc(userModel.mail).set(userModel.toJson());
   }
 
   Future<UserModel> readUserData({required String email}) async {
@@ -30,14 +30,14 @@ class LoginFirestoreCrud {
   }
 
   Future<void> updateUserData({required UserModel userModel}) async {
-    userModel.modifiedDate = Timestamp.now();
+    userModel.lastModDate = Timestamp.now();
 
-    await _firebaseFirestore.collection(USER).doc(userModel.email).update(userModel.toJson());
+    await _firebaseFirestore.collection(USER).doc(userModel.mail).update(userModel.toJson());
   }
 
   //Company 관련
   Future<void> createCompanyData({required CompanyModel companyModel}) async {
-    await _firebaseFirestore.collection(COMPANY).doc(companyModel.companyId).set(companyModel.toJson());
+    await _firebaseFirestore.collection(COMPANY).doc(companyModel.companyCode).set(companyModel.toJson());
   }
 
   Future<List<CompanyModel>> readAllCompanyData() async {

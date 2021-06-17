@@ -42,15 +42,15 @@ class SignInViewState extends State<SignInView> {
                 top: 42.0.h,
               ),
               child: SizedBox(
-                  height: 19.0.h,
-                  child: Text(
-                    "Release ${APP_VERSION}",
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 14.0.sp,
-                      color: Color(0xff585858),
-                    ),
-                  )),
+                height: 19.0.h,
+                child: Text(
+                  "Release ${APP_VERSION}",
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14.0.sp,
+                    color: Color(0xff585858),
+                  ),
+                )),
             ),
             Container(
               alignment: Alignment.center,
@@ -116,6 +116,7 @@ class SignInViewState extends State<SignInView> {
               topPadding: 12.0.h,
               buttonName: 'signUp'.tr(),
               buttonAction: () {
+                _emailTextController.clear();
                 _passwordTextController.clear();
                 pageMove(
                   context: context,

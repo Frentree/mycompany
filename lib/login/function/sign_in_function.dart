@@ -30,8 +30,8 @@ class SignInFunction {
       _userModel = await loginFirestoreRepository.readUserData(email: email); //DB에서 user 정보 가져오기
 
       //저장된 토큰값이 없을 때(다른 기기에서 로그인 되어 있지 않음)
-      if (_userModel.tokenId == "") {
-        _userModel.tokenId = await firebaseMessaging.getToken(); //토큰값 가져오기
+      if (_userModel.token == "") {
+        _userModel.token = await firebaseMessaging.getToken(); //토큰값 가져오기
         await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
         userInfoProvider.saveUserDataToPhone(userModel: _userModel); //로그인 정보 핸드폰에 저장
       }
@@ -44,7 +44,7 @@ class SignInFunction {
             loginDialogConfirmButton(
               buttonName: 'dialogConfirm'.tr(),
               buttonAction: () async {
-                _userModel.tokenId = await firebaseMessaging.getToken();
+                _userModel.token = await firebaseMessaging.getToken();
                 await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
                 userInfoProvider.saveUserDataToPhone(userModel: _userModel);
                 backPage(context: context);

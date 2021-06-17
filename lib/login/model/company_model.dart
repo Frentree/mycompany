@@ -1,67 +1,57 @@
 /*
 회사 모델
-회사ID : companyId
-회사생성일 : createDate;
-정보수정일 : modifiedDate;
+회사ID : companyCode
 회사명 : companyName
-회사주소 : companyAddress
+회사주소 : companyAddr
 회사전화번호 : companyPhone
-로고 : companyLogo
-사업자번호 : businessNumber
-웹페이지주소 : webUrl
+로고 : companyPhoto
+사업자번호 : companyNo
+웹페이지주소 : companyWeb
 회사검색: companySearch
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CompanyModel {
-  String companyId;
-  Timestamp? createDate;
-  Timestamp? modifiedDate;
+  String companyCode;
   String companyName;
-  String companyAddress;
+  String companyAddr;
   String? companyPhone;
-  String? companyLogo;
-  String? businessNumber;
-  String? webUrl;
+  String? companyPhoto;
+  String? companyNo;
+  String? companyWeb;
   List<dynamic>? companySearch;
 
   CompanyModel({
-    required this.companyId,
-    this.createDate,
-    this.modifiedDate,
+    required this.companyCode,
     required this.companyName,
-    required this.companyAddress,
+    required this.companyAddr,
     this.companyPhone,
-    this.companyLogo,
-    this.businessNumber,
-    this.webUrl,
+    this.companyPhoto,
+    this.companyNo,
+    this.companyWeb,
     this.companySearch,
   });
 
   CompanyModel.fromMap({required Map mapData})
-      : companyId = mapData["companyId"] ?? "",
-        createDate = mapData["createDate"] ?? Timestamp.now(),
-        modifiedDate = mapData["modifiedDate"] ?? Timestamp.now(),
+      : companyCode = mapData["companyCode"] ?? "",
         companyName = mapData["companyName"] ?? "",
-        companyAddress = mapData["companyAddress"] ?? "",
+        companyAddr = mapData["companyAddr"] ?? "",
         companyPhone = mapData["companyPhone"] ?? "",
-        companyLogo = mapData["companyLogo"] ?? "",
-        businessNumber = mapData["businessNumber"] ?? "",
-        webUrl = mapData["webUrl"] ?? "",
+        companyPhoto = mapData["companyPhoto"] ?? "",
+        companyNo = mapData["companyNo"] ?? "",
+        companyWeb = mapData["companyWeb"] ?? "",
         companySearch = mapData["companySearch"] ?? [];
 
   toJson(){
     return {
-      "companyId": companyId,
-      "createDate": createDate,
-      "modifiedDate": modifiedDate,
+      "companyCode": companyCode,
       "companyName": companyName,
-      "companyAddress": companyAddress,
+      "companyAddr": companyAddr,
       "companyPhone": companyPhone,
-      "companyLogo": companyLogo,
-      "businessNumber": businessNumber,
-      "webUrl": webUrl,
+      "companyPhoto": companyPhoto,
+      "companyNo": companyNo,
+      "webUrl": companyWeb,
       "companySearch": companyName.split(""),
     };
   }
