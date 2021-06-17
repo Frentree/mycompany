@@ -43,6 +43,8 @@
   "deselect" : "deselect",
   "team_selection" : "team selection",
   "chose" : "Chose",
+  "update" : "update",
+  "delete" : "delete",
 
 
   "errorEmailAlreadyInUse": "This email is already in use.",

@@ -164,7 +164,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                           ),
                         ),
                         onTap: () async {
-                          var result = await CalenderFunction().insertWork(
+                          var result = await CalenderFunction().updateSchedule(
                               companyCode: "0S9YLBX",
                               allDay: _isAllDay.value,
                               workName: workNames[workChkCount],

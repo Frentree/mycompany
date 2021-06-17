@@ -59,6 +59,10 @@ class Appointment with Diagnosticable {
     this.profile,
     this.team,
     this.position,
+    this.title,
+    this.content,
+    this.documentId,
+    this.colleagues,
     this.location,
     this.resourceIds,
     required this.startTime,
@@ -660,6 +664,10 @@ class Appointment with Diagnosticable {
   String? profile;
   String? team;
   String? position;
+  String? title;
+  String? content;
+  List<dynamic>? colleagues;
+  String? documentId;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -689,6 +697,10 @@ class Appointment with Diagnosticable {
         otherStyle.profile == profile &&
         otherStyle.team == team &&
         otherStyle.position == position &&
+        otherStyle.title == title &&
+        otherStyle.content == content &&
+        otherStyle.documentId == documentId &&
+        otherStyle.colleagues == colleagues &&
         otherStyle.recurrenceExceptionDates == recurrenceExceptionDates;
   }
 
@@ -711,6 +723,10 @@ class Appointment with Diagnosticable {
       profile,
       team,
       position,
+      title,
+      content,
+      documentId,
+      colleagues,
       hashList(recurrenceExceptionDates),
     );
   }
@@ -729,6 +745,11 @@ class Appointment with Diagnosticable {
     properties.add(StringProperty('profile', profile));
     properties.add(StringProperty('team', team));
     properties.add(StringProperty('position', position));
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('content', content));
+    properties.add(StringProperty('documentId', documentId));
+    properties.add(IterableDiagnostics<dynamic>(colleagues)
+        .toDiagnosticsNode(name: 'colleagues'));
     properties.add(DiagnosticsProperty<DateTime>('startTime', startTime));
     properties.add(DiagnosticsProperty<DateTime>('endTime', endTime));
     properties.add(IterableDiagnostics<DateTime>(recurrenceExceptionDates)

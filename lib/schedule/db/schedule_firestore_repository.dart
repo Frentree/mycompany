@@ -18,4 +18,10 @@ class ScheduleFirebaseReository {
 
   Future<bool> insertWorkDocument({required WorkModel workModel, CompanyUserModel? approvalUser,required String companyCode}) =>
       _curd.insertWorkDocument(workModel, approvalUser, companyCode);
+
+  Future<bool> deleteScheduleDocument({required String companyCode,required String documentId}) =>
+      _curd.deleteScheduleDocument(companyCode, documentId);
+
+  Future<bool> getApprovalListSizeDocument({required String companyCode,required String documentId}) =>
+      _curd.getApprovalListSizeDocument(companyCode, documentId);
 }

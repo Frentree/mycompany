@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/schedule/view/schedule_detail_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
@@ -85,10 +86,10 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                   child: Column(
                     children: [
                       Column(
-                        children: getCalendarPerseonalDetail(appointment: amAppointment, timeZone: 1),
+                        children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1),
                       ),
                       Column(
-                        children: getCalendarPerseonalDetail(appointment: pmAppointment, timeZone: 2),
+                        children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2),
                       )
                     ]
                   ),
@@ -103,7 +104,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
   }
 
 
-  getCalendarPerseonalDetail({required List<Appointment> appointment,required int timeZone}) {
+  getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone}) {
     var list = <Widget>[Container(width: 16)]; // container is left padding
 
     if(appointment.isEmpty){
@@ -132,110 +133,113 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
     for(Appointment app in appointment){
       list.add(
-        Column(
-          children: [
-            Container(
-              width: 278.0.w,
-              height: 36.0.h,
-              padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
-              child: Row(
-                children: [
-                  getProfileImage(
-                    size: 36.0,
-                    ImageUri: mailChkList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
-                  ),
-                  SizedBox(
-                    width: 6.0.w,
-                  ),
-                  Container(
-                    child: Column(
+        InkWell(
+          child: Column(
+            children: [
+              Container(
+                width: 278.0.w,
+                height: 36.0.h,
+                padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
+                child: Row(
+                  children: [
+                    getProfileImage(
+                      size: 36.0,
+                      ImageUri: mailChkList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
+                    ),
+                    SizedBox(
+                      width: 6.0.w,
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            app.subject,
+                            style: TextStyle(
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "NotoSansKR"
+                            ),
+                          ),
+                          Text(
+                            app.position.toString(),
+                            style: TextStyle(
+                              fontSize: 10.0.sp,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "NotoSansKR",
+                              color: hintTextColor
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 13.0.w,
+                    ),
+                    Container(
+                      width: 2.0.w,
+                      height: 29.0.h,
+                      color: app.color,
+                    ),
+                    SizedBox(
+                      width: 6.0.w,
+                    ),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          app.subject,
+                          _format.getTime(date: app.startTime),
                           style: TextStyle(
-                            fontSize: 12.0.sp,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "NotoSansKR"
+                              fontSize: 10.0.sp,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: "Roboto"
                           ),
                         ),
                         Text(
-                          mailChkList.firstWhere((element) => element.mail == app.profile).position.toString(),
+                          _format.getTime(date: app.endTime),
                           style: TextStyle(
-                            fontSize: 10.0.sp,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: "NotoSansKR",
-                            color: hintTextColor
+                              fontSize: 10.0.sp,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: "Roboto",
+                              color: hintTextColor
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    width: 13.0.w,
-                  ),
-                  Container(
-                    width: 2.0.w,
-                    height: 29.0.h,
-                    color: app.color,
-                  ),
-                  SizedBox(
-                    width: 6.0.w,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _format.getTime(date: app.startTime),
-                        style: TextStyle(
-                            fontSize: 10.0.sp,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Roboto"
-                        ),
-                      ),
-                      Text(
-                        _format.getTime(date: app.endTime),
-                        style: TextStyle(
-                            fontSize: 10.0.sp,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Roboto",
-                            color: hintTextColor
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.centerRight,
+                    Expanded(
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: app.color,
-                          borderRadius: BorderRadius.all(Radius.circular(20.0))
-                        ),
-                        width: 34.0.w,
-                        height: 19.0.h,
-                        child: Center(
-                          child: Text(
-                            app.type.toString(),
-                            style: TextStyle(
-                              fontSize: 10.0.sp,
-                              color: whiteColor,
-                              fontFamily: "NotoSansKR",
-                              fontWeight: FontWeight.w500
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: app.color,
+                            borderRadius: BorderRadius.all(Radius.circular(20.0))
+                          ),
+                          width: 34.0.w,
+                          height: 19.0.h,
+                          child: Center(
+                            child: Text(
+                              app.type.toString(),
+                              style: TextStyle(
+                                fontSize: 10.0.sp,
+                                color: whiteColor,
+                                fontFamily: "NotoSansKR",
+                                fontWeight: FontWeight.w500
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 15.0.h,),
-          ],
-        )
+              SizedBox(height: 15.0.h,),
+            ],
+          ),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleDetailView(appointment: app,))),
+        ),
       );
     }
 
