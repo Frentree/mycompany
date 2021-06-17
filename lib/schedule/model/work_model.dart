@@ -28,11 +28,12 @@ class WorkModel {
   String name;
   String? organizerId;
   String? location;
+  Timestamp? startDate;
   Timestamp startTime;
-  Timestamp endTime;
+  Timestamp? endTime;
   Timestamp? createDate;
   Timestamp? lastModDate;
-  List<String>? attendees;
+  List<dynamic>? colleagues;
 
   WorkModel({
     this.alarmId,
@@ -44,16 +45,17 @@ class WorkModel {
     required this.name,
     this.organizerId,
     this.location,
+    this.startDate,
     required this.startTime,
     required this.endTime,
     this.createDate,
     this.lastModDate,
-    this.attendees
+    this.colleagues
   });
 
   WorkModel.fromMap({required Map mapData})
-      : alarmId = mapData["alarmId"] ?? "",
-        allDay = mapData["allDay"] ?? "",
+      : alarmId = mapData["alarmId"] ?? 0,
+        allDay = mapData["allDay"] ?? false,
         title = mapData["title"] ?? "",
         content = mapData["content"] ?? "",
         type = mapData["type"] ?? "",
@@ -62,14 +64,14 @@ class WorkModel {
         organizerId = mapData["organizerId"] ?? "",
         location = mapData["location"] ?? "",
         startTime = mapData["startTime"] ?? Timestamp.now(),
-        endTime = mapData["endTime"] ?? Timestamp.now(),
+        endTime = mapData["endTime"] ?? null,
         createDate = mapData["createDate"] ?? Timestamp.now(),
         lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
-        attendees = mapData["attendees"] ?? [mapData["createUid"]];
+        colleagues = mapData["colleagues"] ?? [mapData["createUid"]];
 
   toJson(){
     return {
-      "alarmId": alarmId ?? "",
+      "alarmId": alarmId ?? 0,
       "allDay": allDay,
       "title": title,
       "content": content,
@@ -78,11 +80,12 @@ class WorkModel {
       "name": name,
       "organizerId": organizerId,
       "location": location,
+      "startDate" : startDate ?? Timestamp.fromDate(DateTime(startTime.toDate().year, startTime.toDate().month, startTime.toDate().day, 21, 0, 0)),
       "startTime": startTime,
       "endTime": endTime,
       "createDate": createDate ?? Timestamp.now(),
       "lastModDate": lastModDate ?? Timestamp.now(),
-      "attendees" : attendees ?? [createUid],
+      "colleagues" : colleagues ?? [createUid],
     };
   }
 }

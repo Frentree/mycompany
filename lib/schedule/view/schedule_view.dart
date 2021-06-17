@@ -13,7 +13,7 @@ import 'package:mycompany/public/widget/main_menu.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_theme.dart';

@@ -1,7 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_crud.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 
 class ScheduleFirebaseReository {

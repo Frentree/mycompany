@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 

@@ -13,7 +13,7 @@ import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/view/schedule_approval_view.dart';
 import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';

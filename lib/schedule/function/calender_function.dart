@@ -2,11 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
@@ -26,13 +25,14 @@ class CalenderFunction{
     List<QueryDocumentSnapshot> scheduleSnapshot = schduleData.docs;
 
     for (var doc in scheduleSnapshot) {
-      String type = doc.data()['type'];
-      String name = doc.data()['name'];
-      String? title = doc.data()['title'];
-      String? mail = doc.data()['createUid'];
-      String? location = doc.data()['location'];
+      final model = WorkModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>));
+      String type = model.type;
+      String name = model.name;
+      String title = model.title;
+      String mail = model.createUid;
+      String? location = model.location;
       String? notes = "[${type}] ${title}";
-      Timestamp startTimes = doc.data()['startTime'];
+      Timestamp startTimes = model.startTime;
 
       if(typeList.contains(type)){
         typeChoise = typeList.indexOf(type);
@@ -41,7 +41,7 @@ class CalenderFunction{
       }
 
       final DateTime startTime = DateTime.parse(startTimes.toDate().toString());
-      final DateTime endTime = doc.data()['endTime'] == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(doc.data()['endTime'].toDate().toString());
+      final DateTime endTime = model.endTime == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(model.endTime!.toDate().toString());
 
       shedules.add(Appointment(
         startTime: startTime,
@@ -99,7 +99,7 @@ class CalenderFunction{
     List<QueryDocumentSnapshot> teamSnapshot = teamData.docs;
 
     for (var doc in teamSnapshot) {
-      teamList.add(TeamModel.fromMap(mapData: doc.data()));
+      teamList.add(TeamModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
     }
 
     return teamList;
@@ -112,7 +112,7 @@ class CalenderFunction{
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
     for (var doc in empSnapshot) {
-      empList.add(CompanyUserModel.fromMap(mapData: doc.data()));
+      empList.add(CompanyUserModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
     }
 
     return empList;
@@ -134,12 +134,12 @@ class CalenderFunction{
     CompanyUserModel? approvalUser,
   }) async {
     // 선택된 동료 리스트
-    List<String>? attendeesList;
+    List<String>? colleaguesList;
 
     // 선택된 동료가 있으면
     if(workColleagueChkList.length != 0){
-      attendeesList = ["bsc2079@naver.com"];
-      workColleagueChkList.map((e) => attendeesList!.add(e.mail.toString())).toList();
+      colleaguesList = ["bsc2079@naver.com"];
+      workColleagueChkList.map((e) => colleaguesList!.add(e.mail.toString())).toList();
     }
 
 
@@ -151,7 +151,7 @@ class CalenderFunction{
       location: location,
       startTime: Timestamp.fromDate(startTime),
       endTime: Timestamp.fromDate(endTime),
-      attendees: attendeesList,
+      colleagues: colleaguesList,
       name: "이윤혁",
       createUid: "bsc2079@naver.com",
     );

@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/schedule/model/approval_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 
@@ -77,7 +77,7 @@ class ScheduleFirebaseCurd {
       allDay: workModel.allDay,
       approvalMail: approvalUser.mail,
       approvalUser: approvalUser.name,
-      attendees: workModel.attendees!,
+      colleagues: workModel.colleagues!,
       title: workModel.title,
       location: workModel.location!,
       approvalType: workModel.type,
@@ -86,7 +86,7 @@ class ScheduleFirebaseCurd {
       requestContent: workModel.content,
       status: "대기",
       requestStartDate: workModel.startTime,
-      requestEndDate: workModel.endTime,
+      requestEndDate: workModel.endTime!,
     );
 
     await _store.collection("company").doc(companyCode).collection("workApproval").add(model.toJson());
@@ -108,7 +108,7 @@ class ScheduleFirebaseCurd {
       location: model.location,
       startTime: model.requestStartDate,
       endTime: model.requestEndDate,
-      attendees: model.attendees,
+      colleagues: model.colleagues,
       name: model.approvalType == "요청" ? model.user : model.approvalUser,
       createUid: model.approvalType == "요청" ? model.userMail : model.approvalMail,
       createDate: model.createDate

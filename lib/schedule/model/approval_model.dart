@@ -39,7 +39,7 @@ class ApprovalModel {
   int? totalCost;
   String user;
   String userMail;
-  List<String> attendees;
+  List<dynamic> colleagues;
   DocumentReference? reference;
 
   ApprovalModel({
@@ -60,7 +60,7 @@ class ApprovalModel {
     this.totalCost,
     required this.user,
     required this.userMail,
-    required this.attendees,
+    required this.colleagues,
   });
 
   ApprovalModel.fromMap({required Map mapData, this.reference})
@@ -81,7 +81,7 @@ class ApprovalModel {
         totalCost = mapData["totalCost"] ?? 0,
         user = mapData["user"] ?? Timestamp.now(),
         userMail = mapData["userMail"] ?? Timestamp.now(),
-        attendees = mapData["attendees"] ?? [mapData["createUid"]];
+        colleagues = mapData["colleagues"] ?? [mapData["createUid"]];
   toJson(){
     return {
       "docIds": docIds ?? "",
@@ -101,7 +101,7 @@ class ApprovalModel {
       "totalCost": totalCost ?? 0,
       "user": user,
       "userMail": userMail,
-      "attendees" : attendees,
+      "colleagues" : colleagues,
     };
   }
 }
