@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/schedule/function/calender_function.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/testcompany_model.dart';
+import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleFunctionReprository {

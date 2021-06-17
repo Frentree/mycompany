@@ -14,12 +14,14 @@ import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 
-class ScheduleRegisrationView extends StatefulWidget {
+class ScheduleRegisrationUpdateView extends StatefulWidget {
+
+
   @override
-  _ScheduleRegisrationViewState createState() => _ScheduleRegisrationViewState();
+  _ScheduleRegisrationUpdateViewState createState() => _ScheduleRegisrationUpdateViewState();
 }
 
-class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
+class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdateView> {
   PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
 
   // 전체 팀
@@ -32,7 +34,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   // 선택된 팀
   List<String> workTeamChkList = [];
-
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");

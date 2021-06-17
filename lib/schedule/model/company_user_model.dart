@@ -69,6 +69,7 @@ class CompanyUserModel {
     required this.userSearch,
   });
 
+
   CompanyUserModel.fromMap({required Map mapData})
       : token = mapData["token"] ?? "",
         mail = mapData["mail"] ?? "",
