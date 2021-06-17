@@ -10,4 +10,8 @@ class PublicFunctionRepository {
 
   Future<bool> onBackPressed({required BuildContext context}) =>
       _function.onBackPressed(context);
+
+
+  Future<bool> onScheduleBackPressed({required BuildContext context}) =>
+      _function.onScheduleBackPressed(context);
 }

@@ -39,7 +39,7 @@ class ApprovalModel {
   int? totalCost;
   String user;
   String userMail;
-  List<dynamic> colleagues;
+  List<dynamic>? colleagues;
   DocumentReference? reference;
 
   ApprovalModel({
@@ -60,7 +60,7 @@ class ApprovalModel {
     this.totalCost,
     required this.user,
     required this.userMail,
-    required this.colleagues,
+    this.colleagues,
   });
 
   ApprovalModel.fromMap({required Map mapData, this.reference})

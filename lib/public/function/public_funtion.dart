@@ -14,4 +14,9 @@ class PublicFunction {
     Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleView(),));
     return true;
   }
+
+  Future<bool> onScheduleBackPressed(BuildContext context) async {
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ScheduleView(),), (route) => false);
+    return true;
+  }
 }

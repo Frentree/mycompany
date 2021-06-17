@@ -77,7 +77,7 @@ class ScheduleFirebaseCurd {
       allDay: workModel.allDay,
       approvalMail: approvalUser.mail,
       approvalUser: approvalUser.name,
-      colleagues: workModel.colleagues!,
+      colleagues: workModel.colleagues,
       title: workModel.title,
       location: workModel.location!,
       approvalType: workModel.type,
@@ -90,6 +90,28 @@ class ScheduleFirebaseCurd {
     );
 
     await _store.collection("company").doc(companyCode).collection("workApproval").add(model.toJson());
+  }
+
+  // 결재 내역 확인 있으면 삭제 불가능
+  Future<bool> getApprovalListSizeDocument(String companyCode, String documentId) async {
+    bool isResult = false;
+
+    await _store.collection("company").doc(companyCode).collection("workApproval").where("docIds", isEqualTo: documentId).where("status", isEqualTo: "대기").get().then((value) {
+      if(value.size < 1) {
+        isResult = true;
+      }
+    });
+
+    return isResult;
+  }
+
+  // 일정 삭제
+  Future<bool> deleteScheduleDocument(String companyCode, String documentId) async {
+    bool isResult = false;
+
+    await _store.collection("company").doc(companyCode).collection("work").doc(documentId).delete().whenComplete(() => {isResult = true});
+
+    return isResult;
   }
 
   /*

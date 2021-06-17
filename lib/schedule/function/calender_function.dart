@@ -7,6 +7,7 @@ import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
@@ -29,10 +30,13 @@ class CalenderFunction{
       String type = model.type;
       String name = model.name;
       String title = model.title;
+      String content = model.content;
       String mail = model.createUid;
       String? location = model.location;
       String? notes = "[${type}] ${title}";
       Timestamp startTimes = model.startTime;
+      String? position = mailChkList.firstWhere((element) => element.mail == mail).position.toString();
+      String? team = mailChkList.firstWhere((element) => element.mail == mail).team.toString();
 
       if(typeList.contains(type)){
         typeChoise = typeList.indexOf(type);
@@ -51,6 +55,12 @@ class CalenderFunction{
         notes: notes,
         type: type,
         profile: mail,
+        team: team,
+        title: title,
+        content: content,
+        colleagues: model.colleagues,
+        documentId: doc.id,
+        position: position,
         location: location != null ? location : "",
         resourceIds:<Object> [mail.hashCode],
       ));
@@ -120,7 +130,7 @@ class CalenderFunction{
 
 
   // 스케줄 입력
-  Future<bool> insertWork({
+  Future<bool> insertSchedule({
     required String companyCode,
     required bool allDay,
     required String workName,
@@ -158,6 +168,69 @@ class CalenderFunction{
 
     return await _reository.insertWorkDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser);
   }
+
+  // 스케줄 수정
+  Future<bool> updateSchedule({
+    required String companyCode,
+    required bool allDay,
+    required String workName,
+    required String title,
+    required String content,
+    String? location,
+    required DateTime startTime,
+    required DateTime endTime,
+    required List<CompanyUserModel> workColleagueChkList,
+    required bool isAllDay,
+    CompanyUserModel? approvalUser,
+  }) async {
+    // 선택된 동료 리스트
+    List<String>? colleaguesList;
+
+    // 선택된 동료가 있으면
+    if(workColleagueChkList.length != 0){
+      colleaguesList = ["bsc2079@naver.com"];
+      workColleagueChkList.map((e) => colleaguesList!.add(e.mail.toString())).toList();
+    }
+
+
+    WorkModel workModel = WorkModel(
+      allDay: allDay,
+      type: workName,
+      title: title,
+      content: content,
+      location: location,
+      startTime: Timestamp.fromDate(startTime),
+      endTime: Timestamp.fromDate(endTime),
+      colleagues: colleaguesList,
+      name: "이윤혁",
+      createUid: "bsc2079@naver.com",
+    );
+
+    return await _reository.insertWorkDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser);
+  }
+
+  // 스케줄 삭제
+  Future<int> deleteSchedule({
+    required String companyCode,
+    required String documentId
+  }) async {
+    int resultCode = 0; // 0 : 성공, 404 : 결재 중인 항목일때, 405 : 스케줄 삭제 오류
+
+    var approvalResult = await _reository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
+
+    if(approvalResult){
+      var scheduleResult = await _reository.deleteScheduleDocument(companyCode: companyCode, documentId: documentId);
+      if(!scheduleResult){
+        resultCode = 405;
+      }
+    } else {
+      resultCode = 404;
+    }
+
+    return resultCode;
+  }
+
+
 
 
 }
