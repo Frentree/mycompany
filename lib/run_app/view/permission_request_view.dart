@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:mycompany/login/function/join_company_function.dart';
 import 'package:mycompany/login/model/company_model.dart';
-import 'package:mycompany/login/view/find_company_view.dart';
-import 'package:mycompany/login/view/wait_join_company_approval_view.dart';
-import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
-import 'package:mycompany/login/widget/login_text_form_widget.dart';
 import 'package:mycompany/run_app/function/permission_function.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,19 +15,26 @@ class PermissionRequestView extends StatefulWidget {
 }
 
 class PermissionRequestViewState extends State<PermissionRequestView> with WidgetsBindingObserver {
-  late AppLifecycleState _notification;
+  late AppLifecycleState _appLifecycleState;
 
   CompanyModel selectCompany = CompanyModel(companyCode: "", companyName: "", companyAddr: "");
 
   ValueNotifier<bool> isSelected = ValueNotifier<bool>(false);
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
     setState(() {
-      _notification = state;
+      _appLifecycleState = state;
     });
+
+    if(_appLifecycleState == AppLifecycleState.resumed){
+      bool isPermissionGranted = await checkPermissionFunction();
+      if(isPermissionGranted == true){
+        pageMoveAndRemoveBackPage(context: context, pageName: SplashViewWhite());
+      }
+    }
   }
 
   @override
@@ -58,24 +59,6 @@ class PermissionRequestViewState extends State<PermissionRequestView> with Widge
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          /*Container(
-            padding: EdgeInsets.only(
-              left: 27.5.w,
-              right: 27.5.w,
-              top: 68.0.h,
-            ),
-            child: SizedBox(
-              height: 26.0.h,
-              child: Text(
-                "MYCOMPANY 이용 안내",
-                style: TextStyle(
-                  fontSize: 18.0.sp,
-                  fontWeight: FontWeight.w700,
-                  color: textColor,
-                ),
-              ),
-            ),
-          ),*/
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.only(
@@ -147,13 +130,9 @@ class PermissionRequestViewState extends State<PermissionRequestView> with Widge
             topPadding: 45.0.h,
             buttonName: "허용하기",
             buttonAction: () async {
-              String k = await requestPermissionFunction();
-              print("=========================>>>>> K : $k");
-              if(k=="NO"){
+              bool isPermissionGranted = await requestPermissionFunction();
+              if(isPermissionGranted == false){
                 await openAppSettings();
-              }
-              if(k=="OK"){
-                pageMoveAndRemoveBackPage(context: context, pageName: SplashViewWhite());
               }
             }
           ),

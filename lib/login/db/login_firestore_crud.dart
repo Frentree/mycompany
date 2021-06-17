@@ -41,14 +41,13 @@ class LoginFirestoreCrud {
   }
 
   Future<List<CompanyModel>> readAllCompanyData() async {
-    QuerySnapshot getData = await _firebaseFirestore.collection(COMPANY).get();
-    List<CompanyModel> allCompanyDataList = getData.docs.map((doc) => CompanyModel.fromMap(mapData: (doc.data() as dynamic))).toList();
+    QuerySnapshot<Map<dynamic, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).get();
+    List<CompanyModel> allCompanyDataList = getData.docs.map((doc) => CompanyModel.fromMap(mapData: doc.data())).toList();
 
     return allCompanyDataList;
   }
 
   Future<QuerySnapshot> findCompanyDataWithName({required String keyWord}) async {
-    QuerySnapshot t = await _firebaseFirestore.collection(COMPANY).where("companySearch", arrayContains: keyWord).get();
     return await _firebaseFirestore.collection(COMPANY).where("companySearch", arrayContains: keyWord).get();
   }
 

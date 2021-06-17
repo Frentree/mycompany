@@ -111,7 +111,7 @@ class DateFormatCustom {
   // ex) 2020.10.15(수)
   String getDate({required DateTime date}) {
 
-    return date.year.toString() + "." +  twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + cangeWeekDay(date: date) +")";
+    return date.year.toString() + "." +  twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + changeWeekDay(date: date) +")";
   }
 
 }
