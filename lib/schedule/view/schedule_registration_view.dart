@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -25,18 +27,18 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   // 전체 팀
   List<TeamModel> teamList = <TeamModel>[];
   // 전체 직원
-  List<CompanyUserModel> employeeList = <CompanyUserModel>[];
+  List<EmployeeModel> employeeList = <EmployeeModel>[];
 
   // 선택된 직원
-  List<CompanyUserModel> workColleagueChkList = [];
+  List<EmployeeModel> workColleagueChkList = [];
 
   // 선택된 팀
   List<String> workTeamChkList = [];
 
 
   _getPersonalDataSource() async {
-    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");
-    List<CompanyUserModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: "0S9YLBX");
+    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser!.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser!.companyCode);
 
     setState(() {
       teamList = team;
@@ -58,14 +60,29 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   ValueNotifier<bool> _isAllDay = ValueNotifier<bool>(false);
   ValueNotifier<bool> _isHalfway = ValueNotifier<bool>(false);
 
+  EmployeeModel defaultEmpUser = EmployeeModel(mail: "", name: "", companyCode: "", userSearch: [], createDate: Timestamp.now());
+
   // 결재자
-  ValueNotifier<CompanyUserModel> approvalUser = ValueNotifier<CompanyUserModel>(CompanyUserModel(mail: "", name: "", companyId: "", joinedDate: Timestamp.now(), userSearch: []));
+  late ValueNotifier<EmployeeModel> approvalUser = ValueNotifier<EmployeeModel>(defaultEmpUser);
+
 
   List workNames = [
+    "internal_work".tr(),
+    "outside_work".tr(),
+    "request".tr(),
+    "home_job".tr(),
+    "annual".tr(),
+    //"외출",
+    "meeting".tr(),
+    "other".tr(),
+  ];
+
+  List works = [
     "내근",
     "외근",
+    "요청",
     "재택",
-    "annual".tr(),
+    "연차",
     //"외출",
     "미팅",
     "기타",
@@ -164,7 +181,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                         ),
                         onTap: () async {
                           var result = await CalenderFunction().insertSchedule(
-                              companyCode: "0S9YLBX",
+                              companyCode: loginUser!.companyCode.toString(),
                               allDay: _isAllDay.value,
                               workName: workNames[workChkCount],
                               title: titleController.text,
@@ -246,11 +263,11 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                         ),
                                         onPressed: () {
                                           // 결재자
-                                          approvalUser.value = CompanyUserModel(mail: "", name: "", companyId: "", joinedDate: Timestamp.now(), userSearch: []);
+                                          approvalUser.value = defaultEmpUser;
                                           _isAllDay.value = false;
                                           _isHalfway.value = false;
 
-                                          if(workNames[index] == "annual".tr()){
+                                          if(works[index] == "연차"){
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 9, 0, 0);
                                             _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 18, 0, 0);
                                           } else {
@@ -271,7 +288,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             child: Container(
                               width: 309.0.w,
                               child: ScheduleInsertWidget(
-                                workName: workNames[workChkCount],
+                                workName: works[workChkCount],
                                 isAllDay: _isAllDay,
                                 isHalfway: _isHalfway,
                                 locationController: locationController,

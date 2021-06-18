@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/schedule/model/approval_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
@@ -12,6 +13,7 @@ class ScheduleFirebaseCurd {
 
   Future<QuerySnapshot> getSchedules(String? companyCode) async {
     List<String> mailList = [];
+
     for(var data in mailChkList){
       mailList.add(data.mail);
     }
@@ -38,7 +40,7 @@ class ScheduleFirebaseCurd {
   *  외출, 재택, 연차,  휴가등 결재 후 스케줄 등록
   *
   * */
-  Future<bool> insertWorkDocument(WorkModel workModel, CompanyUserModel? approvalUser, String companyCode) async {
+  Future<bool> insertWorkDocument(WorkModel workModel, EmployeeModel? approvalUser, String companyCode) async {
     bool isResult = false;
     switch(workModel.type) {
       case "내근": case "미팅":
@@ -50,7 +52,7 @@ class ScheduleFirebaseCurd {
         isResult = true;
         break;
 
-      case "재택": case "외출": case "연차" : case "Annual":
+      case "재택": case "외출": case "연차":
         await insertWorkApproval(workModel, approvalUser!, companyCode, null);
         isResult = true;
         break;
@@ -68,10 +70,43 @@ class ScheduleFirebaseCurd {
   }
 
   /*
+  *  스케줄 수정
+  *
+  * */
+  Future<bool> updateWorkDocument(WorkModel workModel, EmployeeModel? approvalUser, String companyCode, String documentId) async {
+    bool isResult = false;
+    switch(workModel.type) {
+      case "내근": case "미팅":
+      await _store.collection("company").doc(companyCode).collection("work").doc(documentId).set(workModel.toJson());
+      isResult = true;
+      break;
+      case "외근": case "요청":
+      await _store.collection("company").doc(companyCode).collection("work").doc(documentId).set(workModel.toJson()).then((value) => insertWorkApproval(workModel, approvalUser!, companyCode, documentId));
+      isResult = true;
+      break;
+
+      case "재택": case "외출": case "연차":
+      await insertWorkApproval(workModel, approvalUser!, companyCode, null);
+      isResult = true;
+      break;
+    }
+
+    if(workModel.type == "기타" && approvalUser!.mail == ""){
+      await _store.collection("company").doc(companyCode).collection("work").doc(documentId).set(workModel.toJson());
+      isResult = true;
+    }else if(workModel.type == "기타" && approvalUser!.mail != "") {
+      await _store.collection("company").doc(companyCode).collection("work").doc(documentId).set(workModel.toJson()).then((value) => insertWorkApproval(workModel, approvalUser, companyCode, documentId));
+      isResult = true;
+    }
+
+    return isResult;
+  }
+
+  /*
   *  결재 Doc
   *
   * */
-  Future<void> insertWorkApproval(WorkModel workModel, CompanyUserModel approvalUser, String companyCode, String? docId) async {
+  Future<void> insertWorkApproval(WorkModel workModel, EmployeeModel approvalUser, String companyCode, String? docId) async {
     ApprovalModel model = ApprovalModel(
       docIds: docId,
       allDay: workModel.allDay,

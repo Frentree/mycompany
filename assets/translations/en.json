@@ -34,6 +34,7 @@
   "halfway" : "Halfway",
   "other" : "Other",
   "registering_a_schedule" : "Registering a Schedule",
+  "schedule_modification": "Schedule modification",
   "start_time" : "Start Time",
   "end_time" : "End Time",
   "Invite_colleague" : "Invite colleague",
@@ -94,5 +95,4 @@
   "rejoinButton": "Rejoin Company",
   "joinCompanySuccessViewMainMessage": "Company join is complete!",
   "joinCompanySuccessViewHintMessage": "Now you can use the MY COMPANY service in the company you joined."
->>>>>>> origin/master
 }

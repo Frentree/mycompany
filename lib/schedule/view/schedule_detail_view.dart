@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/login/widget/login_dialog_widget.dart';
+import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -26,7 +29,6 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    print(widget.appointment.content);
 
     return Scaffold(
       body: Container(
@@ -74,53 +76,133 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                       ],
                     ),
                   ),
-                  PopupMenuButton<int>(
-                    padding: EdgeInsets.all(0),
-                    icon: SvgPicture.asset(
-                      'assets/icons/vertical_menu.svg',
-                      width: 15.8.w,
-                      height: 15.76.h,
-                      color: blackColor,
-                    ),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 1,
-                        child: Text(
-                          "update".tr(),
-                          style: getNotoSantMedium(fontSize: 12.0, color: textColor),
-                        ),
+                  Visibility(
+                    visible: widget.appointment.profile == loginUser!.mail,
+                    child: PopupMenuButton<int>(
+                      padding: EdgeInsets.all(0),
+                      icon: SvgPicture.asset(
+                        'assets/icons/vertical_menu.svg',
+                        width: 15.8.w,
+                        height: 15.76.h,
+                        color: blackColor,
                       ),
-                      PopupMenuItem(
-                        value: 2,
-                        child: Text(
-                          "delete".tr(),
-                          style: getNotoSantMedium(fontSize: 12.0, color: textColor),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text(
+                            "update".tr(),
+                            style: getNotoSantMedium(fontSize: 12.0, color: textColor),
+                          ),
                         ),
-                      ),
-                    ],
-                    onSelected: (value) async {
-                      var result = -1;
-                      switch(value) {
-                        case 1:   //수정
-                          break;
-                        case 2:   //삭제
-                          result = await CalenderFunction().deleteSchedule(companyCode: "0S9YLBX", documentId: widget.appointment.documentId.toString());
-                          break;
-                      }
-                      print(result);
-                      switch(result) {
-                        case 0: // 삭제 및 수정 성공
-                          _publicFunctionReprository.onScheduleBackPressed(context: context);
-                          break;
-                        case 404: // 결재 중인 항목이 있어서 삭제 실패
-                          break;
-                        case 405: // 스케줄 등록 실패
-                          break;
-                        case 406: // 수정 실패 오류
-                          break;
-                      }
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text(
+                            "delete".tr(),
+                            style: getNotoSantMedium(fontSize: 12.0, color: textColor),
+                          ),
+                        ),
+                      ],
+                      onSelected: (value) async {
+                        var result = -1;
+                        switch(value) {
+                          case 1:   //수정
+                            result = await CalenderFunction().updateScheduleWork(
+                                context: context,
+                                companyCode: loginUser!.companyCode.toString(),
+                                documentId: widget.appointment.documentId.toString(),
+                                appointment: widget.appointment);
+                            break;
+                          case 2:   //삭제
+                            result = await CalenderFunction().deleteSchedule(
+                                companyCode: loginUser!.companyCode.toString(),
+                                documentId: widget.appointment.documentId.toString()
+                            );
+                            break;
+                        }
+                        print(result);
+                        switch(result) {
+                          case 0: // 삭제 및 수정 성공
+                            _publicFunctionReprository.onScheduleBackPressed(context: context);
+                            break;
+                          case 400: // 결재 중인 항목이 있어서 삭제 실패
+                            loginDialogWidget(
+                                context: context,
+                                message: "연차는 수정이 불가능합니다",
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
+                            break;
+                          case 404: // 결재 중인 항목이 있어서 삭제 실패
+                            loginDialogWidget(
+                              context: context,
+                              message: "결재 중인 항목이므로 삭제가 불가능합니다.\n결재 요청 취소 후 삭제 해주세요.",
+                              actions: [
+                                confirmElevatedButton(
+                                  topPadding: 81.0.h,
+                                  buttonName: "dialogConfirm".tr(),
+                                  buttonAction: () => Navigator.pop(context),
+                                  customWidth: 200.0,
+                                  customHeight: 40.0.h
+                                ),
+                              ]
+                            );
+                            break;
+                          case 405: // 스케줄 등록 실패
+                            loginDialogWidget(
+                                context: context,
+                                message: "일정 삭제에 실패하였습니다. 관리자에게 문의해주세요",
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
+                            break;
+                          case 406: // 결재 진행중 수정
+                            loginDialogWidget(
+                                context: context,
+                                message: "결재 중인 항목이므로 수정이 불가능합니다.\n결재 요청 취소 후 수정 해주세요.",
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
+                            break;
+                          case 407: // 수정 오류
+                            loginDialogWidget(
+                                context: context,
+                                message: "일정 수정이 실패하였습니다. 관리자에게 문의해주세요",
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
+                            break;
+                        }
 
-                    },
+                      },
+                    ),
                   ),
                 ],
               ),

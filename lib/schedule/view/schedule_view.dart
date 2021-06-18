@@ -6,6 +6,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/main.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
@@ -30,7 +32,7 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   List<Appointment> scheduleList = <Appointment>[];
   List<TeamModel> teamList = <TeamModel>[];
-  List<CompanyUserModel> employeeList = <CompanyUserModel>[];
+  List<EmployeeModel> employeeList = <EmployeeModel>[];
   List<CalendarResource> resource = <CalendarResource>[];
 
   bool _isDatePopup = false;           // 스케줄 날자 선택 창
@@ -46,23 +48,9 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   @override
   void initState() {
+    if(loginEmpUser != null)
     if(mailChkList.isEmpty){
-      mailChkList.add(
-          CompanyUserModel(   // 로그인 유저로 변경 예정
-            mail: "bsc2079@naver.com",
-            name: "이윤혁",
-            companyId: "0S9YLBX",
-            phone: "010-7658-2079",
-            position: "대리",
-            team: "개발팀",
-            birthday: "1993.05.26",
-            profilePhoto: "",
-            teamNum: 999,
-            positionNum: 999,
-            joinedDate: Timestamp.now(),
-            userSearch: ['이', '윤', '혁']
-          )
-      );
+      mailChkList.add(loginEmpUser!);
     }
 
     _key = GlobalKey<ScaffoldState>();
@@ -74,33 +62,22 @@ class _ScheduleViewState extends State<ScheduleView> {
   }
 
   _getResetChose() {
+
     mailChkList = [];
-    mailChkList.add(CompanyUserModel(
-        mail: "bsc2079@naver.com",
-        name: "이윤혁",
-        companyId: "0S9YLBX",
-        phone: "010-7658-2079",
-        position: "대리",
-        team: "개발팀",
-        birthday: "1993.05.26",
-        profilePhoto: "",
-        teamNum: 999,
-        positionNum: 999,
-        joinedDate: Timestamp.now(),
-        userSearch: ['이', '윤', '혁']
-    ));
+
+    mailChkList.add(loginEmpUser!);
   }
 
   _getDataSource() async {
-    List<Appointment> schedules = await ScheduleFunctionReprository().getSheduleData(companyCode: "0S9YLBX");
+    List<Appointment> schedules = await ScheduleFunctionReprository().getSheduleData(companyCode: loginUser!.companyCode.toString());
     setState(() {
       scheduleList = schedules;
     });
   }
 
   _getPersonalDataSource() async {
-    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: "0S9YLBX");
-    List<CompanyUserModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: "0S9YLBX");
+    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser!.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser!.companyCode);
 
     setState(() {
       teamList = team;
@@ -170,8 +147,9 @@ class _ScheduleViewState extends State<ScheduleView> {
                           ),
                           onTap: () {
                             _isColleagueChk = !_isColleagueChk;
-
+                            // 팀 선택일때
                             if(!_isTeamAndEmployeeChk) {
+
                               if(_isColleagueChk) {
                                 _getResetChose();
                                 for(var team in teamList){
@@ -186,10 +164,10 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 teamChkList.clear();
                                 _getResetChose();
                               }
-                            } else {
+                            } else {   //직원 선택일떄
                               if(_isColleagueChk) {
                                 for(var emp in employeeList){
-                                  if(!mailChkList.contains(emp.mail.toString())){
+                                  if(!mailChkList.contains(emp)){
                                     mailChkList.add(emp);
                                   }
                                 }
@@ -409,7 +387,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   }
 }
 
-List<CompanyUserModel> mailChkList = [];
+List<EmployeeModel> mailChkList = [];
 List<String> teamChkList = [];
 
 Widget _buildColleague({
@@ -417,7 +395,7 @@ Widget _buildColleague({
   required data,
   required getDataSource,
   required bool isTeamAndEmployeeChk,
-  List<CompanyUserModel>? user
+  List<EmployeeModel>? user
 }) {
   return Row(
     /*mainAxisAlignment: MainAxisAlignment.start,

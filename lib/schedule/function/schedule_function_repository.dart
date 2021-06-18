@@ -22,7 +22,7 @@ class ScheduleFunctionReprository {
   Future<List<TeamModel>> getTeam({required companyCode}) =>
       _calenderFunction.getTeam(companyCode);
 
-  Future<List<CompanyUserModel>> getEmployee({required companyCode}) =>
+  Future<List<EmployeeModel>> getEmployee({required companyCode}) =>
       _calenderFunction.getEmployee(companyCode);
 
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
@@ -15,8 +16,8 @@ class ScheduleApprovalView extends StatefulWidget {
 
   Key? key;
   final List<TeamModel> teamList;
-  final List<CompanyUserModel> employeeList;
-  ValueNotifier<CompanyUserModel> approvalUser;
+  final List<EmployeeModel> employeeList;
+  ValueNotifier<EmployeeModel> approvalUser;
 
   ScheduleApprovalView({key, required this.teamList, required this.employeeList, required this.approvalUser});
 
@@ -27,9 +28,9 @@ class ScheduleApprovalView extends StatefulWidget {
 class _ScheduleApprovalViewState extends State<ScheduleApprovalView> {
 
   late List<TeamModel> teamList = widget.teamList;
-  late List<CompanyUserModel> employeeList = widget.employeeList;
+  late List<EmployeeModel> employeeList = widget.employeeList;
 
-  late CompanyUserModel approvalUsers = widget.approvalUser.value;
+  late EmployeeModel approvalUsers = widget.approvalUser.value;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +109,7 @@ class _ScheduleApprovalViewState extends State<ScheduleApprovalView> {
               child: ListView.builder(
                 itemCount: super.widget.teamList.length + 1,
                 itemBuilder: (context, index) {
-                  List<CompanyUserModel> list = [];
+                  List<EmployeeModel> list = [];
 
                   employeeList.map((data) {
                     if(index != teamList.length){
@@ -188,7 +189,7 @@ class _ScheduleApprovalViewState extends State<ScheduleApprovalView> {
   }
 
 
-  Widget getTeam({required int index,required List<CompanyUserModel> list, required String teamName}) {
+  Widget getTeam({required int index,required List<EmployeeModel> list, required String teamName}) {
 
     return Column(
       children: [

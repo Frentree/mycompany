@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -31,10 +30,10 @@ class ScheduleInsertWidget extends StatefulWidget {
   final ValueNotifier<bool> isAllDay;
   final ValueNotifier<bool> isHalfway;
   final List<TeamModel> teamList;
-  final List<CompanyUserModel> employeeList;
-  final List<CompanyUserModel> workColleagueChkList;
+  final List<EmployeeModel> employeeList;
+  final List<EmployeeModel> workColleagueChkList;
   final List<String> workTeamChkList;
-  final ValueNotifier<CompanyUserModel> approvalUser;
+  final ValueNotifier<EmployeeModel> approvalUser;
 
   ScheduleInsertWidget({
     required this.workName,
@@ -66,6 +65,8 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         return setInWork(context);
       case "외근":
         return setOutWork(context);
+      case "요청":
+        return setRequest(context);
       case "미팅":
         return setMeeting(context);
       case "재택":
@@ -115,6 +116,21 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
     );
   }
 
+  Widget setRequest(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getTitleWidget(),
+          getDateTime(),
+          getLocation(),
+          getNote(),
+          getApproval()
+        ],
+      ),
+    );
+  }
+
   Widget setHomeWork(BuildContext context) {
     widget.workColleagueChkList.clear();
     widget.locationController.text = "";
@@ -139,6 +155,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
       child: Column(
         children: [
           getAnnual(),
+          getLocation(),
           getNote(),
           getApproval()
         ],
@@ -153,6 +170,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         children: [
           getTitleWidget(),
           getDateTime(),
+          getLocation(),
           getNote(),
           getColleague()
         ],

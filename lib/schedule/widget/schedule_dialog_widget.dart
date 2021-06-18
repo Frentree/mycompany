@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/view/schedule_detail_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
@@ -199,12 +200,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                         ),
                         Text(
                           _format.getTime(date: app.endTime),
-                          style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: "Roboto",
-                              color: hintTextColor
-                          ),
+                          style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
                         ),
                       ],
                     ),
@@ -221,12 +217,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                           child: Center(
                             child: Text(
                               app.type.toString(),
-                              style: TextStyle(
-                                fontSize: 10.0.sp,
-                                color: whiteColor,
-                                fontFamily: "NotoSansKR",
-                                fontWeight: FontWeight.w500
-                              ),
+                              style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
                             ),
                           ),
                         ),

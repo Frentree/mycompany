@@ -16,13 +16,11 @@ class UserInfoProvider with ChangeNotifier {
   }
 
   void setUserData({UserModel? userModel}) {
-    print("데이터저장");
     _userModel = userModel;
     notifyListeners();
   }
 
   Future<void> saveUserDataToPhone({required UserModel userModel}) async {
-    print("데이터 저장");
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     dynamic encodeData = userModel.toJson();
 

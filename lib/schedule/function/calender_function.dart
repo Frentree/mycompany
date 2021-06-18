@@ -2,11 +2,13 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
+import 'package:mycompany/schedule/view/schedule_registration_update_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
@@ -48,6 +50,7 @@ class CalenderFunction{
       final DateTime endTime = model.endTime == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(model.endTime!.toDate().toString());
 
       shedules.add(Appointment(
+        isAllDay: model.allDay,
         startTime: startTime,
         endTime: endTime,
         subject: name,
@@ -115,14 +118,14 @@ class CalenderFunction{
     return teamList;
   }
 
-  Future<List<CompanyUserModel>> getEmployee(String? companyCode) async {
-    List<CompanyUserModel> empList = [];
+  Future<List<EmployeeModel>> getEmployee(String? companyCode) async {
+    List<EmployeeModel> empList = [];
     var empData = await _reository.getCompanyUser(companyCode: companyCode);
 
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
     for (var doc in empSnapshot) {
-      empList.add(CompanyUserModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
+      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
     }
 
     return empList;
@@ -139,12 +142,18 @@ class CalenderFunction{
     String? location,
     required DateTime startTime,
     required DateTime endTime,
-    required List<CompanyUserModel> workColleagueChkList,
+    required List<EmployeeModel> workColleagueChkList,
     required bool isAllDay,
-    CompanyUserModel? approvalUser,
+    EmployeeModel? approvalUser,
   }) async {
     // 선택된 동료 리스트
     List<String>? colleaguesList;
+
+    if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
+      if(approvalUser == null || approvalUser.mail == ""){
+        return await false;
+      }
+    }
 
     // 선택된 동료가 있으면
     if(workColleagueChkList.length != 0){
@@ -162,8 +171,8 @@ class CalenderFunction{
       startTime: Timestamp.fromDate(startTime),
       endTime: Timestamp.fromDate(endTime),
       colleagues: colleaguesList,
-      name: "이윤혁",
-      createUid: "bsc2079@naver.com",
+      name: workName == "요청" ? approvalUser!.name : "이윤혁",
+      createUid: workName == "요청" ? approvalUser!.mail : "bsc2079@naver.com",
     );
 
     return await _reository.insertWorkDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser);
@@ -171,6 +180,7 @@ class CalenderFunction{
 
   // 스케줄 수정
   Future<bool> updateSchedule({
+    required String documentId,
     required String companyCode,
     required bool allDay,
     required String workName,
@@ -179,12 +189,18 @@ class CalenderFunction{
     String? location,
     required DateTime startTime,
     required DateTime endTime,
-    required List<CompanyUserModel> workColleagueChkList,
+    required List<EmployeeModel> workColleagueChkList,
     required bool isAllDay,
-    CompanyUserModel? approvalUser,
+    EmployeeModel? approvalUser,
   }) async {
     // 선택된 동료 리스트
     List<String>? colleaguesList;
+
+    if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
+      if(approvalUser == null || approvalUser.mail == ""){
+        return false;
+      }
+    }
 
     // 선택된 동료가 있으면
     if(workColleagueChkList.length != 0){
@@ -202,11 +218,38 @@ class CalenderFunction{
       startTime: Timestamp.fromDate(startTime),
       endTime: Timestamp.fromDate(endTime),
       colleagues: colleaguesList,
-      name: "이윤혁",
-      createUid: "bsc2079@naver.com",
+      name: workName == "요청" ? approvalUser!.name : "이윤혁",
+      createUid: workName == "요청" ? approvalUser!.mail : "bsc2079@naver.com",
     );
 
-    return await _reository.insertWorkDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser);
+    return await _reository.updateWorkDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser, documentId: documentId);
+  }
+
+  // 스케줄 수정
+  Future<int> updateScheduleWork({
+    required BuildContext context,
+    required String companyCode,
+    required String documentId,
+    required Appointment appointment
+  }) async {
+    int resultCode = 0; // 0 : 성공, 404 : 결재 중인 항목일때, 405 : 스케줄 삭제 오류
+
+    if(appointment.type == "반차" || appointment.type == "연차"){
+      return 400;
+    }
+
+    var approvalResult = await _reository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
+
+    if(approvalResult){
+      var scheduleResult = await Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment,)));
+      if(!scheduleResult){
+        resultCode = 407;
+      }
+    } else {
+      resultCode = 406;
+    }
+
+    return resultCode;
   }
 
   // 스케줄 삭제
@@ -229,8 +272,5 @@ class CalenderFunction{
 
     return resultCode;
   }
-
-
-
 
 }
