@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
-import 'package:mycompany/public/function/fcm/fcm_init.dart';
+import 'package:mycompany/public/function/fcm/__init__.dart';
 import 'package:mycompany/run_app/view/permission_request_view.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,8 +23,15 @@ void main() async {
   await Firebase.initializeApp();
   bool a = await checkPermissionFunction();
 
-  ///Initialize configurations for Firebase Cloud Messagings
+  ///Initialize configurations for Firebase Cloud Messaging
   FcmInit();
+
+  String? token = await FirebaseMessaging.instance.getToken(
+      vapidKey:
+      "BD93gpQXenmF_dTiN2tcVyf7zKxMxHDkhLAj50jYI6ZI0FDxvPG5jH8xmH0PIagfT3g-HaVdk8wHkM5Rdyf5s5E'"
+  );
+
+  print(token);
 
   runApp(
     EasyLocalization(

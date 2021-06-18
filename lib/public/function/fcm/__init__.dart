@@ -16,13 +16,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
 
+/// Create a [AndroidNotificationChannel] for heads up notifications
+late AndroidNotificationChannel channel;
+
+/// Initialize the [FlutterLocalNotificationsPlugin] package.
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 void FcmInit() async {
-  /// Create a [AndroidNotificationChannel] for heads up notifications
-  AndroidNotificationChannel channel;
-
-  /// Initialize the [FlutterLocalNotificationsPlugin] package.
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
   if (!kIsWeb) {
     channel = const AndroidNotificationChannel(
       'high_importance_channel', // id
@@ -51,4 +51,35 @@ void FcmInit() async {
       sound: true,
     );
   }
+}
+
+void OnMessage() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("message is : $message");
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null && !kIsWeb) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channel.description,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ));
+    }
+  });
+}
+
+void OnMessageOpenedApp() {
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
+    // TODO add a proper navigation router here, for bypass to the destination
+  });
 }

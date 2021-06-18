@@ -26,7 +26,8 @@ class CalenderFunction{
     List<QueryDocumentSnapshot> scheduleSnapshot = schduleData.docs;
 
     for (var doc in scheduleSnapshot) {
-      final model = WorkModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>));
+      final model =
+          WorkModel.fromMap(mapData: (doc.data() as Map<dynamic, dynamic>));
       String type = model.type;
       String name = model.name;
       String title = model.title;
@@ -35,17 +36,25 @@ class CalenderFunction{
       String? location = model.location;
       String? notes = "[${type}] ${title}";
       Timestamp startTimes = model.startTime;
-      String? position = mailChkList.firstWhere((element) => element.mail == mail).position.toString();
-      String? team = mailChkList.firstWhere((element) => element.mail == mail).team.toString();
+      String? position = mailChkList
+          .firstWhere((element) => element.mail == mail)
+          .position
+          .toString();
+      String? team = mailChkList
+          .firstWhere((element) => element.mail == mail)
+          .team
+          .toString();
 
-      if(typeList.contains(type)){
+      if (typeList.contains(type)) {
         typeChoise = typeList.indexOf(type);
       } else {
         typeChoise = 6;
       }
 
       final DateTime startTime = DateTime.parse(startTimes.toDate().toString());
-      final DateTime endTime = model.endTime == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(model.endTime!.toDate().toString());
+      final DateTime endTime = model.endTime == null
+          ? startTime.add(const Duration(hours: 0))
+          : DateTime.parse(model.endTime!.toDate().toString());
 
       shedules.add(Appointment(
         startTime: startTime,
@@ -62,9 +71,8 @@ class CalenderFunction{
         documentId: doc.id,
         position: position,
         location: location != null ? location : "",
-        resourceIds:<Object> [mail.hashCode],
+        resourceIds: <Object>[mail.hashCode],
       ));
-
     }
 
     return shedules;
