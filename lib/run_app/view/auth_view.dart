@@ -50,7 +50,7 @@ class AuthView extends StatelessWidget {
           return WaitJoinCompanyApprovalView();
 
         case 2:
-          return AttendanceDashboardView();
+          return ScheduleView();
           /*if(loginEmployeeData == null){
             return JoinCompanySuccessView();
           }
