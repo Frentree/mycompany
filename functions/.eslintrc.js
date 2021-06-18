@@ -7,8 +7,11 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "google",
+    "prettier",
   ],
   rules: {
     quotes: ["error", "double"],
+    "no-unused-vars": 0,
   },
+  parser: "babel-eslint",
 };
