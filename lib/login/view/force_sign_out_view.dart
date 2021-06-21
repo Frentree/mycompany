@@ -6,8 +6,10 @@ import 'package:mycompany/login/view/sign_in_view.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'dart:async';
 import 'package:mycompany/public/provider/user_info_provider.dart';
+import 'package:mycompany/run_app/view/auth_view.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -16,6 +18,7 @@ class ForceSignOutView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
     Future.delayed(Duration.zero, (){
       loginDialogWidget(
         context: context,
@@ -25,7 +28,8 @@ class ForceSignOutView extends StatelessWidget {
             buttonName: 'dialogConfirm'.tr(),
             buttonAction: () async {
               await userInfoProvider.deleteUserDataToPhone();
-              pageMoveAndRemoveBackPage(context: context, pageName: SignInView());
+              await employeeInfoProvider.deleteEmployeeDataToPhone();
+              pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
             }
           ),
         ],

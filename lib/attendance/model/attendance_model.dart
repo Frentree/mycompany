@@ -31,6 +31,7 @@ status
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AttendanceModel {
+  String? documentId;
   String mail;
   String name;
   Timestamp? createDate;
@@ -38,9 +39,10 @@ class AttendanceModel {
   Timestamp? endTime;
   int? certificationDevice;
   int? manualOnWorkReason;
-  String status;
+  int? status;
 
   AttendanceModel({
+    this.documentId,
     required this.mail,
     required this.name,
     this.createDate,
@@ -48,11 +50,12 @@ class AttendanceModel {
     this.endTime,
     this.certificationDevice,
     this.manualOnWorkReason,
-    required this.status,
+    this.status,
   });
 
-  AttendanceModel.fromMap({required Map mapData})
-      : mail = mapData["mail"] ?? "",
+  AttendanceModel.fromMap({required Map mapData, String? documentId})
+      : documentId = documentId ?? "",
+        mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",
         createDate = mapData["createDate"] ?? Timestamp.now(),
         attendTime = mapData["attendTime"] ?? null,

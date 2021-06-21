@@ -159,7 +159,7 @@ class SignUpViewState extends State<SignUpView> {
                                   phone: _phoneTextController.text,
                                 );
                                 if(_isSignUpSuccess){
-                                  backPage(context: context, /*pageName: SignInView()*/);
+                                  backPage(context: context);
                                 }
                               }
                             );

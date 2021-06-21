@@ -16,3 +16,13 @@ void pageMoveAndRemoveBackPage(
         (route) => false,
   );
 }
+
+/*
+void pageReplacement(
+    {required BuildContext context, required Widget pageName}) {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => pageName),
+  );
+}
+*/

@@ -1,20 +1,14 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
 import 'package:mycompany/attendance/widget/attendance_dialog_widget.dart';
-import 'package:mycompany/login/function/login_function_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/login/view/sign_up_view.dart';
-import 'package:mycompany/login/widget/login_button_widget.dart';
-import 'package:mycompany/login/widget/login_text_form_widget.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
-import 'package:mycompany/public/word/app_version.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceDashboardView extends StatefulWidget {
@@ -97,33 +91,29 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 175.0.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        dateFormatCustom.todayStringFormat()+" 근무시간",
-                        style: TextStyle(
-                          fontSize: 13.0.sp,
-                          color: textColor,
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dateFormatCustom.todayStringFormat()+" 근무시간",
+                      style: TextStyle(
+                        fontSize: 13.0.sp,
+                        color: textColor,
                       ),
-                      Text(
-                        "4시간 20분",
-                        style: TextStyle(
-                          fontSize: 26.0.sp,
-                          fontWeight: fontWeight['Bold'],
-                          color: Color(0xff2093F0),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Text(
+                      "4시간 20분",
+                      style: TextStyle(
+                        fontSize: 26.0.sp,
+                        fontWeight: fontWeight['Bold'],
+                        color: Color(0xff2093F0),
+                      ),
+                    )
+                  ],
                 ),
                 GestureDetector(
                   onTap: () => viewWorkingStatusDialog(context: context),
                   child: Container(
-                    width: 47.0.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [

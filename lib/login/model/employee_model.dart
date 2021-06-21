@@ -65,7 +65,7 @@ class EmployeeModel {
         mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",
         phone = mapData["phone"] ?? "",
-        birthday = mapData["birthday"] ?? null,
+        birthday = mapData["birthday"] ?? "",
         account = mapData["account"] ?? "",
         companyCode = mapData["companyCode"] ?? "",
         createDate = mapData["createDate"] ?? Timestamp.now(),

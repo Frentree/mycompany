@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,6 +11,7 @@ import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
+import 'package:mycompany/run_app/view/auth_view.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:provider/provider.dart';
 
@@ -85,8 +87,11 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
               topPadding: 81.0.h,
               buttonName: 'startButton'.tr(),
               buttonAction: () async {
+                String? deviceToken;
+
                 UserModel loginUserData = await loginFirestoreRepository.readUserData(email: userInfoProvider.getUserData()!.mail);
                 EmployeeModel loginEmployeeData = await loginFirestoreRepository.readEmployeeData(companyId: loginUserData.companyCode!, email: loginUserData.mail);
+                await FirebaseMessaging.instance.getToken().then((value) => deviceToken = value);
 
                 //UserInfoProvider 업데이트
                 userInfoProvider.saveUserDataToPhone(userModel: loginUserData);
@@ -94,7 +99,10 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
                 //EmployeeInfoProvider 저장
                 employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: loginEmployeeData);
 
-                pageMoveAndRemoveBackPage(context: context, pageName: SplashViewBlue());
+                print("기기 토큰 : $deviceToken");
+                print("유저 토큰 : ${loginUserData.token}");
+
+                pageMoveAndRemoveBackPage(context: context, pageName: AuthView(deviceToken: deviceToken,));
               }
             )
           ],
