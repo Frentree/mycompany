@@ -72,7 +72,8 @@ class NoPermission extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
 
-          home: PermissionRequestView(),
+          // home: PermissionRequestView(),
+          home: SplashViewWhite(),
         ),
       ),
     );

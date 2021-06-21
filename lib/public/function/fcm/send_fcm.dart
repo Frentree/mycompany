@@ -10,11 +10,7 @@ Future<void> sendFcmWithTokens(
 
   PublicFirebaseRepository _repository = PublicFirebaseRepository();
 
-  List<String> _tokens;
   String? _companyCode = currentUser!.companyCode;
-
-  /// Method to get user's tokens from firebase for use of FCM
-  // _tokens = await _repository.getTokensFromUsers(currentUser, _companyCode, users);
 
   var payload = <String, dynamic>{
     "title": title,
@@ -22,19 +18,7 @@ Future<void> sendFcmWithTokens(
     "route": route,
   };
 
-  /// TODO Method to write alarm data to firebase
+  /// Method to write alarm data to firebase
   _repository.saveAlarmDataFromUsersThenSend(currentUser, _companyCode, users, payload);
 
-
-  //
-  // try {
-  //   print(_tokens);
-  //   print(title);
-  //   print(message);
-  //   print(route);
-  //   await callFcm.call(payload);
-  // } catch (e) {
-  //   print("[ERROR] send fcm : sendFcmWithTokens");
-  //   print(e.toString());
-  // }
 }

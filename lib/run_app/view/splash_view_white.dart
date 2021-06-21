@@ -16,6 +16,28 @@ class SplashViewWhite extends StatefulWidget {
 
 class SplashViewWhiteState extends State<SplashViewWhite> {
   String? _deviceToken;
+  bool _requested = false;
+  bool _fetching = false;
+  late NotificationSettings _settings;
+
+  Future<void> requestPermissions() async {
+    setState(() {
+      _fetching = true;
+    });
+
+    NotificationSettings settings =
+    await FirebaseMessaging.instance.requestPermission(
+      announcement: true,
+      carPlay: true,
+      criticalAlert: true,
+    );
+
+    setState(() {
+      _requested = true;
+      _fetching = false;
+      _settings = settings;
+    });
+  }
 
   void setToken(String? token) {
     print('FCM Token: $token');
@@ -45,6 +67,7 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
     });
     OnMessage();
     OnMessageOpenedApp();
+    requestPermissions();
 
     Timer(Duration(seconds: 3), () => pageMoveAndRemoveBackPage(context: context, pageName: AuthView(deviceToken: _deviceToken,)));
   }
@@ -81,3 +104,26 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
     );
   }
 }
+
+/// Maps a [AuthorizationStatus] to a string value.
+const statusMap = {
+  AuthorizationStatus.authorized: 'Authorized',
+  AuthorizationStatus.denied: 'Denied',
+  AuthorizationStatus.notDetermined: 'Not Determined',
+  AuthorizationStatus.provisional: 'Provisional',
+};
+
+/// Maps a [AppleNotificationSetting] to a string value.
+const settingsMap = {
+  AppleNotificationSetting.disabled: 'Disabled',
+  AppleNotificationSetting.enabled: 'Enabled',
+  AppleNotificationSetting.notSupported: 'Not Supported',
+};
+
+/// Maps a [AppleShowPreviewSetting] to a string value.
+const previewMap = {
+  AppleShowPreviewSetting.always: 'Always',
+  AppleShowPreviewSetting.never: 'Never',
+  AppleShowPreviewSetting.notSupported: 'Not Supported',
+  AppleShowPreviewSetting.whenAuthenticated: 'Only When Authenticated',
+};
