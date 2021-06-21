@@ -1,32 +1,40 @@
-
 // cuND2SpJRb22zxQqkqQO-l:APA91bEOw2Bd8DuHI_OBKmVDeU65DIOL1DnV4i09A_yNIIAhKMmuKdlAGzumGfyDh1pryv9pKhL0aVqggSj5oMqEdhiI6eqx2EiVxOuE84YtJnuXCUhfM-QQzVoFBzGToakkMbcx7bNX
 
-
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/function/fcm/alarmModel.dart';
+import 'package:mycompany/public/function/public_firebase_repository.dart';
 
 Future<void> sendFcmWithTokens(
-    List tokens, String title, String message, String route) async {
-  HttpsCallable callFcm = FirebaseFunctions.instance.httpsCallable('sendFcm');
+    UserModel? currentUser, List users, String title, String message, String route) async {
 
-  String alarmId = "alarmId";
+  PublicFirebaseRepository _repository = PublicFirebaseRepository();
+
+  List<String> _tokens;
+  String? _companyCode = currentUser!.companyCode;
+
+  /// Method to get user's tokens from firebase for use of FCM
+  // _tokens = await _repository.getTokensFromUsers(currentUser, _companyCode, users);
 
   var payload = <String, dynamic>{
-    "tokens": tokens,
     "title": title,
     "message": message,
-    "alarmId": alarmId,
     "route": route,
   };
-  print("send FCM with Tokens");
-  print(payload);
-  print(payload["title"]);
-  print(payload["message"]);
 
-  try {
-    await callFcm.call(payload);
-  } catch(exception) {
-    print(exception.toString());
-  }
+  /// TODO Method to write alarm data to firebase
+  _repository.saveAlarmDataFromUsersThenSend(currentUser, _companyCode, users, payload);
+
+
+  //
+  // try {
+  //   print(_tokens);
+  //   print(title);
+  //   print(message);
+  //   print(route);
+  //   await callFcm.call(payload);
+  // } catch (e) {
+  //   print("[ERROR] send fcm : sendFcmWithTokens");
+  //   print(e.toString());
+  // }
 }
-
-

@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_item.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
 import 'package:mycompany/schedule/view/schedule_registration_view.dart';
+import 'package:provider/provider.dart';
 
 PublicFunctionRepository _reprository = PublicFunctionRepository();
 
 Widget getMainCircularMenu(
     {required BuildContext context, required String navigator}) {
+
+  UserInfoProvider _userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+
+  UserModel? _userModel = _userInfoProvider.getUserData();
+
   return CircularMenu(
       alignment: Alignment.bottomRight,
       radius: 170.0,
@@ -42,7 +50,8 @@ Widget getMainCircularMenu(
         CircularMenuItem(
             icon: Icons.star,
             color: navigator != 'good' ? Colors.blue : Colors.black38,
-            onTap: () => sendFcmWithTokens(["cuND2SpJRb22zxQqkqQO-l:APA91bEOw2Bd8DuHI_OBKmVDeU65DIOL1DnV4i09A_yNIIAhKMmuKdlAGzumGfyDh1pryv9pKhL0aVqggSj5oMqEdhiI6eqx2EiVxOuE84YtJnuXCUhfM-QQzVoFBzGToakkMbcx7bNX"],
+            onTap: () => sendFcmWithTokens(_userModel,
+                ["test0621_3@frentree.com"],
                 "title", "message", "route")
             // onTap: () => navigator != 'schedule'
             //     ? _reprository.mainNavigator(
