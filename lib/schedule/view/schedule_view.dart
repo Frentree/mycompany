@@ -11,6 +11,7 @@ import 'package:mycompany/main.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
+import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
@@ -70,6 +71,8 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   _getDataSource() async {
     List<Appointment> schedules = await ScheduleFunctionReprository().getSheduleData(companyCode: loginUser!.companyCode.toString());
+    // await ScheduleFirebaseReository().workColleaguesUpdate(companyCode: loginUser!.companyCode.toString());
+
     setState(() {
       scheduleList = schedules;
     });

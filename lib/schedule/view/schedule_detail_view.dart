@@ -7,7 +7,7 @@ import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
-import 'package:mycompany/schedule/function/calender_function.dart';
+import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -106,14 +106,38 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                         var result = -1;
                         switch(value) {
                           case 1:   //수정
-                            result = await CalenderFunction().updateScheduleWork(
+                            if(widget.appointment.profile != widget.appointment.organizerId){
+                              loginDialogWidget(
+                                  context: context,
+                                  message: "일정 생성자가 아니므로 수정이 불가능합니다.",
+                                  actions: [
+                                    confirmElevatedButton(
+                                        topPadding: 81.0.h,
+                                        buttonName: "dialogConfirm".tr(),
+                                        buttonAction: () => Navigator.pop(context),
+                                        customWidth: 200.0,
+                                        customHeight: 40.0.h
+                                    ),
+                                  ]
+                              );
+                              break;
+                            }
+
+                            result = await CalenderMethod().updateScheduleWork(
                                 context: context,
                                 companyCode: loginUser!.companyCode.toString(),
                                 documentId: widget.appointment.documentId.toString(),
                                 appointment: widget.appointment);
                             break;
                           case 2:   //삭제
-                            result = await CalenderFunction().deleteSchedule(
+                            if(widget.appointment.profile != widget.appointment.organizerId){
+                              result = await CalenderMethod().deleteColleagues(
+                                  companyCode: loginUser!.companyCode.toString(),
+                                  appointment: widget.appointment
+                              );
+                              break;
+                            }
+                            result = await CalenderMethod().deleteSchedule(
                                 companyCode: loginUser!.companyCode.toString(),
                                 documentId: widget.appointment.documentId.toString()
                             );
@@ -122,6 +146,19 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                         print(result);
                         switch(result) {
                           case 0: // 삭제 및 수정 성공
+                            await loginDialogWidget(
+                                context: context,
+                                message: "처리가 완료되었습니다.",
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
                             _publicFunctionReprository.onScheduleBackPressed(context: context);
                             break;
                           case 400: // 결재 중인 항목이 있어서 삭제 실패

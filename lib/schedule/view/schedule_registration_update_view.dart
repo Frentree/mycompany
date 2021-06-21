@@ -12,7 +12,7 @@ import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
-import 'package:mycompany/schedule/function/calender_function.dart';
+import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
@@ -84,7 +84,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
   List workNames = [
     "internal_work".tr(),
     "outside_work".tr(),
-    "request".tr(),
+    "task_request".tr(),
 //    "home_job".tr(),
 //    "annual".tr(),
     //"외출",
@@ -207,11 +207,11 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                           ),
                         ),
                         onTap: () async {
-                          var result = await CalenderFunction().updateSchedule(
+                          var result = await CalenderMethod().updateSchedule(
                             documentId: widget.documentId,
                             companyCode: loginUser!.companyCode.toString(),
                             allDay: _isAllDay.value,
-                            workName: workNames[workChkCount],
+                            workName: works[workChkCount],
                             title: titleController.text,
                             content: noteController.text,
                             startTime: _startDateTime.value,
@@ -262,9 +262,9 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                               itemCount: workNames.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                    padding: EdgeInsets.all(7.0),
+                                    padding: EdgeInsets.all(5.0),
                                     child: Container(
-                                      width: 58.0.w,
+                                      //width: 58.0.w,
                                       height: 37.0.h,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(Radius.circular(17.0.r)),

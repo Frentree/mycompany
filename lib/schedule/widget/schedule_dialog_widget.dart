@@ -17,14 +17,21 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widg
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
   DateFormatCustom _format = DateFormatCustom();
 
   Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
+    data.sort((a,b) => a.startTime.compareTo(b.startTime));
+
+    List<Appointment> allDayAppointment = [];
     List<Appointment> amAppointment = [];
     List<Appointment> pmAppointment = [];
 
     for(Appointment appoint in data) {
-      if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(DateTime.parse(appoint.startTime.toString())).inHours){
+      if(appoint.isAllDay == true){
+        allDayAppointment.add(appoint);
+      } else if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(DateTime.parse(appoint.startTime.toString())).inHours){
         amAppointment.add(appoint);
         //print("오전");
       } else {
@@ -33,8 +40,8 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
       }
     }
 
-    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
-    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+/*    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));*/
 
     showDialog(
       context: context,
@@ -58,11 +65,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                     children: [
                       Text(
                         _format.dateFormat(date: date),
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'NotoSansKR'
-                        ),
+                        style: getNotoSantBold(fontSize: 14.0, color: textColor),
                       ),
                       GestureDetector(
                         child: Container(
@@ -87,6 +90,9 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                   child: Column(
                     children: [
                       Column(
+                        children: getCalendarPerseonalDetail(context: context, appointment: allDayAppointment, timeZone: 0),
+                      ),
+                      Column(
                         children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1),
                       ),
                       Column(
@@ -106,7 +112,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
 
   getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone}) {
-    var list = <Widget>[Container(width: 16)]; // container is left padding
+    var list = <Widget>[Container(width: 16.w)]; // container is left padding
 
     if(appointment.isEmpty){
       return list;
@@ -121,7 +127,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
           padding: EdgeInsets.only(left: 17.0.w),
           alignment: Alignment.centerLeft,
           child: Text(
-            timeZone == 0 ? "종일" : timeZone == 1 ? "오전" : "오후",
+            timeZone == 0 ? "all_day".tr() : timeZone == 1 ? "am".tr() : "pm".tr(),
             style: TextStyle(
                 fontSize: 12.0.sp,
                 fontFamily: "NotoSansKR"
@@ -151,26 +157,18 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                       width: 6.0.w,
                     ),
                     Container(
+                      width: 50.0.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             app.subject,
-                            style: TextStyle(
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "NotoSansKR"
-                            ),
+                            style: getNotoSantBold(fontSize: 12.0, color: textColor)
                           ),
                           Text(
                             app.position.toString(),
-                            style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "NotoSansKR",
-                              color: hintTextColor
-                            ),
+                            style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
                           ),
                         ],
                       ),
@@ -192,11 +190,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                       children: [
                         Text(
                           _format.getTime(date: app.startTime),
-                          style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: "Roboto"
-                          ),
+                          style: getRobotoMedium(fontSize: 10.0, color: textColor),
                         ),
                         Text(
                           _format.getTime(date: app.endTime),

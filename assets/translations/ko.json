@@ -34,6 +34,7 @@
   "other": "기타",
   "meeting": "미팅",
   "request": "요청",
+  "task_request": "업무요청",
   "registering_a_schedule": "일정등록",
   "schedule_modification": "일정수정",
   "start_time": "시작시간",
@@ -94,5 +95,29 @@
   "rejectJoinCompanyApprovalViewHintMessage": "회사 담당자에게 문의 후\n다시 회사에 가입해 주세요.",
   "rejoinButton": "다시 가입하기",
   "joinCompanySuccessViewMainMessage": "회사 가입이\n완료되었습니다!",
-  "joinCompanySuccessViewHintMessage": "이제 합류한 회사에서\n마이컴퍼니 서비스를 이용하실 수 있습니다."
+  "joinCompanySuccessViewHintMessage": "이제 합류한 회사에서\n마이컴퍼니 서비스를 이용하실 수 있습니다.",
+
+
+  "approval" : "결재",
+  "request_cencel" : "요청취소",
+  "consent" : "승낙",
+  "return" : "반려",
+  "approval_detail" : "결제 상세보기",
+  "content" : "내용",
+  "approval_content" : "결재 내용",
+  "approval_type" : "결재 종류",
+  "location" : "위치",
+  "target_date" : "대상일",
+  "approver" : "결재자",
+  "requester" : "요청자",
+  "approval_request_date" : "결재 요청일",
+  "approval_status" : "결재 상태",
+  "approval_completion_date" : "결재 완료일",
+  "cancel_the_approval_request" : "결재 요청을 취소하시겠습니까?",
+  "return_the_approval_request" : "결재 요청을 반려하시겠습니까?",
+  "consent_the_approval_request" : "결재 요청을 승낙하시겠습니까?",
+  "approval_request" : "승인 요청",
+  "approval_consent" : "승인 완료",
+  "approval_return" : "승인 반려",
+  "approval_content_input" : "결재 내용 입력"
 }

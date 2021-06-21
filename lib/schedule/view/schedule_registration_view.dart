@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
-import 'package:mycompany/schedule/function/calender_function.dart';
+import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
@@ -69,7 +71,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   List workNames = [
     "internal_work".tr(),
     "outside_work".tr(),
-    "request".tr(),
+    "task_request".tr(),
     "home_job".tr(),
     "annual".tr(),
     //"외출",
@@ -180,10 +182,10 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                           ),
                         ),
                         onTap: () async {
-                          var result = await CalenderFunction().insertSchedule(
+                          var result = await CalenderMethod().insertSchedule(
                               companyCode: loginUser!.companyCode.toString(),
                               allDay: _isAllDay.value,
-                              workName: workNames[workChkCount],
+                              workName: works[workChkCount],
                               title: titleController.text,
                               content: noteController.text,
                               startTime: _startDateTime.value,
@@ -197,7 +199,19 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                           if(result){
                             _publicFunctionReprository.onBackPressed(context: context);
                           } else {
-
+                            loginDialogWidget(
+                                context: context,
+                                message: "결재자를 선택해주세요.",
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
                           }
                         }
 
@@ -222,9 +236,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                               itemCount: workNames.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                    padding: EdgeInsets.all(7.0),
+                                    padding: EdgeInsets.all(5.0),
                                     child: Container(
-                                      width: 58.0.w,
                                       height: 37.0.h,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(Radius.circular(17.0.r)),

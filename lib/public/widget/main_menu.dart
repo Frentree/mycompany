@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/approval/view/approval_main_view.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/schedule/view/schedule_registration_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_item.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
-import 'package:mycompany/schedule/view/schedule_registration_view.dart';
 
 PublicFunctionRepository _reprository = PublicFunctionRepository();
 
@@ -25,7 +26,7 @@ Widget getMainCircularMenu({required BuildContext context,required String naviga
         CircularMenuItem(
             icon: Icons.settings,
             color: navigator != 'star' ? Colors.blue : Colors.black38,
-            onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false) : {}),
+            onTap: () => navigator != 'schedule' ? _reprository.mainNavigator(context: context, navigator: ApprovalMainView(), isMove: false) : {}),
         CircularMenuItem(
             icon: Icons.star,
             color: navigator != 'good' ? Colors.blue : Colors.black38,
