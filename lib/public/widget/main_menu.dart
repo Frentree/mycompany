@@ -50,9 +50,12 @@ Widget getMainCircularMenu(
         CircularMenuItem(
             icon: Icons.star,
             color: navigator != 'good' ? Colors.blue : Colors.black38,
-            onTap: () => sendFcmWithTokens(_userModel,
-                ["test0621_3@frentree.com"],
-                "title", "message", "route")
+            onTap: () => sendFcmWithTokens(
+                _userModel,
+                ["junios@test.com", "junand@test.com"],
+                "[결재 요청]",
+                "홍길동 님이 외근결재를 요청 했습니다.",
+                "/")
             // onTap: () => navigator != 'schedule'
             //     ? _reprository.mainNavigator(
             //         context: context, navigator: ScheduleView(), isMove: false)

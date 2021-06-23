@@ -8,6 +8,7 @@ import 'package:mycompany/login/view/sign_in_view.dart';
 import 'package:mycompany/login/view/wait_join_company_approval_view.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
+import 'package:mycompany/public/function/fcm/__init__.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/view/splash_view_blue.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';

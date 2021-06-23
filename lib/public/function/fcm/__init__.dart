@@ -23,6 +23,9 @@ late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void FcmInit() async {
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   if (!kIsWeb) {
     channel = const AndroidNotificationChannel(
       'high_importance_channel', // id
@@ -80,6 +83,10 @@ void OnMessage() {
 void OnMessageOpenedApp() {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('A new onMessageOpenedApp event was published!');
+    print(message);
+    print(message.runtimeType);
+    print(message.data);
+    print(message.data["alarmId"]);
     // TODO add a proper navigation router here, for bypass to the destination
   });
 }

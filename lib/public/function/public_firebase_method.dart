@@ -5,7 +5,9 @@ import 'package:mycompany/public/function/fcm/alarmModel.dart';
 
 class PublicFirebaseMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  PublicFirebaseMethods.settings({persistenceEnabled: true});
+
+  PublicFirebaseMethods.settings(
+      {persistenceEnabled: true, cacheSizeBytes: -1});
 
   Future<List<String>> getTokensFromUsers(
       UserModel user, String? companyCode, List users) async {
@@ -36,11 +38,10 @@ class PublicFirebaseMethods {
 
   Future<void> saveAlarmDataFromUsersThenSend(
       UserModel user, String? companyCode, List users, var payload) async {
-
     HttpsCallable callFcm = FirebaseFunctions.instance.httpsCallable('sendFcm');
 
     users.forEach((_userMail) async {
-
+      print("user mail : $_userMail");
       int _alarmId = DateTime.now().hashCode;
 
       /// 알람 데이터 저장
@@ -75,14 +76,15 @@ class PublicFirebaseMethods {
             .doc(_docRef.id)
             .set(_model.toJson());
       } catch (e) {
-        print("[ERROR] public firebase method : saveAlarmDataFromUsersThenSend");
+        print(
+            "[ERROR] public firebase method : saveAlarmDataFromUsersThenSend");
         print(e.toString());
       }
 
       /// 알람 전송
       var _user = await _firestore.collection("user").doc(_userMail).get();
 
-      var _payload = <String, dynamic> {
+      var _payload = <String, dynamic>{
         "tokens": (_user.data() as dynamic)["token"],
         "title": payload["title"],
         "message": payload["message"],
@@ -91,14 +93,29 @@ class PublicFirebaseMethods {
       };
 
       try {
-        print(_payload);
-        print(_payload["token"].runtimeType);
         await callFcm.call(_payload);
-      } catch(e) {
-        print("[ERROR] public firebase method : saveAlarmDataFromUsersThenSend");
+      } catch (e) {
+        print(
+            "[ERROR] public firebase method : saveAlarmDataFromUsersThenSend");
         print(e.toString());
       }
-
     });
+  }
+
+  Future<void> setAlarmReadToTrue(
+      String? companyCode, String? mail, String alarmId) async {
+
+    try {
+      _firestore
+          .collection("company")
+          .doc(companyCode)
+          .collection("user")
+          .doc(mail)
+          .collection("alarm")
+          .doc(alarmId)
+          .set({"read": true});
+    } catch(e) {
+      print(e.toString());
+    }
   }
 }

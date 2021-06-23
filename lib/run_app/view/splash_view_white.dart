@@ -2,7 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/function/fcm/__init__.dart';
+import 'package:mycompany/public/function/public_firebase_repository.dart';
 import 'dart:async';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/function/page_route.dart';
@@ -15,10 +17,12 @@ class SplashViewWhite extends StatefulWidget {
 }
 
 class SplashViewWhiteState extends State<SplashViewWhite> {
+  PublicFirebaseRepository _firestore = PublicFirebaseRepository();
   String? _deviceToken;
   bool _requested = false;
   bool _fetching = false;
   late NotificationSettings _settings;
+  late UserModel? _user;
 
   Future<void> requestPermissions() async {
     setState(() {
@@ -50,6 +54,7 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
   void initState() {
     super.initState();
 
+
     /// Get and set device token
     FirebaseMessaging.instance
             .getToken(
@@ -62,12 +67,24 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
         .getInitialMessage()
         .then((RemoteMessage? message) {
       if (message != null) {
+        print("Init State in Splash View White");
+        print(message);
+        print(message.runtimeType);
+        print(message.data);
+        _firestore.setAlarmReadToTrue(_user!.companyCode, _user!.mail, message.data["alarmId"]);
         // TODO add a proper navigator here after finish architecture.
       }
     });
     OnMessage();
-    OnMessageOpenedApp();
+    // OnMessageOpenedApp();
     requestPermissions();
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      print('splash view white');
+      print(message.notification!.body);
+      // TODO add a proper navigation router here, for bypass to the destination
+    });
 
     Timer(Duration(seconds: 3), () => pageMoveAndRemoveBackPage(context: context, pageName: AuthView(deviceToken: _deviceToken,)));
   }
@@ -81,6 +98,8 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
   Widget build(BuildContext context) {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
     userInfoProvider.loadUserDataToPhone();
+    _user = userInfoProvider.getUserData();
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -104,26 +123,3 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
     );
   }
 }
-
-/// Maps a [AuthorizationStatus] to a string value.
-const statusMap = {
-  AuthorizationStatus.authorized: 'Authorized',
-  AuthorizationStatus.denied: 'Denied',
-  AuthorizationStatus.notDetermined: 'Not Determined',
-  AuthorizationStatus.provisional: 'Provisional',
-};
-
-/// Maps a [AppleNotificationSetting] to a string value.
-const settingsMap = {
-  AppleNotificationSetting.disabled: 'Disabled',
-  AppleNotificationSetting.enabled: 'Enabled',
-  AppleNotificationSetting.notSupported: 'Not Supported',
-};
-
-/// Maps a [AppleShowPreviewSetting] to a string value.
-const previewMap = {
-  AppleShowPreviewSetting.always: 'Always',
-  AppleShowPreviewSetting.never: 'Never',
-  AppleShowPreviewSetting.notSupported: 'Not Supported',
-  AppleShowPreviewSetting.whenAuthenticated: 'Only When Authenticated',
-};
