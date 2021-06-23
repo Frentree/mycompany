@@ -16,8 +16,8 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
   //오늘 출퇴근 데이터를 가져온다.
   List<AttendanceModel> todayAttendanceData = await attendanceFirestoreRepository.readMyAttendanceDataWithPeriod(
     employeeData: employeeInfo,
-    minimumDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: today),
-    maximumDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: today),
+    minimumDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
+    maximumDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
   );
 
   //출퇴근 데이터가 없을 경우
@@ -25,7 +25,7 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
     AttendanceModel _attendanceModel = AttendanceModel(
       mail: employeeInfo.mail,
       name: employeeInfo.name,
-      createDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: today),
+      createDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
     );
 
     bool _isConnectWifi = await checkConnectWifi();

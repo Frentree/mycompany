@@ -6,6 +6,7 @@ import 'package:mycompany/public/word/database_name.dart';
 
 class AttendanceFirestoreCrud {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  AttendanceFirestoreCrud.settings({persistenceEnabled: true});
 
   Future<void> createAttendanceData({required String companyId, required AttendanceModel attendanceModel}) async {
     await _firebaseFirestore
@@ -15,17 +16,18 @@ class AttendanceFirestoreCrud {
         .add(attendanceModel.toJson());
   }
 
-  Future<List<AttendanceModel>> readMyAttendanceData({required EmployeeModel employeeData}) async {
+  Future<List<AttendanceModel>> readMyAttendanceData({required EmployeeModel employeeData, required Timestamp today}) async {
     List<AttendanceModel> _attendanceData = [];
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
         .collection(COMPANY)
         .doc(employeeData.companyCode)
         .collection(ATTENDANCE)
         .where("mail", isEqualTo: employeeData.mail)
+        .where("createDate", isLessThanOrEqualTo: today)
         .get();
 
     querySnapshot.docs.forEach((doc) {
-      _attendanceData.add(AttendanceModel.fromMap(mapData: doc.data()));
+      _attendanceData.add(AttendanceModel.fromMap(mapData: doc.data(), documentId: doc.id));
     });
 
     return _attendanceData;
@@ -42,10 +44,7 @@ class AttendanceFirestoreCrud {
         .where("createDate", isLessThanOrEqualTo: maximumDate)
         .get();
 
-    print(querySnapshot.docs.length);
-
     querySnapshot.docs.forEach((doc) {
-      print(doc.id);
       _attendanceData.add(AttendanceModel.fromMap(mapData: doc.data(), documentId: doc.id));
     });
 

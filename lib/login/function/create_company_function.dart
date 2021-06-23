@@ -100,17 +100,17 @@ class CreateCompanyFunction {
       phone: loginUserData.phone,
       birthday: loginUserData.birthday,
       companyCode: companyId,
-      createDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-      lastModDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      createDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
+      lastModDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
     );
-    
+
     employeeInfoProvider.saveEmployeeDataToPhoneWithoutNotifyListener(employeeModel: employeeModel);
     await loginFirestoreRepository.createEmployeeData(employeeModel: employeeModel);
 
     //로그인 사용자 joinStatus 및 companyCode 업데이트
     loginUserData.state = 2;
     loginUserData.companyCode = companyId;
-    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now());
+    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now());
 
     await loginFirestoreRepository.updateUserData(userModel: loginUserData);
 

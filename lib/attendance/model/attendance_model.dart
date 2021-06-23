@@ -37,6 +37,7 @@ class AttendanceModel {
   Timestamp? createDate;
   Timestamp? attendTime;
   Timestamp? endTime;
+  int? overTime;
   int? certificationDevice;
   int? manualOnWorkReason;
   int? status;
@@ -48,6 +49,7 @@ class AttendanceModel {
     this.createDate,
     this.attendTime,
     this.endTime,
+    this.overTime = 0,
     this.certificationDevice,
     this.manualOnWorkReason,
     this.status,
@@ -60,6 +62,7 @@ class AttendanceModel {
         createDate = mapData["createDate"] ?? Timestamp.now(),
         attendTime = mapData["attendTime"] ?? null,
         endTime = mapData["endTime"] ?? null,
+        overTime = mapData["overTime"] ?? 0,
         certificationDevice = mapData["certificationDevice"] ?? null,
         manualOnWorkReason = mapData["manualOnWorkReason"] ?? null,
         status = mapData["status"] ?? 0;
@@ -71,6 +74,7 @@ class AttendanceModel {
       "createDate": createDate,
       "attendTime": attendTime,
       "endTime": endTime,
+      "overTime": overTime,
       "certificationDevice": certificationDevice,
       "manualOnWorkReason": manualOnWorkReason,
       "status": status,

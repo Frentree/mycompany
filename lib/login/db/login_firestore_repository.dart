@@ -6,7 +6,7 @@ import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 
 class LoginFirestoreRepository {
-  LoginFirestoreCrud _loginFirebaseCrud = LoginFirestoreCrud();
+  LoginFirestoreCrud _loginFirebaseCrud = LoginFirestoreCrud.settings();
 
   //Employee 관련
   Future<void> createEmployeeData({required EmployeeModel employeeModel}) =>

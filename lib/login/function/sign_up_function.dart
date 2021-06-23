@@ -34,8 +34,8 @@ class SignUpFunction {
         name: name,
         birthday: birthday,
         phone: phone,
-        createDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-        lastModDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+        createDate: _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
+        lastModDate: _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
       );
 
       //User DB 생성

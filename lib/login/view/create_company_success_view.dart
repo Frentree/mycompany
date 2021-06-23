@@ -99,9 +99,6 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
                 //EmployeeInfoProvider 저장
                 employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: loginEmployeeData);
 
-                print("기기 토큰 : $deviceToken");
-                print("유저 토큰 : ${loginUserData.token}");
-
                 pageMoveAndRemoveBackPage(context: context, pageName: AuthView(deviceToken: deviceToken,));
               }
             )

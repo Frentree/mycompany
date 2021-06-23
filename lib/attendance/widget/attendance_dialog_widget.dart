@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/attendance/db/attendance_firestore_repository.dart';
+import 'package:mycompany/attendance/function/show_work_type.dart';
 import 'package:mycompany/attendance/widget/attendance_button_widget.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
@@ -9,6 +12,7 @@ import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 Future<dynamic> changeWorkingStatusDialog({required BuildContext context, required String buttonName}) {
+  AttendanceFirestoreRepository _attendanceFirestoreRepository = AttendanceFirestoreRepository();
   DateFormatCustom dateFormatCustom = DateFormatCustom();
 
   int? attendance = 0;
@@ -118,7 +122,9 @@ Future<dynamic> changeWorkingStatusDialog({required BuildContext context, requir
                   attendanceDialogElevatedButton(
                     topPadding: 11.0.h,
                     buttonName: buttonName,
-                    buttonAction: attendance == 0 ? null : (){}
+                    buttonAction: attendance == 0 ? null : (){
+                      backPage(context: context, returnValue: attendance);
+                    }
                   ),
                 ],
               ),
@@ -130,7 +136,7 @@ Future<dynamic> changeWorkingStatusDialog({required BuildContext context, requir
   );
 }
 
-Future<dynamic> viewWorkingStatusDialog({required BuildContext context, /*required Timestamp time,*//* required String workingStatus*/}){
+Future<dynamic> viewWorkingStatusDialog({required BuildContext context, Timestamp? attendTime, Timestamp? endTime, required int workTypeNumber}){
   DateFormatCustom dateFormatCustom = DateFormatCustom();
   return showDialog(
     context: context,
@@ -178,7 +184,7 @@ Future<dynamic> viewWorkingStatusDialog({required BuildContext context, /*requir
                           ),
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
-                          onPressed: () => backPage(context: context),
+                          onPressed: () => backPage(context: context, returnValue: 0),
                         ),
                       ],
                     ),
@@ -204,7 +210,7 @@ Future<dynamic> viewWorkingStatusDialog({required BuildContext context, /*requir
                                 width: 7.0.w,
                               ),
                               Text(
-                                "9:00",
+                                workTypeNumber == 0 ? "" : workTypeNumber != 6 ? "${dateFormatCustom.changeTimeToString(time: attendTime!)}" : "${dateFormatCustom.changeTimeToString(time: attendTime!)} - ${dateFormatCustom.changeTimeToString(time: endTime!)}",
                                 style: TextStyle(
                                   fontSize: 13.0.sp,
                                   fontWeight: fontWeight["Medium"],
@@ -215,7 +221,7 @@ Future<dynamic> viewWorkingStatusDialog({required BuildContext context, /*requir
                           ),
                         ),
                         Text(
-                          "내근",
+                          changeWorkTypeNumberToString(workTypeNumber: workTypeNumber),
                           style: TextStyle(
                             fontSize: 13.0.sp,
                             fontWeight: fontWeight["Medium"],
@@ -229,10 +235,10 @@ Future<dynamic> viewWorkingStatusDialog({required BuildContext context, /*requir
                   attendanceDialogElevatedButton(
                     topPadding: 11.0.h,
                     buttonName: "근무상태변경",
-                    buttonAction: (){
-                      backPage(context: context);
-                      changeWorkingStatusDialog(context: context, buttonName: "변경");
-                    },
+                    buttonAction: workTypeNumber != 0 ? () async {
+                      workTypeNumber = await changeWorkingStatusDialog(context: context, buttonName: "변경");
+                      backPage(context: context, returnValue: workTypeNumber);
+                    } : null,
                   ),
                 ],
               ),
@@ -274,14 +280,16 @@ Future<dynamic> finishWorkDialog({required BuildContext context}) {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     attendanceDialogCancelButton(
-                        buttonName: 'dialogCancel'.tr(),
-                        buttonAction: () {
-                          backPage(context: context);
-                        }
+                      buttonName: 'dialogCancel'.tr(),
+                      buttonAction: () {
+                        backPage(context: context, returnValue: false);
+                      }
                     ),
                     attendanceDialogConfirmButton(
                       buttonName: 'dialogConfirm'.tr(),
-                      buttonAction: (){}
+                      buttonAction: (){
+                        backPage(context: context, returnValue: true);
+                      }
                     ),
                   ],
                 ),

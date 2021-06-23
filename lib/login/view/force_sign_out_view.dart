@@ -27,9 +27,13 @@ class ForceSignOutView extends StatelessWidget {
           loginDialogConfirmButton(
             buttonName: 'dialogConfirm'.tr(),
             buttonAction: () async {
+              String? deviceToken;
+
               await userInfoProvider.deleteUserDataToPhone();
               await employeeInfoProvider.deleteEmployeeDataToPhone();
-              pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
+              await FirebaseMessaging.instance.getToken().then((value) => deviceToken = value);
+
+              pageMoveAndRemoveBackPage(context: context, pageName: AuthView(deviceToken: deviceToken,));
             }
           ),
         ],

@@ -30,6 +30,8 @@ class AuthView extends StatelessWidget {
     }
 
     else if(loginUserData.token != deviceToken){
+      print(loginUserData.token);
+      print(deviceToken);
       return ForceSignOutView();
     }
 

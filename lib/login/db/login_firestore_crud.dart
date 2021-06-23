@@ -7,6 +7,8 @@ import 'package:mycompany/public/word/database_name.dart';
 
 class LoginFirestoreCrud {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  LoginFirestoreCrud.settings({persistenceEnabled: true});
+
   //Employee 관련
   Future<void> createEmployeeData({required EmployeeModel employeeModel}) async {
     await _firebaseFirestore.collection(COMPANY).doc(employeeModel.companyCode).collection(USER).doc(employeeModel.mail).set(employeeModel.toJson());
