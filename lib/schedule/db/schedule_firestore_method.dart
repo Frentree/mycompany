@@ -11,8 +11,9 @@ import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 
-class ScheduleFirebaseCurd {
+class ScheduleFirebaseMethods {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
+  ScheduleFirebaseMethods.setting({persistenceEnabled: true});
 
   ApprovalFirebaseRepository approvalRepository = ApprovalFirebaseRepository();
 

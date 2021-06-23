@@ -202,7 +202,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         TextFormField(
             controller: widget.titleController,
             decoration: InputDecoration(
-              hintText: "제목을 입력하세요",
+              hintText: "title_input".tr(),
               hintStyle: getNotoSantRegular(
                 fontSize: 18.0,
                 color: hintTextColor,
@@ -553,7 +553,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "세부 내용",
+                    hintText: "details".tr(),
                     hintStyle: getNotoSantRegular(
                       fontSize: 14.0,
                       color: hintTextColor,

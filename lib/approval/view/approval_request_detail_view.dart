@@ -1,18 +1,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/widget/approval_detail_widget.dart';
-import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
 
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,10 +16,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ApprovalRequestDetailView extends StatefulWidget {
 
-  Key? key;
   final ApprovalModel model;
 
-  ApprovalRequestDetailView({key, required this.model,});
+  ApprovalRequestDetailView({required this.model,});
 
   @override
   _ApprovalRequestDetailViewState createState() => _ApprovalRequestDetailViewState();

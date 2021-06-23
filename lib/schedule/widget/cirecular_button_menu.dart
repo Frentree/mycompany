@@ -30,6 +30,7 @@ class CircularMenu extends StatefulWidget {
 
   /// callback
   final VoidCallback? toggleButtonOnPressed;
+  Function(bool)? toggleChk;
   final Color? toggleButtonColor;
   final double? toggleButtonSize;
   final List<BoxShadow>? toggleButtonBoxShadow;
@@ -57,6 +58,7 @@ class CircularMenu extends StatefulWidget {
     this.curve = Curves.bounceOut,
     this.reverseCurve = Curves.fastOutSlowIn,
     this.toggleButtonOnPressed,
+    this.toggleChk,
     this.toggleButtonColor,
     this.toggleButtonBoxShadow,
     this.toggleButtonMargin = 10,
@@ -82,6 +84,7 @@ class CircularMenuState extends State<CircularMenu>
   late double _startAngle;
   late int _itemsCount;
   late Animation<double> _animation;
+  bool toggleButtonChk = false;
 
   /// forward animation
   void forwardAnimation() {
@@ -229,9 +232,21 @@ class CircularMenuState extends State<CircularMenu>
           padding: (-_animation.value * widget.toggleButtonPadding * 0.5) +
               widget.toggleButtonPadding,
           onTap: () {
-            _animationController.status == AnimationStatus.dismissed
+            if(_animationController.status == AnimationStatus.dismissed) {
+              toggleButtonChk = false;
+              (_animationController).forward();
+            } else {
+              toggleButtonChk = true;
+              (_animationController).reverse();
+            }
+
+            if(widget.toggleChk != null){
+              widget.toggleChk!(toggleButtonChk);
+            }
+
+            /*_animationController.status == AnimationStatus.dismissed
                 ? (_animationController).forward()
-                : (_animationController).reverse();
+                : (_animationController).reverse();*/
             if (widget.toggleButtonOnPressed != null) {
               widget.toggleButtonOnPressed!();
             }

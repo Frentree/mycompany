@@ -317,8 +317,6 @@ class CalenderMethod{
 
     var approvalResult = await _reository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
 
-    print(approvalResult);
-
     if(approvalResult){
       var scheduleResult = await Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment,)));
       if(!scheduleResult){

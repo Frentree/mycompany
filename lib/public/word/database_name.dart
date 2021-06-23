@@ -7,3 +7,5 @@ const String TEAM = 'team';
 const String GRADE = 'grade';
 const String POSITION = 'position';
 const String ANNUAL = 'annual';
+const String NOTICE = 'notice';
+const String NOTICECOMMENT = 'noticeComment';

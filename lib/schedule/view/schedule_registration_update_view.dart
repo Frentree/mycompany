@@ -124,7 +124,6 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
     noteController.text = widget.appointment.content ?? "";
     locationController.text = widget.appointment.location ?? "";
 
-    print(widget.appointment.isAllDay);
     setState(() {});
   }
 

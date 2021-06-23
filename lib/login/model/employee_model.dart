@@ -11,7 +11,9 @@
 입사일 : enteredDate
 정보수정일 : lastModDate
 프로필사진 : profilePhoto
+팀번호 : teamNum
 팀 : team
+직급번호 : positionNum
 직급 : position
 권한 : level
 사용자검색 : userSearch
@@ -20,6 +22,7 @@
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mycompany/main.dart';
 
 class EmployeeModel {
   String? token;
@@ -33,7 +36,9 @@ class EmployeeModel {
   String? enteredDate;
   Timestamp? lastModDate;
   String? profilePhoto;
+  int? teamNum;
   String? team;
+  int? positionNum;
   String? position;
   List<dynamic>? level;
   List<dynamic>? userSearch;
@@ -52,7 +57,9 @@ class EmployeeModel {
     this.enteredDate,
     this.lastModDate,
     this.profilePhoto,
+    this.teamNum,
     this.team,
+    this.positionNum,
     this.position,
     this.level,
     this.userSearch,
@@ -72,7 +79,9 @@ class EmployeeModel {
         enteredDate = mapData["enteredDate"] ?? "",
         lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
         profilePhoto = mapData["profilePhoto"] ?? "",
+        teamNum = mapData["teamNum"] ?? 999,
         team = mapData["team"] ?? "",
+        positionNum = mapData["positionNum"] ?? 999,
         position = mapData["position"] ?? "",
         level = mapData["level"] ?? [],
         userSearch = mapData["userSearch"] ?? [],
@@ -92,9 +101,11 @@ class EmployeeModel {
       "enteredDate": enteredDate,
       "lastModDate": lastModDate,
       "profilePhoto": profilePhoto ?? "",
+      "teamNum": teamNum ?? 999,
       "team": team ?? "",
+      "positionNum": positionNum ?? 999,
       "position": position ?? "",
-      "level": level,
+      "level": level ?? [0],
       "userSearch": name.split(""),
       "employeeNum": employeeNum,
       "status": status,

@@ -201,19 +201,31 @@ import 'package:easy_localization/easy_localization.dart';
                     Expanded(
                       child: Container(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: app.color,
-                            borderRadius: BorderRadius.all(Radius.circular(20.0))
-                          ),
-                          width: 34.0.w,
-                          height: 19.0.h,
-                          child: Center(
-                            child: Text(
-                              app.type.toString(),
-                              style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: app.color,
+                                borderRadius: BorderRadius.all(Radius.circular(20.0))
+                              ),
+                              width: 34.0.w,
+                              height: 19.0.h,
+                              child: Center(
+                                child: Text(
+                                  app.type.toString(),
+                                  style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                                ),
+                              ),
                             ),
-                          ),
+                            Visibility(
+                              visible: app.type == "미팅",
+                              child: app.profile == app.organizerId ?
+                                Text("organizer".tr(), style: getNotoSantRegular(fontSize: 9.0, color: hintTextColor),)
+                                  :  Text("participants".tr(), style: getNotoSantRegular(fontSize: 9.0, color: hintTextColor),),
+                            )
+                          ],
                         ),
                       ),
                     ),

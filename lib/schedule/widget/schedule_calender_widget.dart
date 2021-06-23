@@ -46,7 +46,6 @@ class ScheduleCalenderWidget {
 
     if (details.appointments.isNotEmpty) {
       //Appointment bbb = details.appointments[0];
-      print(details.appointments[0].toString() + ", " + details.date.toString());
       return Container(
         height: details.bounds.height,
         child: Column(
@@ -144,11 +143,10 @@ class ScheduleCalenderWidget {
 
   Widget _buildData(BuildContext context, dynamic details) {
     final Appointment appointment = details;
-    print(appointment);
     return Container(
       child: Stack(
         children: [
-          appointment.subject == "이윤혁"
+          appointment.profile == loginUser!.mail
               ? Container(
             width: 4.0.w,
             color: appointment.color,

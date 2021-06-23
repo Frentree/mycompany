@@ -9,6 +9,7 @@ import 'package:mycompany/schedule/model/work_model.dart';
 
 class ApprovalFirebaseCurd {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
+  ApprovalFirebaseCurd.setting({persistenceEnabled: true});
 
   Future<List<ApprovalModel>> getRequestApprovalData(String companyCode) async {
     List<ApprovalModel> approvalList = [];

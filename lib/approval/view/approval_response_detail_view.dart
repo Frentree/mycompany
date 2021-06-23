@@ -13,11 +13,9 @@ import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
 
 class ApprovalResponseDetailView extends StatefulWidget {
-  Key? key;
   final ApprovalModel model;
 
   ApprovalResponseDetailView({
-    key,
     required this.model,
   });
 

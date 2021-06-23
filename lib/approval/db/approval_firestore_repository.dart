@@ -5,7 +5,7 @@ import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 
 class ApprovalFirebaseRepository {
-  ApprovalFirebaseCurd _curd = ApprovalFirebaseCurd();
+  ApprovalFirebaseCurd _curd = ApprovalFirebaseCurd.setting();
 
   Future<List<ApprovalModel>> getRequestApprovalData({required String companyCode}) =>
       _curd.getRequestApprovalData(companyCode);

@@ -63,7 +63,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                   Container(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           widget.appointment.subject.toString(),
@@ -143,12 +143,12 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                             );
                             break;
                         }
-                        print(result);
+
                         switch(result) {
                           case 0: // 삭제 및 수정 성공
                             await loginDialogWidget(
                                 context: context,
-                                message: "처리가 완료되었습니다.",
+                                message: "schedule_detail_view_dialog_1".tr(),
                                 actions: [
                                   confirmElevatedButton(
                                       topPadding: 81.0.h,
@@ -164,7 +164,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           case 400: // 결재 중인 항목이 있어서 삭제 실패
                             loginDialogWidget(
                                 context: context,
-                                message: "연차는 수정이 불가능합니다",
+                                message: "schedule_detail_view_dialog_2".tr(),
                                 actions: [
                                   confirmElevatedButton(
                                       topPadding: 81.0.h,
@@ -179,7 +179,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           case 404: // 결재 중인 항목이 있어서 삭제 실패
                             loginDialogWidget(
                               context: context,
-                              message: "결재 중인 항목이므로 삭제가 불가능합니다.\n결재 요청 취소 후 삭제 해주세요.",
+                              message: "schedule_detail_view_dialog_3".tr(),
                               actions: [
                                 confirmElevatedButton(
                                   topPadding: 81.0.h,
@@ -194,7 +194,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           case 405: // 스케줄 등록 실패
                             loginDialogWidget(
                                 context: context,
-                                message: "일정 삭제에 실패하였습니다. 관리자에게 문의해주세요",
+                                message: "schedule_detail_view_dialog_4".tr(),
                                 actions: [
                                   confirmElevatedButton(
                                       topPadding: 81.0.h,
@@ -209,7 +209,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           case 406: // 결재 진행중 수정
                             loginDialogWidget(
                                 context: context,
-                                message: "결재 중인 항목이므로 수정이 불가능합니다.\n결재 요청 취소 후 수정 해주세요.",
+                                message: "schedule_detail_view_dialog_5".tr(),
                                 actions: [
                                   confirmElevatedButton(
                                       topPadding: 81.0.h,
@@ -224,7 +224,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           case 407: // 수정 오류
                             loginDialogWidget(
                                 context: context,
-                                message: "일정 수정이 실패하였습니다. 관리자에게 문의해주세요",
+                                message: "schedule_detail_view_dialog_6".tr(),
                                 actions: [
                                   confirmElevatedButton(
                                       topPadding: 81.0.h,
@@ -244,47 +244,46 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                 ],
               ),
             ),
-            Card(
-              child: Container(
-                width: double.infinity,
-                height: isArrowChk? null : 100.0.h ,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _formatCustom.getDate(date:  widget.appointment.startTime),
-                          style: getRobotoBold(fontSize: 12.0, color: textColor),
-                        ),
-                        Text(
-                          " - " + _formatCustom.getDate(date:  widget.appointment.endTime),
-                          style: getRobotoBold(fontSize: 12.0, color: hintTextColor),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.0.h,),
-                    Text(
-                      widget.appointment.title.toString(),
-                      style: getNotoSantBold(fontSize: 18.0, color: textColor),
-                    ),
-                    SizedBox(height: 10.0.h,),
-                    Visibility(
-                      visible: isArrowChk,
-                      child: Column(
+            InkWell(
+              child: Card(
+                child: Container(
+                  width: double.infinity,
+                  height: isArrowChk? null : 100.0.h ,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            widget.appointment.content.toString(),
-                            style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                            _formatCustom.getDate(date:  widget.appointment.startTime),
+                            style: getRobotoBold(fontSize: 12.0, color: textColor),
                           ),
-                          SizedBox(height: 10.0.h,),
+                          Text(
+                            " - " + _formatCustom.getDate(date:  widget.appointment.endTime),
+                            style: getRobotoBold(fontSize: 12.0, color: hintTextColor),
+                          ),
                         ],
                       ),
-                    ),
-                    GestureDetector(
-                      child: Container(
+                      SizedBox(height: 10.0.h,),
+                      Text(
+                        widget.appointment.title.toString(),
+                        style: getNotoSantBold(fontSize: 18.0, color: textColor),
+                      ),
+                      SizedBox(height: 10.0.h,),
+                      Visibility(
+                        visible: isArrowChk,
+                        child: Column(
+                          children: [
+                            Text(
+                              widget.appointment.content.toString(),
+                              style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                            ),
+                            SizedBox(height: 10.0.h,),
+                          ],
+                        ),
+                      ),
+                      Container(
                         width: 30.0.w,
                         height: 30.0.h,
                         color: whiteColor.withOpacity(0.0),
@@ -297,15 +296,15 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           ),
                         ),
                       ),
-                      onTap: () {
-                        setState(() {
-                          isArrowChk = !isArrowChk;
-                        });
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+              onTap: () {
+                setState(() {
+                  isArrowChk = !isArrowChk;
+                });
+              },
             )
           ],
         ),

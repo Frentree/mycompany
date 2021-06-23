@@ -9,7 +9,6 @@ import 'package:mycompany/approval/view/approval_response_detail_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
@@ -22,7 +21,6 @@ class ApprovalMainView extends StatefulWidget {
 
 class _ApprovalMainViewState extends State<ApprovalMainView> {
   DateFormatCustom _format = DateFormatCustom();
-  PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
   ApprovalFirebaseRepository _approvalFirebaseRepository = ApprovalFirebaseRepository();
 
   var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent];
@@ -73,9 +71,6 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
       }).toList();
 
       responseApproval.map((data) {
-        print(data.user);
-        print(data.userMail);
-        print(data.approvalMail);
         if(data.status == "요청"){
           responseWaitingApproval.add(data);
         }else if(data.status == "승인"){
@@ -413,120 +408,76 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-    return WillPopScope(
-      onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          body: Container(
-            width: double.infinity,
-            color: whiteColor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 72.0.h + statusBarHeight,
-                  width: double.infinity,
-                  color: whiteColor,
-                  padding: EdgeInsets.only(
-                      top: statusBarHeight,
-                      left: 26.0.w
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        child: Container(
-                          color: whiteColor,
-                          width: 20.0.w,
-                          height: 30.0.h,
-                          alignment: Alignment.centerLeft,
-                          child: SizedBox(
-                            child: Container(
-                                width: 14.9.w,
-                                height: 14.9.h,
-                                child: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: workInsertColor,
-                                )
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          color: whiteColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                height: 30.0.h,
+                width: double.infinity,
+                child: TabBar(
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        "결재 신청함",
+                        style: getNotoSantMedium(fontSize: 15.0, color: textColor),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "결재 수신함",
+                        style: getNotoSantMedium(fontSize: 15.0, color: textColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10.0.h,
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                          children: [
+                            Column(
+                              children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: 0),
                             ),
-                          ),
-                        ),
-                        onTap: () => _publicFunctionReprository.onBackPressed(context: context),
+                            Column(
+                              children: getRequestData(context: context, approval: requestCompleteApproval, approvalName: 1),
+                            ),
+                            Column(
+                              children: getRequestData(context: context, approval: requestCancelApproval, approvalName: 2),
+                            ),
+                          ]
                       ),
-                      Text(
-                          "approval".tr(),
-                          style: getNotoSantRegular(
-                              fontSize: 18.0,
-                              color: textColor
-                          )
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                          children: [
+                            Column(
+                              children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: 0),
+                            ),
+                            Column(
+                              children: getResponseData(context: context, approval: responseCompleteApproval, approvalName: 1),
+                            ),
+                            Column(
+                              children: getResponseData(context: context, approval: responseCancelApproval, approvalName: 2),
+                            ),
+                          ]
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                  height: 30.0.h,
-                  width: double.infinity,
-                  child: TabBar(
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "결재 신청함",
-                          style: getNotoSantMedium(fontSize: 15.0, color: textColor),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          "결재 수신함",
-                          style: getNotoSantMedium(fontSize: 15.0, color: textColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0.h,
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      SingleChildScrollView(
-                        child: Column(
-                            children: [
-                              Column(
-                                children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: 0),
-                              ),
-                              Column(
-                                children: getRequestData(context: context, approval: requestCompleteApproval, approvalName: 1),
-                              ),
-                              Column(
-                                children: getRequestData(context: context, approval: requestCancelApproval, approvalName: 2),
-                              ),
-                            ]
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        child: Column(
-                            children: [
-                              Column(
-                                children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: 0),
-                              ),
-                              Column(
-                                children: getResponseData(context: context, approval: responseCompleteApproval, approvalName: 1),
-                              ),
-                              Column(
-                                children: getResponseData(context: context, approval: responseCancelApproval, approvalName: 2),
-                              ),
-                            ]
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
