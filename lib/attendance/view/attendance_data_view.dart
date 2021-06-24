@@ -1,22 +1,12 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:mycompany/attendance/db/attendance_firestore_repository.dart';
-import 'package:mycompany/attendance/function/show_work_type.dart';
 import 'package:mycompany/attendance/function/total_office_hours_calculation_function.dart';
 import 'package:mycompany/attendance/model/attendance_model.dart';
-import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
-import 'package:mycompany/attendance/widget/attendance_dialog_widget.dart';
-import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/attendance/view/employee_attendance_data_view.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
-import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
-import 'package:provider/provider.dart';
 
 class AttendanceDataView extends StatefulWidget {
   List<AttendanceModel> attendanceData;
@@ -28,21 +18,13 @@ class AttendanceDataView extends StatefulWidget {
 }
 
 class AttendanceDataViewState extends State<AttendanceDataView> {
-  AttendanceFirestoreRepository _attendanceFirestoreRepository = AttendanceFirestoreRepository();
   DateFormatCustom dateFormatCustom = DateFormatCustom();
   TotalOfficeHoursCalculationFunction _totalOfficeHoursCalculationFunction = TotalOfficeHoursCalculationFunction();
 
   DateTime now = DateTime.now();
 
-  double test = (3360/3120);
-
   @override
   Widget build(BuildContext context) {
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
-    EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
-
-    DateTime today = DateTime(now.year, now.month, now.day);
-
     ValueNotifier<DateTime> queryEndDate = ValueNotifier<DateTime>(DateTime(now.year, now.month, now.day + (6 - now.weekday)));
     ValueNotifier<DateTime> queryStartDate = ValueNotifier<DateTime>(queryEndDate.value.subtract(Duration(days: 6)));
     ValueNotifier<List<AttendanceModel>> weekAttendanceData = ValueNotifier<List<AttendanceModel>>(_totalOfficeHoursCalculationFunction.getWeekAttendanceData(attendanceDataList: widget.attendanceData, startDate: queryStartDate.value, endDate: queryEndDate.value));
@@ -437,9 +419,9 @@ class AttendanceDataViewState extends State<AttendanceDataView> {
                 top: 20.0.h,
               ),
               child: GestureDetector(
-                /*onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AttendanceDataView(attendanceData: snapshot.data!)));
-                }*/
+                onTap: (){
+                  pageMove(context: context, pageName: EmployeeAttendanceDataView());
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

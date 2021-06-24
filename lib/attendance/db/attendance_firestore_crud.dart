@@ -33,15 +33,14 @@ class AttendanceFirestoreCrud {
     return _attendanceData;
   }
 
-  Future<List<AttendanceModel>> readMyAttendanceDataWithPeriod({required EmployeeModel employeeData, required Timestamp minimumDate, required Timestamp maximumDate}) async {
+  Future<List<AttendanceModel>> readTodayMyAttendanceData({required EmployeeModel employeeData, required Timestamp today}) async {
     List<AttendanceModel> _attendanceData = [];
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
         .collection(COMPANY)
         .doc(employeeData.companyCode)
         .collection(ATTENDANCE)
         .where("mail", isEqualTo: employeeData.mail)
-        .where("createDate", isGreaterThanOrEqualTo: minimumDate)
-        .where("createDate", isLessThanOrEqualTo: maximumDate)
+        .where("createDate", isEqualTo: today)
         .get();
 
     querySnapshot.docs.forEach((doc) {
@@ -51,15 +50,21 @@ class AttendanceFirestoreCrud {
     return _attendanceData;
   }
 
-  Future<EmployeeModel> readAllEmployeeAttendanceData({required String companyId, required String email}) async {
-    dynamic document = await _firebaseFirestore
+  Future<List<AttendanceModel>> readEmployeeAttendanceData({required EmployeeModel employeeData, required Timestamp today}) async {
+    List<AttendanceModel> _attendanceData = [];
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
         .collection(COMPANY)
-        .doc(companyId)
-        .collection(USER)
-        .doc(email)
+        .doc(employeeData.companyCode)
+        .collection(ATTENDANCE)
+        .where("mail", isNotEqualTo: employeeData.mail)
+        .where("createDate", isLessThanOrEqualTo: today)
         .get();
 
-    return EmployeeModel.fromMap(mapData: document.data());
+    querySnapshot.docs.forEach((doc) {
+      _attendanceData.add(AttendanceModel.fromMap(mapData: doc.data(), documentId: doc.id));
+    });
+
+    return _attendanceData;
   }
 
   Future<void> updateAttendanceData({required String companyId, required AttendanceModel attendanceModel}) async {

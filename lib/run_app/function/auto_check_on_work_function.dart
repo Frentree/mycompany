@@ -14,10 +14,9 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
   DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   //오늘 출퇴근 데이터를 가져온다.
-  List<AttendanceModel> todayAttendanceData = await attendanceFirestoreRepository.readMyAttendanceDataWithPeriod(
+  List<AttendanceModel> todayAttendanceData = await attendanceFirestoreRepository.readTodayMyAttendanceData(
     employeeData: employeeInfo,
-    minimumDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
-    maximumDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
+    today: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
   );
 
   //출퇴근 데이터가 없을 경우

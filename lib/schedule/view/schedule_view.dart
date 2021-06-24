@@ -170,7 +170,6 @@ class _ScheduleViewState extends State<ScheduleView> {
                           ),
                           onTap: () {
                             _isColleagueChk = !_isColleagueChk;
-
                             if(!_isTeamAndEmployeeChk) {
                               if(_isColleagueChk) {
                                 _getResetChose();

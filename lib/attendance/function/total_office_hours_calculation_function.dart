@@ -116,6 +116,23 @@ class TotalOfficeHoursCalculationFunction {
     return weekAttendanceData;
   }
 
+  Map<String, List<AttendanceModel>> getEmployeeWeekAttendanceData({required List<AttendanceModel> attendanceDataList, required DateTime startDate, required DateTime endDate}){
+    Map<String, List<AttendanceModel>> employeeWeekAttendanceData = Map();
+
+    attendanceDataList.forEach((element) {
+      if(!employeeWeekAttendanceData.keys.contains(element.mail)){
+        employeeWeekAttendanceData.update(key, (value) => null)
+      }
+      DateTime dataCreateDate = dateFormatCustom.changeTimestampToDateTime(timestamp: element.createDate!);
+      if((dataCreateDate.compareTo(startDate) >= 0) && (dataCreateDate.compareTo(endDate) <= 0)){
+        weekAttendanceData[element.createDate!.toDate().weekday] = element;
+      }
+    });
+
+    return weekAttendanceData;
+  }
+
+
   List<Duration> weekTotalOfficeHoursCalculation({required List<AttendanceModel> attendanceDataList}){
     List<Duration> weekTotal = [Duration(), Duration(), Duration()];
 
