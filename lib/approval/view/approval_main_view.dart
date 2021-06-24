@@ -425,13 +425,13 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                   tabs: [
                     Tab(
                       child: Text(
-                        "결재 신청함",
+                        "approval_application_box".tr(),
                         style: getNotoSantMedium(fontSize: 15.0, color: textColor),
                       ),
                     ),
                     Tab(
                       child: Text(
-                        "결재 수신함",
+                        "approve_inbox".tr(),
                         style: getNotoSantMedium(fontSize: 15.0, color: textColor),
                       ),
                     ),

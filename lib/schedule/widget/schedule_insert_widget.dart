@@ -155,7 +155,6 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
       child: Column(
         children: [
           getAnnual(),
-          getLocation(),
           getNote(),
           getApproval()
         ],
@@ -445,7 +444,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "halfway".tr(),
+                      value? "halfway".tr() : "annual".tr(),
                       style: getNotoSantRegular(
                           fontSize: 14.0,
                           color: widget.isAllDay.value ? workInsertColor : hintTextColor
@@ -488,7 +487,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "pm".tr(),
+                      value ? "pm".tr() : "am".tr(),
                       style: getNotoSantRegular(
                           fontSize: 14.0,
                           color: value ? workInsertColor : hintTextColor
