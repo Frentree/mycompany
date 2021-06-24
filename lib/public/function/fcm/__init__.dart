@@ -22,6 +22,9 @@ late AndroidNotificationChannel channel;
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+/// Enroll mipmap/ic_launcher icon to message icon
+AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+
 void FcmInit() async {
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -59,6 +62,9 @@ void FcmInit() async {
 void OnMessage() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print("message is : $message");
+    print(message.notification);
+    print(message.notification!.android);
+    print(message.notification!.android!.clickAction);
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
     if (notification != null && android != null && !kIsWeb) {
@@ -73,9 +79,14 @@ void OnMessage() {
               channel.description,
               // TODO add a proper drawable resource to android, for now using
               //      one that already exists in example app.
-              icon: 'launch_background',
+              icon: '@mipmap/ic_launcher',
+              styleInformation: DefaultStyleInformation(true, true),
+              importance: Importance.max,
+
             ),
-          ));
+          ),
+        payload: "",
+      );
     }
   });
 }

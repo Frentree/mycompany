@@ -25,11 +25,11 @@ exports.sendFcmNew = functions.https.onCall(async (data, context) => {
         notification: {
           title: _title,
           body: _message,
-          alarmId: _alarmId,
-          clickAction: "FLUTTER_NOTIFICATION_CLICK",
         },
         data: {
+          click_action: "FLUTTER_NOTIFICATION_CLICK",
           route: _route,
+          alarmId: _alarmId,
         }
       },
       {
@@ -41,8 +41,9 @@ exports.sendFcmNew = functions.https.onCall(async (data, context) => {
     );
 });
 
-exports.sendFcm = functions.https.onCall(async (data, context) => {
-    const _token = data["tokenList"];
+
+/* exports.sendFcm = functions.region("asia-northeast1").https.onCall(async (data, context) => {
+    const _token = data["token"];
     const _team = data["team"];
     const _name = data["name"];
     const _position = data["position"];
@@ -51,7 +52,7 @@ exports.sendFcm = functions.https.onCall(async (data, context) => {
 
     const payload = {
         data: {
-        title: team + " " + name + " " + position,
+        title: "",
         body: _collection,
         alarmId: _alarmId,
         clickAction: "FLUTTER_NOTIFICATION_CLICK",
@@ -62,7 +63,5 @@ exports.sendFcm = functions.https.onCall(async (data, context) => {
         priority: "high",
     };
 
-    const result = admin.messaging().sendToDevice(token, payload, options);
-    return result;
-});
-rkskekfkakqktk dkwkz
+    await admin.messaging().sendToDevice(_token, payload, options);
+});*/

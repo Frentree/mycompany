@@ -76,15 +76,15 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
       }
     });
     OnMessage();
-    // OnMessageOpenedApp();
+    OnMessageOpenedApp();
     requestPermissions();
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      print('splash view white');
-      print(message.notification!.body);
-      // TODO add a proper navigation router here, for bypass to the destination
-    });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print('A new onMessageOpenedApp event was published!');
+    //   print('splash view white');
+    //   print(message.notification!.body);
+    //   // TODO add a proper navigation router here, for bypass to the destination
+    // });
 
     Timer(Duration(seconds: 3), () => pageMoveAndRemoveBackPage(context: context, pageName: AuthView(deviceToken: _deviceToken,)));
   }
