@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/main.dart';
+import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
@@ -30,19 +31,19 @@ class ScheduleFirebaseMethods {
   
   
   Future<QuerySnapshot> getCompanyUser(String? companyCode) async {
-    return await _store.collection(COMPANY).doc(companyCode).collection("user").where("mail", isNotEqualTo: loginUser!.mail).get();
+    return await _store.collection(COMPANY).doc(companyCode).collection(USER).where("mail", isNotEqualTo: loginUser!.mail).get();
   }
 
   Future<QuerySnapshot> getMyAndCompanyUser(String? companyCode) async {
-    return await _store.collection(COMPANY).doc(companyCode).collection("user").get();
+    return await _store.collection(COMPANY).doc(companyCode).collection(USER).get();
   }
 
   Future<QuerySnapshot> getTeamDocument(String? companyCode) async {
-    return await _store.collection(COMPANY).doc(companyCode).collection("team").get();
+    return await _store.collection(COMPANY).doc(companyCode).collection(TEAM).get();
   }
 
   Future<QuerySnapshot> getEmployeeDocument(String? companyCode) async {
-    return await _store.collection(COMPANY).doc(companyCode).collection("user").get();
+    return await _store.collection(COMPANY).doc(companyCode).collection(USER).get();
   }
 
   /*
@@ -125,6 +126,18 @@ class ScheduleFirebaseMethods {
     print(map);
 
     await _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(documentId).update({"colleagues": map}).onError((error, stackTrace) =>{result = 405});
+
+    return result;
+  }
+
+  Stream<QuerySnapshot> getScheduleComment(String companyCode, String docId) {
+    return _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(docId).collection(COMMENT).snapshots();
+  }
+
+  Future<int> insertScheduleComment(String companyCode, String scheduleId, CommentModel model) async {
+    var result = -1;
+    await _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(scheduleId).collection(COMMENT).add(model.toJson())
+        .whenComplete(() => {result = 0});
 
     return result;
   }

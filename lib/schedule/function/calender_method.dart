@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/main.dart';
+import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
@@ -16,17 +17,17 @@ import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class CalenderMethod{
-  final ScheduleFirebaseReository _reository = ScheduleFirebaseReository();
+  final ScheduleFirebaseReository _repository = ScheduleFirebaseReository();
   ApprovalFirebaseRepository approvalRepository = ApprovalFirebaseRepository();
 
   Future<List<Appointment>> getSheduleData(String? companyCode) async {
-    var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent];
+    var _color = [checkColor, outWorkColor, Colors.purple, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent];
     int typeChoise = 1;
-    var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타"];
+    var typeList = ["내근", "외근", "요청", "업무", "미팅", "연차", "반차", "휴가", "기타"];
 
 
     final List<Appointment> shedules = <Appointment>[];
-    var schduleData = await _reository.getSchedules(companyCode: companyCode);
+    var schduleData = await _repository.getSchedules(companyCode: companyCode);
 
     List<QueryDocumentSnapshot> scheduleSnapshot = schduleData.docs;
 
@@ -91,12 +92,12 @@ class CalenderMethod{
     return shedules;
   }
 
-  void getScheduleDetail(CalendarTapDetails details, BuildContext context){
+  void getScheduleDetail({required CalendarTapDetails details,required BuildContext context,required List<EmployeeModel> employeeList}){
     dynamic appointment = details.appointments;
     DateTime? date = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
     if(appointment != null){
-      showScheduleDetail(context: context, data: appointment, date: date!);
+      showScheduleDetail(context: context, data: appointment, date: date!, employeeList: employeeList);
     }
   }
 
@@ -114,18 +115,18 @@ class CalenderMethod{
     return pickTime;
   }
 
-  void mainNavigator(CalendarTapDetails details, BuildContext context){
+  void mainNavigator(CalendarTapDetails details, BuildContext context, List<EmployeeModel> employeeList){
     dynamic appointment = details.appointments;
     DateTime? date = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
     if(appointment != null){
-      showScheduleDetail(context: context, data: appointment, date: date!);
+      showScheduleDetail(context: context, data: appointment, date: date!, employeeList: employeeList);
     }
   }
 
   Future<List<TeamModel>> getTeam(String? companyCode) async {
     List<TeamModel> teamList = [];
-    var teamData = await _reository.getTeamDocument(companyCode: companyCode);
+    var teamData = await _repository.getTeamDocument(companyCode: companyCode);
 
     List<QueryDocumentSnapshot> teamSnapshot = teamData.docs;
 
@@ -138,7 +139,7 @@ class CalenderMethod{
 
   Future<List<EmployeeModel>> getEmployee(String? companyCode) async {
     List<EmployeeModel> empList = [];
-    var empData = await _reository.getCompanyUser(companyCode: companyCode);
+    var empData = await _repository.getCompanyUser(companyCode: companyCode);
 
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
@@ -152,7 +153,7 @@ class CalenderMethod{
   // 나 포함
   Future<List<EmployeeModel>> getEmployeeMy(String? companyCode) async {
     List<EmployeeModel> empList = [];
-    var empData = await _reository.getMyAndCompanyUser(companyCode: companyCode);
+    var empData = await _repository.getMyAndCompanyUser(companyCode: companyCode);
 
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
@@ -213,10 +214,10 @@ class CalenderMethod{
 
     switch(workName) {
       case "내근": case "미팅":
-        result = await _reository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode);
+        result = await _repository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode);
         break;
       case "외근": case "요청":
-        result = await _reository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, companyCode: companyCode);
+        result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, companyCode: companyCode);
         break;
       case "재택": case "외출": case "연차":
         result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, companyCode: companyCode);
@@ -224,9 +225,9 @@ class CalenderMethod{
     }
 
     if(workModel.type == "기타" && approvalUser!.mail == ""){
-      result = await _reository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode);
+      result = await _repository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode);
     }else if(workModel.type == "기타" && approvalUser!.mail != "") {
-      result = await _reository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser, companyCode: companyCode);
+      result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser, companyCode: companyCode);
     }
 
     return result;
@@ -283,10 +284,10 @@ class CalenderMethod{
 
     switch(workName) {
       case "내근": case "미팅":
-      result = await _reository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
+      result = await _repository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
       break;
       case "외근": case "요청":
-      result = await _reository.updateWorkApprovalDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser!, documentId: documentId);
+      result = await _repository.updateWorkApprovalDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser!, documentId: documentId);
       break;
       case "재택": case "외출": case "연차":
       result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, companyCode: companyCode);
@@ -294,9 +295,9 @@ class CalenderMethod{
     }
 
     if(workModel.type == "기타" && approvalUser!.mail == ""){
-      result = await _reository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
+      result = await _repository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
     }else if(workModel.type == "기타" && approvalUser!.mail != "") {
-      result = await _reository.updateWorkApprovalDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser, documentId: documentId);
+      result = await _repository.updateWorkApprovalDocument(workModel: workModel, companyCode: companyCode, approvalUser: approvalUser, documentId: documentId);
     }
 
     return result;
@@ -315,7 +316,7 @@ class CalenderMethod{
       return 400;
     }
 
-    var approvalResult = await _reository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
+    var approvalResult = await _repository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
 
     if(approvalResult){
       var scheduleResult = await Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment,)));
@@ -336,11 +337,11 @@ class CalenderMethod{
   }) async {
     int resultCode = 0; // 0 : 성공, 404 : 결재 중인 항목일때, 405 : 스케줄 삭제 오류
 
-    var approvalResult = await _reository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
+    var approvalResult = await _repository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
 
 
     if(approvalResult){
-      var scheduleResult = await _reository.deleteScheduleDocument(companyCode: companyCode, documentId: documentId);
+      var scheduleResult = await _repository.deleteScheduleDocument(companyCode: companyCode, documentId: documentId);
       if(!scheduleResult){
         resultCode = 405;
       }
@@ -371,10 +372,48 @@ class CalenderMethod{
       }
     }
 
-    resultCode = await _reository.workColleaguesDelete(companyCode: companyCode, documentId: appointment.documentId.toString(), map: colleaguesList);
+    resultCode = await _repository.workColleaguesDelete(companyCode: companyCode, documentId: appointment.documentId.toString(), map: colleaguesList);
 
 
     return resultCode;
   }
 
+
+  // 스케줄 댓글등록
+  Future<int> insertScheduleCommentMethod({required String companyCode, CommentModel? model, required TextEditingController noticeComment, required Appointment mode}) async {
+    late CommentModel insertModel;
+
+    var result = -1;
+
+    if (model == null) {
+      insertModel = CommentModel(
+          level: 0,
+          comment: noticeComment.text,
+          createDate: Timestamp.now(),
+          uid: loginUser!.mail,
+          uname: loginUser!.name,
+          commentId: ""
+      );
+    } else {
+      insertModel = CommentModel(
+          level: 1,
+          comment: noticeComment.text,
+          upComment: model.comment,
+          upUid: model.uid,
+          upUname: model.uname,
+          createDate: Timestamp.now(),
+          uid: loginUser!.mail,
+          uname: loginUser!.name,
+          commentId: model.reference!.id
+      );
+    }
+
+    result =  await _repository.insertScheduleComment(companyCode: companyCode, scheduleId: mode.documentId, model: insertModel);
+
+    noticeComment.text = "";
+
+
+    return result;
+
+  }
 }

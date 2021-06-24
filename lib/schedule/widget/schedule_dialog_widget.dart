@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -21,7 +22,7 @@ import 'package:easy_localization/easy_localization.dart';
 
   DateFormatCustom _format = DateFormatCustom();
 
-  Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
+  Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date, required List<EmployeeModel> employeeList}) {
     data.sort((a,b) => a.startTime.compareTo(b.startTime));
 
     List<Appointment> allDayAppointment = [];
@@ -90,13 +91,13 @@ import 'package:easy_localization/easy_localization.dart';
                   child: Column(
                     children: [
                       Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: allDayAppointment, timeZone: 0),
+                        children: getCalendarPerseonalDetail(context: context, appointment: allDayAppointment, timeZone: 0, employeeList: employeeList),
                       ),
                       Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1),
+                        children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1, employeeList: employeeList),
                       ),
                       Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2),
+                        children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2, employeeList: employeeList),
                       )
                     ]
                   ),
@@ -111,7 +112,7 @@ import 'package:easy_localization/easy_localization.dart';
   }
 
 
-  getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone}) {
+  getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone, required List<EmployeeModel> employeeList}) {
     var list = <Widget>[Container(width: 16.w)]; // container is left padding
 
     if(appointment.isEmpty){
@@ -235,7 +236,7 @@ import 'package:easy_localization/easy_localization.dart';
               SizedBox(height: 15.0.h,),
             ],
           ),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleDetailView(appointment: app,))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleDetailView(appointment: app, employeeList: employeeList,))),
         ),
       );
     }

@@ -1,25 +1,21 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/inquiry/db/inquiry_firestore_repository.dart';
 import 'package:mycompany/inquiry/method/notice_method.dart';
-import 'package:mycompany/inquiry/model/notice_comment_model.dart';
 import 'package:mycompany/inquiry/model/notice_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/login/widget/login_button_widget.dart';
-import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:mycompany/schedule/widget/userProfileImage.dart';
+import 'package:mycompany/public/widget/public_widget.dart';
 
 class InquiryNoticeDetailView extends StatefulWidget {
   final NoticeModel notice;
@@ -38,7 +34,8 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
   bool isArrowChk = true;
 
   late TextEditingController _commentTextController;
-  NoticeCommentModel? noticeCommentModel;
+
+  ValueNotifier<CommentModel?> commentValue = ValueNotifier<CommentModel?>(null);
 
   @override
   void initState() {
@@ -54,297 +51,6 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
     _commentTextController.dispose();
   }
 
-  getNoticeComments(BuildContext context, List<DocumentSnapshot> docs){
-    var list = <Widget>[Container(width: 16.w,)];
-
-    docs.sort((a, b) => a.get("noticeCreateDate").compareTo(b.get("noticeCreateDate")));
-
-    for(var doc in docs){
-      final noticeComment = NoticeCommentModel.fromMap(mapData: (doc.data() as dynamic), reference: doc.reference);
-
-      EmployeeModel user = widget.employeeList.where((element) => element.mail == noticeComment.noticeUid).first;
-      if(noticeComment.level == 0) {
-        list.add(
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0.h, horizontal: 8.0.w),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getProfileImage(size: 35.0, ImageUri: user.profilePhoto),
-                      SizedBox(width: 5.0.w,),
-                      Container(
-                        width: 55.0.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.name,
-                              style: getNotoSantMedium(fontSize: 12.0, color: textColor),
-                            ),
-                            Text(
-                              "${user.position} / ${user.team}",
-                              overflow: TextOverflow.ellipsis,
-                              style: getNotoSantMedium(fontSize: 8.0, color: hintTextColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                  width: 150.0.w,
-                                  padding: EdgeInsets.symmetric(vertical: 6.0.h, horizontal: 5.0.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0.r),
-                                    ),
-                                    color: Color(0xffC4C4C4).withOpacity(0.5),
-                                  ),
-                                  child: Text(
-                                    noticeComment.noticeComment,
-                                    style: getNotoSantRegular(fontSize: 12.0, color: textColor),
-                                  )
-                              ),
-                              SizedBox(width: 5.0.w,),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 2.0.h, horizontal: 3.0.w),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(6.0.r),
-                                  ),
-                                  color: workInsertColor,
-                                ),
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                        child: Icon(
-                                          Icons.arrow_forward_outlined,
-                                          color: whiteColor,
-                                          size: 15.w,
-                                        ),
-                                        onTap: () {
-                                          _commentTextController.text = "@" + noticeComment.noticeUname + " ";
-                                          noticeCommentModel = noticeComment;
-                                          setState(() {
-
-                                          });
-                                        }
-                                    ),
-                                    Visibility(
-                                      visible: loginUser!.mail == user.mail,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 5.0.w,),
-                                          InkWell(
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: whiteColor,
-                                                size: 15.w,
-                                              ),
-                                              onTap: () => loginDialogWidget(
-                                                  context: context,
-                                                  message: "notice_detail_view_dialog_1".tr(),
-                                                  actions: [
-                                                    confirmElevatedButton(
-                                                        topPadding: 81.0.h,
-                                                        buttonName: "dialogConfirm".tr(),
-                                                        buttonAction: () async {
-                                                          await noticeComment.reference!.delete();
-                                                          Navigator.pop(context);
-                                                        },
-                                                        customWidth: 80.0,
-                                                        customHeight: 40.0
-                                                    ),
-                                                    confirmElevatedButton(
-                                                        topPadding: 81.0.h,
-                                                        buttonName: "dialogCancel".tr(),
-                                                        buttonAction: () => Navigator.pop(context, false),
-                                                        customWidth: 80.0,
-                                                        customHeight: 40.0
-                                                    ),
-                                                  ]
-                                              )
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-
-                            ],
-                          ),
-                          Text(
-                            "${_formatCustom.dateTimeFormat(date: _formatCustom.changeTimeStampToDateTime(timestamp: noticeComment.noticeCreateDate!))}",
-                            style: getNotoSantMedium(fontSize: 8.0, color: hintTextColor),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-        );
-      } else {
-        list.add(
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0.h, horizontal: 8.0.w),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getProfileImage(size: 35.0, ImageUri: user.profilePhoto),
-                      SizedBox(width: 5.0.w,),
-                      Container(
-                        width: 55.0.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.name,
-                              style: getNotoSantMedium(fontSize: 12.0, color: textColor),
-                            ),
-                            Text(
-                              "${user.position} / ${user.team}",
-                              overflow: TextOverflow.ellipsis,
-                              style: getNotoSantMedium(fontSize: 8.0, color: hintTextColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                  width: 150.0.w,
-                                  padding: EdgeInsets.symmetric(vertical: 6.0.h, horizontal: 5.0.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0.r),
-                                    ),
-                                    color: Color(0xffC4C4C4).withOpacity(0.5),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${noticeComment.noticeUpUname} " + noticeComment.noticeUpComment!,
-                                        maxLines: 4,
-                                        style: getNotoSantRegular(fontSize: 9.0, color: textColor),
-                                      ),
-                                      SizedBox(height: 3.0.h,),
-                                      Container(
-                                        width: 150.w,
-                                        height: 0.7.h,
-                                        color: blackColor.withOpacity(0.3),
-                                      ),
-                                      SizedBox(height: 3.0.h,),
-                                      Text(
-                                        noticeComment.noticeComment,
-                                        style: getNotoSantRegular(fontSize: 12.0, color: textColor),
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              SizedBox(width: 5.0.w,),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 2.0.h, horizontal: 3.0.w),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(6.0.r),
-                                  ),
-                                  color: workInsertColor,
-                                ),
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                        child: Icon(
-                                          Icons.arrow_forward_outlined,
-                                          color: whiteColor,
-                                          size: 15.w,
-                                        ),
-                                        onTap: () {
-                                          _commentTextController.text = "@" + noticeComment.noticeUname + " ";
-                                          noticeCommentModel = noticeComment;
-                                          setState(() {
-
-                                          });
-                                        }
-                                    ),
-                                    Visibility(
-                                      visible: loginUser!.mail == user.mail,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 5.0.w,),
-                                          InkWell(
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: whiteColor,
-                                                size: 15.w,
-                                              ),
-                                              onTap: () => loginDialogWidget(
-                                                  context: context,
-                                                  message: "notice_detail_view_dialog_1".tr(),
-                                                  actions: [
-                                                    confirmElevatedButton(
-                                                        topPadding: 81.0.h,
-                                                        buttonName: "dialogConfirm".tr(),
-                                                        buttonAction: () async {
-                                                          await noticeComment.reference!.delete();
-                                                          Navigator.pop(context);
-                                                        },
-                                                        customWidth: 80.0,
-                                                        customHeight: 40.0
-                                                    ),
-                                                    confirmElevatedButton(
-                                                        topPadding: 81.0.h,
-                                                        buttonName: "dialogCancel".tr(),
-                                                        buttonAction: () => Navigator.pop(context),
-                                                        customWidth: 80.0,
-                                                        customHeight: 40.0
-                                                    ),
-                                                  ]
-                                              )
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-
-                            ],
-                          ),
-                          Text(
-                            "${_formatCustom.dateTimeFormat(date: _formatCustom.changeTimeStampToDateTime(timestamp: noticeComment.noticeCreateDate!))}",
-                            style: getNotoSantMedium(fontSize: 8.0, color: hintTextColor),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-        );
-      }
-
-    }
-
-    return list;
-    
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -471,48 +177,58 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
                             List<DocumentSnapshot> docs = snapshot.data!.docs;
 
                             return Column(
-                                children: getNoticeComments(context, docs)
+                                children: getCommentsWidget(
+                                    context: context, docs: docs,
+                                    employeeList: widget.employeeList,
+                                    commentTextController: _commentTextController,
+                                    commentValue: commentValue
+                                )
                             );
                           },
                         )
                       ],
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: noticeCommentModel != null ? Container(
-                      padding: EdgeInsets.symmetric(vertical: 2.0.h),
-                      width: double.infinity,
-                      height: 20.0.h,
-                      color: workInsertColor.withOpacity(0.7),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${noticeCommentModel!.noticeUname} 님에게 답글 중입니다.",
-                            style: getNotoSantBold(fontSize: 10.0, color: whiteColor),
-                          ),
-                          InkWell(
-                            child: Container(
-                              width: 40.0.w,
-                              color: whiteColor.withOpacity(0),
-                              child: Text(
-                                "cencel".tr(),
-                                style: getNotoSantBold(fontSize: 10.0, color: whiteColor, decoration: TextDecoration.underline,),
+                  ValueListenableBuilder(
+                  valueListenable: commentValue,
+                    builder: (context, value, child) {
+                      return Container(
+                        alignment: Alignment.bottomCenter,
+                        child: commentValue.value != null ? Container(
+                          padding: EdgeInsets.symmetric(vertical: 2.0.h),
+                          width: double.infinity,
+                          height: 20.0.h,
+                          color: workInsertColor.withOpacity(0.7),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${commentValue.value!.uname} 님에게 답글 중입니다.",
+                                style: getNotoSantBold(fontSize: 10.0, color: whiteColor),
                               ),
-                            ),
-                            onTap: () {
-                              noticeCommentModel = null;
-                              _commentTextController.text = "";
-                              setState(() {
+                              InkWell(
+                                child: Container(
+                                  width: 40.0.w,
+                                  color: whiteColor.withOpacity(0),
+                                  child: Text(
+                                    "cencel".tr(),
+                                    style: getNotoSantBold(fontSize: 10.0, color: whiteColor, decoration: TextDecoration.underline,),
+                                  ),
+                                ),
+                                onTap: () {
+                                  commentValue.value = null;
+                                  _commentTextController.text = "";
+                                  setState(() {
 
-                              });
-                            },
+                                  });
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ) : Container(),
+                        ) : Container(),
 
+                      );
+                    },
                   ),
                 ],
               ),
@@ -577,12 +293,12 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
 
                         NoticeMethod().insertNoticeCommentMethod(
                           companyCode: loginUser!.companyCode!,
-                          model: noticeCommentModel,
+                          model: commentValue.value,
                           noticeComment: _commentTextController,
                           noticeMode: widget.notice
                         );
                         setState(() {
-                          noticeCommentModel = null;
+                          commentValue.value = null;
                         });
                       }
                     ),

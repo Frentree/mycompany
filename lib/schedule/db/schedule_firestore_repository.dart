@@ -45,4 +45,10 @@ class ScheduleFirebaseReository {
 
   Future<int> workColleaguesDelete({required String companyCode, required String documentId, required List<Map<String,String>> map}) =>
       _curd.workColleaguesDelete(companyCode, documentId, map);
+
+  Stream<QuerySnapshot> getScheduleComment({required String companyCode, required String docId}) =>
+      _curd.getScheduleComment(companyCode, docId);
+
+  Future<int> insertScheduleComment({required companyCode, required scheduleId, required model}) =>
+      _curd.insertScheduleComment(companyCode, scheduleId, model);
 }

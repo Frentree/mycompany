@@ -14,6 +14,7 @@ import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/main_menu.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
+import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
@@ -60,13 +61,6 @@ class _ScheduleViewState extends State<ScheduleView> {
     _key = GlobalKey<ScaffoldState>();
     _controller = CalendarController();
     super.initState();
-    print(mailChkList);
-
-    if(loginEmpUser != null){
-      if(mailChkList.isEmpty){
-        mailChkList.add(loginEmpUser!);
-      }
-    }
 
     _getDataSource();
     _getPersonalDataSource();
@@ -75,7 +69,6 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   _getResetChose() {
     mailChkList = [];
-    mailChkList.add(loginEmpUser!);
   }
 
   _getDataSource() async {
@@ -89,7 +82,7 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser!.companyCode);
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser!.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser!.companyCode);
 
     setState(() {
       teamList = team;
@@ -325,7 +318,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                               });
                             },
                             todayHighlightColor: checkColor,
-                            onTap: (CalendarTapDetails details) => ScheduleFunctionReprository().getScheduleDetail(details: details, context: context),
+                            onTap: (CalendarTapDetails details) => CalenderMethod().getScheduleDetail(details: details, context: context, employeeList: employeeList),
                           ),
                         ),
                         _isDatePopup

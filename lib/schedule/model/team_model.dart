@@ -7,17 +7,21 @@ App 팀 이름
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TeamModel {
-  String? teamName;
+  int? teamNum;
+  String teamName;
 
   TeamModel({
-    this.teamName,
+    this.teamNum,
+    required this.teamName,
   });
 
   TeamModel.fromMap({required Map mapData})
-      : teamName = mapData["teamName"] ?? "";
+      : teamNum = mapData["teamNum"] ?? 999,
+       teamName = mapData["teamName"] ?? "";
 
   toJson() {
     return {
+      "teamNum": teamNum ?? 999,
       "teamName": teamName,
     };
   }

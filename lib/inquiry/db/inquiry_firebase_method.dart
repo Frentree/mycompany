@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/inquiry/model/notice_comment_model.dart';
 import 'package:mycompany/inquiry/model/notice_model.dart';
+import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
 
 class InquiryFirebaseMethod{
@@ -22,7 +23,7 @@ class InquiryFirebaseMethod{
   }
 
   Stream<QuerySnapshot> getNoticeComment(String companyCode, String docId) {
-    return _store.collection(COMPANY).doc(companyCode).collection(NOTICE).doc(docId).collection(NOTICECOMMENT).snapshots();
+    return _store.collection(COMPANY).doc(companyCode).collection(NOTICE).doc(docId).collection(COMMENT).snapshots();
   }
 /*
   getNoticeComments(String companyCode, String docId) async {
@@ -45,9 +46,9 @@ class InquiryFirebaseMethod{
     return result;
   }
 
-  Future<int> insertNoticeComment(String companyCode, String noticeId, NoticeCommentModel model) async {
+  Future<int> insertNoticeComment(String companyCode, String noticeId, CommentModel model) async {
     var result = -1;
-    await _store.collection(COMPANY).doc(companyCode).collection(NOTICE).doc(noticeId).collection(NOTICECOMMENT).add(model.toJson())
+    await _store.collection(COMPANY).doc(companyCode).collection(NOTICE).doc(noticeId).collection(COMMENT).add(model.toJson())
         .whenComplete(() => {result = 0});
 
     return result;

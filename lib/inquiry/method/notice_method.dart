@@ -4,6 +4,7 @@ import 'package:mycompany/inquiry/db/inquiry_firestore_repository.dart';
 import 'package:mycompany/inquiry/model/notice_comment_model.dart';
 import 'package:mycompany/inquiry/model/notice_model.dart';
 import 'package:mycompany/main.dart';
+import 'package:mycompany/public/model/public_comment_model.dart';
 
 class NoticeMethod{
   InquiryFirebaseRepository _repository = InquiryFirebaseRepository();
@@ -28,31 +29,31 @@ class NoticeMethod{
     return result;
   }
 
-  Future<int> insertNoticeCommentMethod({required String companyCode, NoticeCommentModel? model, required TextEditingController noticeComment, required NoticeModel noticeMode}) async {
-    late NoticeCommentModel insertModel;
+  Future<int> insertNoticeCommentMethod({required String companyCode, CommentModel? model, required TextEditingController noticeComment, required NoticeModel noticeMode}) async {
+    late CommentModel insertModel;
 
     var result = -1;
 
     if (model == null) {
-      insertModel = NoticeCommentModel(
+      insertModel = CommentModel(
           level: 0,
-          noticeComment: noticeComment.text,
-          noticeCreateDate: Timestamp.now(),
-          noticeUid: loginUser!.mail,
-          noticeUname: loginUser!.name,
-          noticeCommentId: ""
+          comment: noticeComment.text,
+          createDate: Timestamp.now(),
+          uid: loginUser!.mail,
+          uname: loginUser!.name,
+          commentId: ""
       );
     } else {
-      insertModel = NoticeCommentModel(
+      insertModel = CommentModel(
           level: 1,
-          noticeComment: noticeComment.text,
-          noticeUpComment: model.noticeComment,
-          noticeUpUid: model.noticeUid,
-          noticeUpUname: model.noticeUname,
-          noticeCreateDate: Timestamp.now(),
-          noticeUid: loginUser!.mail,
-          noticeUname: loginUser!.name,
-          noticeCommentId: model.reference!.id
+          comment: noticeComment.text,
+          upComment: model.comment,
+          upUid: model.uid,
+          upUname: model.uname,
+          createDate: Timestamp.now(),
+          uid: loginUser!.mail,
+          uname: loginUser!.name,
+          commentId: model.reference!.id
       );
     }
 

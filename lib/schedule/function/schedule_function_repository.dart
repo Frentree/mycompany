@@ -13,9 +13,6 @@ class ScheduleFunctionReprository {
   Future<List<Appointment>> getSheduleData({required String companyCode}) =>
       _calenderFunction.getSheduleData(companyCode);
 
-  void getScheduleDetail({required CalendarTapDetails details,required BuildContext context}) =>
-      _calenderFunction.getScheduleDetail(details, context);
-
   Future<DateTime> dateTimeSet({required DateTime date, required BuildContext context}) =>
       _calenderFunction.dateTimeSet(date, context);
 
