@@ -38,7 +38,7 @@ class PublicFirebaseMethods {
 
   Future<void> saveAlarmDataFromUsersThenSend(
       UserModel user, String? companyCode, List users, var payload) async {
-    HttpsCallable callFcm = FirebaseFunctions.instance.httpsCallable('sendFcm');
+    HttpsCallable callFcm = FirebaseFunctions.instance.httpsCallable('sendFcmNew');
 
     users.forEach((_userMail) async {
       print("user mail : $_userMail");
