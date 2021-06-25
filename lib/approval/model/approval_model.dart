@@ -22,7 +22,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ApprovalModel {
-  String? docIds;
+  List<dynamic>? docIds;
+  String? workIds;
   bool allDay;
   String status;
   String location;
@@ -34,6 +35,7 @@ class ApprovalModel {
   String requestContent;
   Timestamp? createDate;
   Timestamp? approvalDate;
+  Timestamp? requestDate;
   Timestamp requestStartDate;
   Timestamp requestEndDate;
   int? totalCost;
@@ -44,6 +46,7 @@ class ApprovalModel {
 
   ApprovalModel({
     this.docIds,
+    this.workIds,
     required this.allDay,
     required this.status,
     required this.location,
@@ -55,6 +58,7 @@ class ApprovalModel {
     required this.requestContent,
     this.createDate,
     this.approvalDate,
+    this.requestDate,
     required this.requestStartDate,
     required this.requestEndDate,
     this.totalCost,
@@ -64,9 +68,10 @@ class ApprovalModel {
   });
 
   ApprovalModel.fromMap({required Map mapData, this.reference})
-      : docIds = mapData["docIds"] ?? "",
+      : docIds = mapData["docIds"] ?? [],
+        workIds = mapData["workIds"] ?? "",
         allDay = mapData["allDay"] ?? false,
-        status = mapData["status"] ?? "대기",
+        status = mapData["status"] ?? "요청",
         location = mapData["location"] ?? "",
         approvalContent = mapData["approvalContent"] ?? "",
         approvalUser = mapData["approvalUser"] ?? "",
@@ -75,20 +80,23 @@ class ApprovalModel {
         title = mapData["title"] ?? "",
         requestContent = mapData["requestContent"] ?? "",
         createDate = mapData["createDate"] ?? Timestamp.now(),
-        approvalDate = mapData["approvalDate"] ?? Timestamp.now(),
-        requestStartDate = mapData["requestStartDate"] ?? Timestamp.now(),
-        requestEndDate = mapData["requestEndDate"] ?? Timestamp.now(),
+        approvalDate = mapData["approvalDate"] ?? null,
+        requestStartDate = mapData["requestStartDate"] ?? mapData["requestDate"],
+        requestEndDate = mapData["requestEndDate"] ?? mapData["requestDate"],
         totalCost = mapData["totalCost"] ?? 0,
         user = mapData["user"] ?? Timestamp.now(),
         userMail = mapData["userMail"] ?? Timestamp.now(),
-        colleagues = mapData["colleagues"] ?? [mapData["createUid"]];
+        colleagues = mapData["colleagues"] ?? [{mapData["userMail"] : mapData["user"]}];
+
+
   toJson(){
     return {
-      "docIds": docIds ?? "",
+      "docIds": docIds ?? [],
+      "workIds": workIds ?? "",
       "allDay": allDay,
       "status": status,
       "location": location,
-      "approvalContent": approvalContent,
+      "approvalContent": approvalContent ?? "",
       "approvalUser": approvalUser,
       "approvalMail": approvalMail,
       "approvalType": approvalType,
@@ -96,6 +104,7 @@ class ApprovalModel {
       "requestContent": requestContent,
       "createDate": createDate ?? Timestamp.now(),
       "approvalDate": approvalDate ?? Timestamp.now(),
+      "requestDate": requestDate ?? Timestamp.now(),
       "requestStartDate": requestStartDate,
       "requestEndDate": requestEndDate,
       "totalCost": totalCost ?? 0,

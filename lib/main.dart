@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:mycompany/public/provider/device_Info_provider.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/run_app/view/permission_request_view.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/function/permission_function.dart';
+
+EmployeeModel? loginEmpUser;
+UserModel? loginUser;
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

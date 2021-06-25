@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mycompany/attendance/view/attendance_dashboard_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/view/force_sign_out_view.dart';
 import 'package:mycompany/login/view/reject_join_company_approval_view.dart';
 import 'package:mycompany/login/view/sign_in_view.dart';
 import 'package:mycompany/login/view/wait_join_company_approval_view.dart';
 import 'package:mycompany/public/provider/device_Info_provider.dart';
+import 'package:mycompany/main.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/function/auto_check_on_work_function.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
@@ -24,6 +24,9 @@ class AuthView extends StatelessWidget {
     UserModel? loginUserData = userInfoProvider.getUserData();
     EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
     String? deviceId = deviceInfoProvider.getDeviceId();
+
+    loginUser = loginUserData;
+    loginEmpUser = loginEmployeeData;
 
     if(loginUserData == null){
       return SignInView();

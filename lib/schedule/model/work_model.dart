@@ -22,7 +22,7 @@ class WorkModel {
   int? alarmId;
   bool allDay;
   String title;
-  String content;
+  String contents;
   String type;
   String createUid;
   String name;
@@ -34,12 +34,15 @@ class WorkModel {
   Timestamp? createDate;
   Timestamp? lastModDate;
   List<dynamic>? colleagues;
+  int? level;
+  int? timeSlot;
+
 
   WorkModel({
     this.alarmId,
     required this.allDay,
     required this.title,
-    required this.content,
+    required this.contents,
     required this.type,
     required this.createUid,
     required this.name,
@@ -57,7 +60,7 @@ class WorkModel {
       : alarmId = mapData["alarmId"] ?? 0,
         allDay = mapData["allDay"] ?? false,
         title = mapData["title"] ?? "",
-        content = mapData["content"] ?? "",
+        contents = mapData["contents"] ?? "",
         type = mapData["type"] ?? "",
         createUid = mapData["createUid"] ?? null,
         name = mapData["name"] ?? "",
@@ -67,14 +70,14 @@ class WorkModel {
         endTime = mapData["endTime"] ?? null,
         createDate = mapData["createDate"] ?? Timestamp.now(),
         lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
-        colleagues = mapData["colleagues"] ?? [mapData["createUid"]];
+        colleagues = mapData["colleagues"] ?? [];
 
   toJson(){
     return {
       "alarmId": alarmId ?? 0,
       "allDay": allDay,
       "title": title,
-      "content": content,
+      "contents": contents,
       "type": type,
       "createUid": createUid,
       "name": name,
@@ -85,7 +88,7 @@ class WorkModel {
       "endTime": endTime,
       "createDate": createDate ?? Timestamp.now(),
       "lastModDate": lastModDate ?? Timestamp.now(),
-      "colleagues" : colleagues ?? [createUid],
+      "colleagues" : colleagues ?? [{createUid : name}],
     };
   }
 }
