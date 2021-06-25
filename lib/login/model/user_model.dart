@@ -10,6 +10,7 @@ App 가입 사용자 모델
 회사ID : companyCode
 회사가입상태 : state
 프로필사진 : profilePhoto
+기기ID : deviceId
 
 state
 0 : 가입신청안함(기본값)
@@ -31,6 +32,7 @@ class UserModel {
   String? companyCode;
   int state;
   String? profilePhoto;
+  String? deviceId;
 
   UserModel({
     this.token,
@@ -43,6 +45,7 @@ class UserModel {
     this.companyCode,
     this.state = 0,
     this.profilePhoto,
+    this.deviceId,
   });
 
   UserModel.fromMap({required Map mapData})
@@ -55,8 +58,8 @@ class UserModel {
         lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
         companyCode = mapData["companyCode"] ?? "",
         state = mapData["state"] ?? 0,
-        profilePhoto = mapData["profilePhoto"] ?? "";
-
+        profilePhoto = mapData["profilePhoto"] ?? "",
+        deviceId = mapData["deviceId"] ?? "";
 
   toJson() {
     return {
@@ -70,6 +73,7 @@ class UserModel {
       "companyCode": companyCode,
       "state": state,
       "profilePhoto": profilePhoto,
+      "deviceId": deviceId,
     };
   }
 }

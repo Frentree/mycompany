@@ -419,9 +419,9 @@ class AttendanceDataViewState extends State<AttendanceDataView> {
                 top: 20.0.h,
               ),
               child: GestureDetector(
-                onTap: (){
+                /*onTap: (){
                   pageMove(context: context, pageName: EmployeeAttendanceDataView());
-                },
+                },*/
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

@@ -28,6 +28,9 @@ class UserInfoProvider with ChangeNotifier {
     encodeData['lastModDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['lastModDate']).toIso8601String();
 
     _sharedPreferences.setString(USER, jsonEncode(encodeData));
+
+    print("로그인 사용자 : ${userModel.mail}");
+
     setUserData(userModel: userModel);
   }
 

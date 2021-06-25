@@ -1,3 +1,4 @@
+/*
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -40,11 +41,13 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
     DateTime today = DateTime(now.year, now.month, now.day);
 
 
-    /*ValueNotifier<DateTime> queryStartDate = ValueNotifier<DateTime>(queryEndDate.value.subtract(Duration(days: 6)));
+    */
+/*ValueNotifier<DateTime> queryStartDate = ValueNotifier<DateTime>(queryEndDate.value.subtract(Duration(days: 6)));
     ValueNotifier<DateTime> queryEndDate = ValueNotifier<DateTime>(DateTime(now.year, now.month, now.day + (6 - now.weekday)));
     ValueNotifier<List<AttendanceModel>> weekAttendanceData = ValueNotifier<List<AttendanceModel>>(_totalOfficeHoursCalculationFunction.getWeekAttendanceData(attendanceDataList: widget.attendanceData, startDate: queryStartDate.value, endDate: queryEndDate.value));
     ValueNotifier<List<Duration>> weekTotalOfficeHours = ValueNotifier<List<Duration>>(_totalOfficeHoursCalculationFunction.weekTotalOfficeHoursCalculation(attendanceDataList: weekAttendanceData.value));
-*/
+*//*
+
     DateTime lastDate = DateTime(now.year, now.month, now.day + (6 - now.weekday));
 
     return Scaffold(
@@ -242,3 +245,4 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
     );
   }
 }
+*/
