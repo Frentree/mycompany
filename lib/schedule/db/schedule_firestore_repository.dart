@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_method.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
@@ -11,8 +12,8 @@ class ScheduleFirebaseReository {
   Future<QuerySnapshot> getSchedules({String? companyCode}) =>
       _curd.getSchedules(companyCode);
 
-  Future<QuerySnapshot> getCompanyUser({String? companyCode}) =>
-      _curd.getCompanyUser(companyCode);
+  Future<QuerySnapshot> getCompanyUser({required UserModel loginUser}) =>
+      _curd.getCompanyUser(loginUser);
 
   Future<QuerySnapshot> getMyAndCompanyUser({String? companyCode}) =>
       _curd.getMyAndCompanyUser(companyCode);
@@ -24,11 +25,11 @@ class ScheduleFirebaseReository {
   Future<bool> insertWorkNotApprovalDocument({required WorkModel workModel, required String companyCode}) =>
       _curd.insertWorkNotApprovalDocument(workModel, companyCode);
 
-  Future<bool> insertWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required String companyCode}) =>
-      _curd.insertWorkApprovalDocument(workModel, approvalUser, companyCode);
+  Future<bool> insertWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required loginUser}) =>
+      _curd.insertWorkApprovalDocument(workModel, approvalUser, loginUser);
 
-  Future<bool> updateWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required String companyCode, required String documentId}) =>
-      _curd.updateWorkApprovalDocument(workModel, approvalUser, companyCode, documentId);
+  Future<bool> updateWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required UserModel loginUser, required String documentId}) =>
+      _curd.updateWorkApprovalDocument(workModel, approvalUser, loginUser, documentId);
 
 
   Future<bool> updateWorkNotApprovalDocument({required WorkModel workModel, required String companyCode, required String documentId}) =>

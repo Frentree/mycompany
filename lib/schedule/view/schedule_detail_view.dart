@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -37,11 +39,16 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
 
   ValueNotifier<CommentModel?> commentValue = ValueNotifier<CommentModel?>(null);
 
+  late UserModel loginUser;
+  late EmployeeModel loginEmployee;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _commentTextController = TextEditingController();
+    loginUser = PublicFunction().getUserProviderSetting(context);
+    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
   }
 
   @override
@@ -102,7 +109,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                     ),
                   ),
                   Visibility(
-                    visible: widget.appointment.profile == loginUser!.mail,
+                    visible: widget.appointment.profile == loginUser.mail,
                     child: PopupMenuButton<int>(
                       padding: EdgeInsets.all(0),
                       icon: SvgPicture.asset(
@@ -150,20 +157,20 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
 
                             result = await CalenderMethod().updateScheduleWork(
                                 context: context,
-                                companyCode: loginUser!.companyCode.toString(),
+                                companyCode: loginUser.companyCode.toString(),
                                 documentId: widget.appointment.documentId.toString(),
                                 appointment: widget.appointment);
                             break;
                           case 2:   //삭제
                             if(widget.appointment.profile != widget.appointment.organizerId){
                               result = await CalenderMethod().deleteColleagues(
-                                  companyCode: loginUser!.companyCode.toString(),
+                                  companyCode: loginUser.companyCode.toString(),
                                   appointment: widget.appointment
                               );
                               break;
                             }
                             result = await CalenderMethod().deleteSchedule(
-                                companyCode: loginUser!.companyCode.toString(),
+                                companyCode: loginUser.companyCode.toString(),
                                 documentId: widget.appointment.documentId.toString()
                             );
                             break;
@@ -338,7 +345,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           },
                         ),
                         StreamBuilder<QuerySnapshot>(
-                          stream: _scheduleFirebaseReository.getScheduleComment(companyCode: loginUser!.companyCode!, docId: widget.appointment.documentId!),
+                          stream: _scheduleFirebaseReository.getScheduleComment(companyCode: loginUser.companyCode!, docId: widget.appointment.documentId!),
                           builder: (context, snapshot) {
                             if(!snapshot.hasData) {
                               return Container();
@@ -461,7 +468,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                           }
 
                           CalenderMethod().insertScheduleCommentMethod(
-                              companyCode: loginUser!.companyCode!,
+                              loginUser: loginUser,
                               model: commentValue.value,
                               noticeComment: _commentTextController,
                               mode: widget.appointment

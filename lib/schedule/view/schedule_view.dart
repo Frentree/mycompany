@@ -8,10 +8,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/public_widget.dart';
@@ -26,6 +30,7 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_them
 import 'package:mycompany/schedule/widget/schedule_calender_widget.dart';
 import 'package:mycompany/schedule/widget/schedule_circular_menu.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:provider/provider.dart';
 
 class ScheduleView extends StatefulWidget {
   @override
@@ -54,6 +59,9 @@ class _ScheduleViewState extends State<ScheduleView> {
   String _headerText = '';
   DateTime _time = DateTime.now();
 
+  late UserModel loginUser;
+  late EmployeeModel loginEmployee;
+
 
   @override
   void initState() {
@@ -61,11 +69,14 @@ class _ScheduleViewState extends State<ScheduleView> {
     _circularKey = GlobalKey<CircularMenuState>();
     _controller = CalendarController();
 
+    super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
+    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
+
     if(loginUser != null){
-      mailChkList.add(loginUser!.mail);
+      mailChkList.add(loginUser.mail);
     }
 
-    super.initState();
     _getInitSetting();
     setState(() {});
   }
@@ -82,11 +93,12 @@ class _ScheduleViewState extends State<ScheduleView> {
     mailChkList = [];
   }
 
-  _getInitSetting() async {
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser!.companyCode);
-    List<Appointment> schedules = await CalenderMethod().getSheduleData(companyCode: loginUser!.companyCode.toString(), empList: employee);
-    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser!.companyCode);
 
+  _getInitSetting() async {
+
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);
+    List<Appointment> schedules = await CalenderMethod().getSheduleData(companyCode: loginUser.companyCode.toString(), empList: employee);
+    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
     setState(() {
       scheduleList = schedules;
       employeeList = employee;
@@ -95,7 +107,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   }
 
   _getDataSource() async {
-    List<Appointment> schedules = await CalenderMethod().getSheduleData(companyCode: loginUser!.companyCode.toString(), empList: employeeList);
+    List<Appointment> schedules = await CalenderMethod().getSheduleData(companyCode: loginUser.companyCode.toString(), empList: employeeList);
     // await ScheduleFirebaseReository().workColleaguesUpdate(companyCode: loginUser!.companyCode.toString());
 
     setState(() {

@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
@@ -35,10 +37,13 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   // 선택된 팀
   List<String> workTeamChkList = [];
 
+  late UserModel loginUser;
+  late EmployeeModel loginEmployee;
+
 
   _getPersonalDataSource() async {
-    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser!.companyCode);
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser!.companyCode);
+    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser.companyCode);
 
     setState(() {
       teamList = team;
@@ -96,6 +101,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     // TODO: implement initState
     _scrollController = ScrollController();
     super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
+    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
     _getPersonalDataSource();
 
     setState(() {});
@@ -181,7 +188,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                         ),
                         onTap: () async {
                           var result = await CalenderMethod().insertSchedule(
-                              companyCode: loginUser!.companyCode.toString(),
                               allDay: _isAllDay.value,
                               workName: works[workChkCount],
                               title: titleController.text,
@@ -191,7 +197,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                               workColleagueChkList: workColleagueChkList,
                               isAllDay: _isAllDay.value,
                               location: locationController.text,
-                              approvalUser: approvalUser.value
+                            approvalUser: approvalUser.value,
+                            loginUser: loginUser
                           );
 
                           if(result){
