@@ -22,6 +22,10 @@ class ApprovalFirebaseCurd {
     return approvalList;
   }
 
+  Stream<QuerySnapshot> getRequestApprovalDataSnashot(String companyCode) {
+    return _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("userMail", isEqualTo: loginUser!.mail).snapshots();
+  }
+
   Future<List<ApprovalModel>> getResponseApprovalData(String companyCode) async {
     List<ApprovalModel> approvalList = [];
 
@@ -32,6 +36,10 @@ class ApprovalFirebaseCurd {
     approvalList.sort((a, b) => b.createDate!.compareTo(a.createDate!));
 
     return approvalList;
+  }
+
+  Stream<QuerySnapshot> getResponseApprovalDataSnashot(String companyCode) {
+    return _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser!.mail).snapshots();
   }
 
   /*

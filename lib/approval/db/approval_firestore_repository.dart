@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/approval/db/approval_firebase_crud.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
@@ -10,8 +11,14 @@ class ApprovalFirebaseRepository {
   Future<List<ApprovalModel>> getRequestApprovalData({required String companyCode}) =>
       _curd.getRequestApprovalData(companyCode);
 
+  Stream<QuerySnapshot> getRequestApprovalDataSnashot({required String companyCode}) =>
+      _curd.getRequestApprovalDataSnashot(companyCode);
+
   Future<List<ApprovalModel>> getResponseApprovalData({required String companyCode}) =>
    _curd.getResponseApprovalData(companyCode);
+
+  Stream<QuerySnapshot> getResponseApprovalDataSnashot({required String companyCode}) =>
+      _curd.getResponseApprovalDataSnashot(companyCode);
 
   Future<bool> insertWorkApproval({required WorkModel workModel,required EmployeeModel approvalUser,required String companyCode, String? docId}) =>
       _curd.insertWorkApproval(workModel, approvalUser, companyCode, docId);

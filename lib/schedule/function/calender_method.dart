@@ -20,8 +20,9 @@ class CalenderMethod{
   final ScheduleFirebaseReository _repository = ScheduleFirebaseReository();
   ApprovalFirebaseRepository approvalRepository = ApprovalFirebaseRepository();
 
-  Future<List<Appointment>> getSheduleData(String? companyCode) async {
+  Future<List<Appointment>> getSheduleData({required String companyCode, required List<EmployeeModel> empList}) async {
     var _color = [checkColor, outWorkColor, Colors.purple, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent];
+
     int typeChoise = 1;
     var typeList = ["내근", "외근", "요청", "업무", "미팅", "연차", "반차", "휴가", "기타"];
 
@@ -53,18 +54,15 @@ class CalenderMethod{
       final DateTime startTime = DateTime.parse(startTimes.toDate().toString());
       final DateTime endTime = model.endTime == null ? startTime.add(const Duration(hours: 0)) : DateTime.parse(model.endTime!.toDate().toString());
 
-
-
       var colleagues = model.colleagues!;
-
 
       for(var data in colleagues) {
         Map<String, dynamic> map = data;
         String mail = map.keys.toString().replaceAll("(", "").replaceAll(")", "");
-        String name = map.values.toString().replaceAll("(", "").replaceAll(")", "");;
+        String name = map.values.toString().replaceAll("(", "").replaceAll(")", "");
+        EmployeeModel empModel = empList.where((element) => element.mail == mail).first;
 
-        for (var mailData in mailChkList) {
-          if (mailData.mail.contains(mail)) {
+          if (mailChkList.contains(mail)) {
             shedules.add(Appointment(
               isAllDay: model.allDay,
               startTime: startTime,
@@ -74,18 +72,17 @@ class CalenderMethod{
               notes: notes,
               type: type,
               profile: mail.toString(),
-              team: mailData.team,
+              team: empModel.team,
               title: title,
               content: content,
               colleagues: model.colleagues,
               documentId: doc.id,
-              position: mailData.position,
+              position: empModel.position,
               location: location != null ? location : "",
               resourceIds: <Object>[mail.hashCode],
               organizerId: model.createUid
             ));
           }
-        }
       }
     }
 

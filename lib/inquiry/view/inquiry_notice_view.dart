@@ -59,8 +59,10 @@ class _InquiryNoticeViewState extends State<InquiryNoticeView> {
 
       list.add(
           Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 4.0.h),
             child: InkWell(
               child: Card(
+                elevation: 5.0,
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(

@@ -11,11 +11,9 @@ import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
-import 'package:mycompany/public/widget/main_menu.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 

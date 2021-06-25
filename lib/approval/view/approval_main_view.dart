@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,41 +52,20 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   }
 
   getApprovalData() async {
-    List<ApprovalModel> requestApprovalData = await _approvalFirebaseRepository.getRequestApprovalData(companyCode: loginUser!.companyCode.toString());
-    List<ApprovalModel> responseApprovalData = await _approvalFirebaseRepository.getResponseApprovalData(companyCode: loginUser!.companyCode.toString());
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser!.companyCode);
 
     setState(() {
-      requestApproval = requestApprovalData;
-      responseApproval = responseApprovalData;
       employeeList = employee;
-
-      requestApproval.map((data) {
-        if(data.status == "요청"){
-          requestWaitingApproval.add(data);
-        }else if(data.status == "승인"){
-          requestCompleteApproval.add(data);
-        }else if(data.status == "반려"){
-          requestCancelApproval.add(data);
-        }
-      }).toList();
-
-      responseApproval.map((data) {
-        if(data.status == "요청"){
-          responseWaitingApproval.add(data);
-        }else if(data.status == "승인"){
-          responseCompleteApproval.add(data);
-        }else if(data.status == "반려"){
-          responseCancelApproval.add(data);
-        }
-      }).toList();
     });
   }
 
-  getApprovalClearDate() {
+  getApprovalRequestClearDate() {
     requestWaitingApproval.clear();
     requestCompleteApproval.clear();
     requestCancelApproval.clear();
+  }
+
+  getApprovalResponseClearDate() {
     responseWaitingApproval.clear();
     responseCompleteApproval.clear();
     responseCancelApproval.clear();
@@ -237,7 +217,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
 
             if(result) {
               setState(() {
-                getApprovalClearDate();
+                getApprovalRequestClearDate();
                 getApprovalData();
               });
             }
@@ -394,7 +374,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
 
             if(result) {
               setState(() {
-                getApprovalClearDate();
+                getApprovalResponseClearDate();
                 getApprovalData();
               });
             }
@@ -444,36 +424,89 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    SingleChildScrollView(
-                      child: Column(
-                          children: [
-                            Column(
-                              children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: 0),
-                            ),
-                            Column(
-                              children: getRequestData(context: context, approval: requestCompleteApproval, approvalName: 1),
-                            ),
-                            Column(
-                              children: getRequestData(context: context, approval: requestCancelApproval, approvalName: 2),
-                            ),
-                          ]
-                      ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: _approvalFirebaseRepository.getRequestApprovalDataSnashot(companyCode: loginUser!.companyCode!),
+                      builder: (context, snapshot) {
+                       if(!snapshot.hasData) {
+                         return Container();
+                       }
+
+                       getApprovalRequestClearDate();
+
+                       List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+                       docs.sort((a, b) => b.get("createDate").compareTo(a.get("createDate")));
+
+                       docs.map((data) {
+                         ApprovalModel model = ApprovalModel.fromMap(mapData: (data.data() as dynamic), reference: data.reference);
+                         if(model.status == "요청"){
+                           requestWaitingApproval.add(model);
+                         }else if(model.status == "승인"){
+                           requestCompleteApproval.add(model);
+                         }else if(model.status == "반려"){
+                           requestCancelApproval.add(model);
+                         }
+                       }).toList();
+
+                       return SingleChildScrollView(
+                         child: Column(
+                           children: [
+                             Column(
+                               children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: 0),
+                             ),
+                             Column(
+                               children: getRequestData(context: context, approval: requestCompleteApproval, approvalName: 1),
+                             ),
+                             Column(
+                               children: getRequestData(context: context, approval: requestCancelApproval, approvalName: 2),
+                             ),
+                           ],
+                         ),
+                       );
+                      },
                     ),
-                    SingleChildScrollView(
-                      child: Column(
-                          children: [
-                            Column(
-                              children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: 0),
-                            ),
-                            Column(
-                              children: getResponseData(context: context, approval: responseCompleteApproval, approvalName: 1),
-                            ),
-                            Column(
-                              children: getResponseData(context: context, approval: responseCancelApproval, approvalName: 2),
-                            ),
-                          ]
-                      ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: _approvalFirebaseRepository.getResponseApprovalDataSnashot(companyCode: loginUser!.companyCode!),
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData) {
+                          return Container();
+                        }
+
+                        getApprovalResponseClearDate();
+
+                        List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+                        docs.sort((a, b) => b.get("createDate").compareTo(a.get("createDate")));
+
+                        docs.map((data) {
+                          ApprovalModel model = ApprovalModel.fromMap(mapData: (data.data() as dynamic), reference: data.reference);
+                          if(model.status == "요청"){
+                            responseWaitingApproval.add(model);
+                          }else if(model.status == "승인"){
+                            responseCompleteApproval.add(model);
+                          }else if(model.status == "반려"){
+                            responseCancelApproval.add(model);
+                          }
+                        }).toList();
+
+                        return SingleChildScrollView(
+                          child: Column(
+                              children: [
+                                Column(
+                                  children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: 0),
+                                ),
+                                Column(
+                                  children: getResponseData(context: context, approval: responseCompleteApproval, approvalName: 1),
+                                ),
+                                Column(
+                                  children: getResponseData(context: context, approval: responseCancelApproval, approvalName: 2),
+                                ),
+                              ]
+                          ),
+                        );
+                      },
                     ),
+
                   ],
                 ),
               ),

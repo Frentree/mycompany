@@ -63,13 +63,13 @@ getClipOverProfile({required BuildContext context, required String ImageUri, Emp
         onTap: () {
           isChks = !isChks;
           if(isChks){
-            if(!mailChkList.contains(user)){
-              mailChkList.add(user);
+            if(!mailChkList.contains(user.mail)){
+              mailChkList.add(user.mail);
             }
           }else {
-            mailChkList.remove(user);
-            if(teamChkList.contains(user)){
-              teamChkList.remove(user);
+            mailChkList.remove(user.mail);
+            if(teamChkList.contains(user.team)){
+              teamChkList.remove(user.team);
             }
           }
           getDataSource();
@@ -132,10 +132,10 @@ getTeamProfile({required BuildContext context, String? teamName, required bool i
             if(!teamChkList.contains(teamName)){
               teamChkList.add(teamName);
             }
-            for(var mail in user){
-              if(teamName == mail.team){
-                if(!mailChkList.contains(mail)){
-                  mailChkList.add(mail);
+            for(var teamUser in user){
+              if(teamName == teamUser.team){
+                if(!mailChkList.contains(teamUser.mail)){
+                  mailChkList.add(teamUser.mail);
                 }
               }else {
                 continue;
@@ -143,10 +143,10 @@ getTeamProfile({required BuildContext context, String? teamName, required bool i
             }
           }else {
             teamChkList.remove(teamName);
-            for(var mail in user){
-              if(teamName == mail.team){
-                if(mailChkList.contains(mail)){
-                  mailChkList.remove(mail);
+            for(var teamUser in user){
+              if(teamName == teamUser.team){
+                if(mailChkList.contains(teamUser.mail)){
+                  mailChkList.remove(teamUser.mail);
                 }
               }else {
               }

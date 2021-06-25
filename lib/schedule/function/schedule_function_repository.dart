@@ -10,9 +10,6 @@ import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 class ScheduleFunctionReprository {
   CalenderMethod _calenderFunction = CalenderMethod();
 
-  Future<List<Appointment>> getSheduleData({required String companyCode}) =>
-      _calenderFunction.getSheduleData(companyCode);
-
   Future<DateTime> dateTimeSet({required DateTime date, required BuildContext context}) =>
       _calenderFunction.dateTimeSet(date, context);
 

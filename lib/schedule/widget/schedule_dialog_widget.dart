@@ -87,21 +87,24 @@ import 'package:easy_localization/easy_localization.dart';
                     ],
                   ),
                 ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: allDayAppointment, timeZone: 0, employeeList: employeeList),
-                      ),
-                      Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1, employeeList: employeeList),
-                      ),
-                      Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2, employeeList: employeeList),
-                      )
-                    ]
-                  ),
+                Container(
+                  height: 540.0.h,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                          children: getCalendarPerseonalDetail(context: context, appointment: allDayAppointment, timeZone: 0, employeeList: employeeList),
+                        ),
+                        Column(
+                          children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1, employeeList: employeeList),
+                        ),
+                        Column(
+                          children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2, employeeList: employeeList),
+                        )
+                      ]
+                    ),
 
+                  ),
                 ),
               ],
             ),
@@ -152,7 +155,7 @@ import 'package:easy_localization/easy_localization.dart';
                   children: [
                     getProfileImage(
                       size: 36.0,
-                      ImageUri: mailChkList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
+                      ImageUri: employeeList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
                     ),
                     SizedBox(
                       width: 6.0.w,

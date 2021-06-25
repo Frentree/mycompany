@@ -19,12 +19,10 @@ class ScheduleFirebaseMethods {
   ApprovalFirebaseRepository approvalRepository = ApprovalFirebaseRepository();
 
   Future<QuerySnapshot> getSchedules(String? companyCode) async {
-    List<String> mailList = [];
 
-    for(var data in mailChkList){
-      mailList.add(data.mail);
-    }
-    var result = await _store.collection(COMPANY).doc(companyCode).collection(WORK).where("colleagues", isGreaterThan: mailList).get();
+    var result = await _store.collection(COMPANY).doc(companyCode).collection(WORK).where("colleagues", isGreaterThan: mailChkList).get();
+
+    print(result.docs.length);
 
     return result;
   }
