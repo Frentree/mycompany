@@ -2,12 +2,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleCalenderWidget {
   Widget setAppointMentBuilder({required BuildContext context, required CalendarAppointmentDetails details, required DateTime selectTime}) {
+    UserModel loginUser = PublicFunction().getUserProviderSetting(context);
     Appointment meeting = details.appointments.last;
 
     if(details.date.month != selectTime.month){
@@ -18,7 +21,7 @@ class ScheduleCalenderWidget {
       padding: EdgeInsets.only(left: 3.0.w, right: 3.0.w),
       child: Stack(
         children: [
-          meeting.profile == loginUser!.mail
+          meeting.profile == loginUser.mail
               ? Container(
             width: 2.0.w,
             color: meeting.color,
@@ -142,11 +145,12 @@ class ScheduleCalenderWidget {
   }
 
   Widget _buildData(BuildContext context, dynamic details) {
+    UserModel loginUser = PublicFunction().getUserProviderSetting(context);
     final Appointment appointment = details;
     return Container(
       child: Stack(
         children: [
-          appointment.profile == loginUser!.mail
+          appointment.profile == loginUser.mail
               ? Container(
             width: 4.0.w,
             color: appointment.color,

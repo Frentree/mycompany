@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/word/database_name.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
@@ -9,9 +10,9 @@ class ApprovalFirebaseCurd {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
   ApprovalFirebaseCurd.setting({persistenceEnabled: true});
 
-  Future<List<ApprovalModel>> getRequestApprovalData(String companyCode) async {
+  Future<List<ApprovalModel>> getRequestApprovalData(UserModel loginUser) async {
     List<ApprovalModel> approvalList = [];
-    var doc = await _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("userMail", isEqualTo: loginUser!.mail).get();
+    var doc = await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).where("userMail", isEqualTo: loginUser.mail).get();
 
     doc.docs.map((e) => approvalList.add(ApprovalModel.fromMap(mapData: e.data(), reference: e.reference))).toList();
 
@@ -20,14 +21,14 @@ class ApprovalFirebaseCurd {
     return approvalList;
   }
 
-  Stream<QuerySnapshot> getRequestApprovalDataSnashot(String companyCode) {
-    return _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("userMail", isEqualTo: loginUser!.mail).snapshots();
+  Stream<QuerySnapshot> getRequestApprovalDataSnashot(UserModel loginUser) {
+    return _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).where("userMail", isEqualTo: loginUser.mail).snapshots();
   }
 
-  Future<List<ApprovalModel>> getResponseApprovalData(String companyCode) async {
+  Future<List<ApprovalModel>> getResponseApprovalData(UserModel loginUser) async {
     List<ApprovalModel> approvalList = [];
 
-    var doc = await _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser!.mail).get();
+    var doc = await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser.mail).get();
 
     doc.docs.map((e) => approvalList.add(ApprovalModel.fromMap(mapData: e.data(), reference: e.reference))).toList();
 
@@ -36,15 +37,15 @@ class ApprovalFirebaseCurd {
     return approvalList;
   }
 
-  Stream<QuerySnapshot> getResponseApprovalDataSnashot(String companyCode) {
-    return _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser!.mail).snapshots();
+  Stream<QuerySnapshot> getResponseApprovalDataSnashot(UserModel loginUser) {
+    return _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser.mail).snapshots();
   }
 
   /*
   *  결재 Doc
   *
   * */
-  Future<bool> insertWorkApproval(WorkModel workModel, EmployeeModel approvalUser, String companyCode, String? docId) async {
+  Future<bool> insertWorkApproval(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser, String? docId) async {
     ApprovalModel model = ApprovalModel(
       workIds: docId,
       allDay: workModel.allDay,
@@ -54,8 +55,8 @@ class ApprovalFirebaseCurd {
       title: workModel.title,
       location: workModel.location!,
       approvalType: workModel.type,
-      user: workModel.type == "요청" ? loginUser!.name : workModel.name,
-      userMail: workModel.type == "요청" ? loginUser!.mail : workModel.createUid,
+      user: workModel.type == "요청" ? loginUser.name : workModel.name,
+      userMail: workModel.type == "요청" ? loginUser.mail : workModel.createUid,
       requestContent: workModel.contents,
       status: "요청",
       requestStartDate: workModel.startTime,
@@ -63,7 +64,7 @@ class ApprovalFirebaseCurd {
     );
     bool isResult = false;
 
-    await _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).add(model.toJson()).whenComplete(() => {isResult = true});
+    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).add(model.toJson()).whenComplete(() => {isResult = true});
 
     return isResult;
   }

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/inquiry/view/inquiry_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -29,6 +31,8 @@ getCommentsWidget(
       width: 16.w,
     )
   ];
+
+  UserModel loginUser = PublicFunction().getUserProviderSetting(context);
   DateFormatCustom _formatCustom = DateFormatCustom();
 
   docs.sort((a, b) => a.get("createDate").compareTo(b.get("createDate")));
@@ -109,7 +113,7 @@ getCommentsWidget(
                                     commentValue.value = model;
                                   }),
                               Visibility(
-                                visible: loginUser!.mail == user.mail,
+                                visible: loginUser.mail == user.mail,
                                 child: Row(
                                   children: [
                                     SizedBox(
@@ -258,7 +262,7 @@ getCommentsWidget(
                                         });*/
                                   }),
                               Visibility(
-                                visible: loginUser!.mail == user.mail,
+                                visible: loginUser.mail == user.mail,
                                 child: Row(
                                   children: [
                                     SizedBox(

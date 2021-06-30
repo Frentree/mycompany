@@ -8,13 +8,11 @@ import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/run_app/view/permission_request_view.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:provider/provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/function/permission_function.dart';
-
-EmployeeModel? loginEmpUser;
-UserModel? loginUser;
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -51,9 +49,11 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserInfoProvider>(
           create: (_) => UserInfoProvider(),
+          child: ScheduleView(),
         ),
         ChangeNotifierProvider<EmployeeInfoProvider>(
           create: (_) => EmployeeInfoProvider(),
+          child: ScheduleView(),
         ),
         ChangeNotifierProvider<DeviceInfoProvider>(
           create: (_) => DeviceInfoProvider(),

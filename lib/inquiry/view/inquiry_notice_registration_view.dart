@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/inquiry/method/notice_method.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 
@@ -20,11 +22,13 @@ class _InquiryNoticeRegistrationViewState extends State<InquiryNoticeRegistratio
   TextEditingController titleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
 
+  late UserModel loginUser;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
   }
 
   @override
@@ -142,7 +146,7 @@ class _InquiryNoticeRegistrationViewState extends State<InquiryNoticeRegistratio
                           return;
                         }
 
-                        var result = await NoticeMethod().insertNoticeMethod(companyCode: loginUser!.companyCode!, title: titleController.text, content: noteController.text);
+                        var result = await NoticeMethod().insertNoticeMethod(loginUser: loginUser, title: titleController.text, content: noteController.text);
 
                         if(result == 0){
                           await loginDialogWidget(

@@ -6,10 +6,12 @@ import 'package:mycompany/inquiry/view/inquiry_notice_detail_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_registration_update_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_registration_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
@@ -29,17 +31,19 @@ class _InquiryNoticeViewState extends State<InquiryNoticeView> {
   List<NoticeModel> noticeList = <NoticeModel>[];
 
   DateFormatCustom _format = DateFormatCustom();
+  late UserModel loginUser;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
     getNoticeData();
   }
 
   getNoticeData() async {
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser!.companyCode);
-    List<NoticeModel> notice = await InquiryFirebaseRepository().getNoticeData(companyCode: loginUser!.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);
+    List<NoticeModel> notice = await InquiryFirebaseRepository().getNoticeData(companyCode: loginUser.companyCode);
 
     setState(() {
       employeeList = employee;
@@ -81,7 +85,7 @@ class _InquiryNoticeViewState extends State<InquiryNoticeView> {
                             ),
                           ),
                           Visibility(
-                            visible: data.noticeUid == loginUser!.mail,
+                            visible: data.noticeUid == loginUser.mail,
                             child: PopupMenuButton<int>(
                               padding: EdgeInsets.all(0),
                               icon: SvgPicture.asset(

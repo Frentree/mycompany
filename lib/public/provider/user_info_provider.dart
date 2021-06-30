@@ -30,6 +30,7 @@ class UserInfoProvider with ChangeNotifier {
     _sharedPreferences.setString(USER, jsonEncode(encodeData));
 
     print("로그인 사용자 : ${userModel.mail}");
+    print("로그인 사용자 ID : ${userModel.companyCode}");
 
     setUserData(userModel: userModel);
   }

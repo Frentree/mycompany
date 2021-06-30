@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/widget/approval_detail_widget.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
@@ -26,6 +28,14 @@ class ApprovalResponseDetailView extends StatefulWidget {
 class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView> {
   DateFormatCustom _format = DateFormatCustom();
   TextEditingController noteController = TextEditingController();
+  late UserModel loginUser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +153,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                           context,
                                           await ApprovalFirebaseRepository().updateWorkApproval(
                                               model: widget.model,
-                                              companyCode: loginUser!.companyCode.toString(),
+                                              companyCode: loginUser.companyCode.toString(),
                                               approval: "반려",
                                               content: noteController.text));
                                     },
@@ -186,7 +196,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                           context,
                                           await ApprovalFirebaseRepository().updateWorkApproval(
                                               model: widget.model,
-                                              companyCode: loginUser!.companyCode.toString(),
+                                              companyCode: loginUser.companyCode.toString(),
                                               approval: "승인",
                                               content: noteController.text));
                                     },

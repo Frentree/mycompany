@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
@@ -41,9 +43,12 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
   // 선택된 팀
   List<String> workTeamChkList = [];
 
+  late UserModel loginUser;
+  late EmployeeModel loginEmployee;
+
   _getPersonalDataSource() async {
-    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser!.companyCode);
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser!.companyCode);
+    List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser.companyCode);
 
     setState(() {
       teamList = team;
@@ -110,6 +115,10 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
     _scrollController = ScrollController();
     super.initState();
     _getPersonalDataSource();
+
+    loginUser = PublicFunction().getUserProviderSetting(context);
+    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
+
     workChkCount = works.indexOf(widget.appointment.type.toString());
     _startDateTime = ValueNotifier<DateTime>(widget.appointment.startTime);
     _endDateTime = ValueNotifier<DateTime>(widget.appointment.endTime);
@@ -206,7 +215,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                         onTap: () async {
                           var result = await CalenderMethod().updateSchedule(
                             documentId: widget.documentId,
-                            companyCode: loginUser!.companyCode.toString(),
+                            companyCode: loginUser.companyCode.toString(),
                             allDay: _isAllDay.value,
                             workName: works[workChkCount],
                             title: titleController.text,
@@ -216,7 +225,8 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                             workColleagueChkList: workColleagueChkList,
                             isAllDay: _isAllDay.value,
                             location: locationController.text,
-                            approvalUser: approvalUser.value
+                            approvalUser: approvalUser.value,
+                            loginUser: loginUser
                           );
 
                           if(result){

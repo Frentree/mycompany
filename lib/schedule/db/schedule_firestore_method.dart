@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
@@ -28,8 +29,8 @@ class ScheduleFirebaseMethods {
   }
   
   
-  Future<QuerySnapshot> getCompanyUser(String? companyCode) async {
-    return await _store.collection(COMPANY).doc(companyCode).collection(USER).where("mail", isNotEqualTo: loginUser!.mail).get();
+  Future<QuerySnapshot> getCompanyUser(UserModel loginUser) async {
+    return await _store.collection(COMPANY).doc(loginUser.companyCode).collection(USER).where("mail", isNotEqualTo: loginUser.mail).get();
   }
 
   Future<QuerySnapshot> getMyAndCompanyUser(String? companyCode) async {
@@ -59,9 +60,9 @@ class ScheduleFirebaseMethods {
     return isResult;
   }
 
-  Future<bool> insertWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, String companyCode) async {
+  Future<bool> insertWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser) async {
     bool isResult = false;
-    await _store.collection(COMPANY).doc(companyCode).collection(WORK).add(workModel.toJson()).then((value) => approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, companyCode: companyCode, docId: value.id)).whenComplete(() => {isResult = true});
+    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORK).add(workModel.toJson()).then((value) => approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, docId: value.id)).whenComplete(() => {isResult = true});
 
     return isResult;
   }
@@ -74,10 +75,10 @@ class ScheduleFirebaseMethods {
     return isResult;
   }
 
-  Future<bool> updateWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, String companyCode, String documentId) async {
+  Future<bool> updateWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser, String documentId) async {
     bool isResult = false;
 
-    await _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(documentId).set(workModel.toJson()).then((value) => approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, companyCode: companyCode, docId: documentId)).whenComplete(() => {isResult = true});
+    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORK).doc(documentId).set(workModel.toJson()).then((value) => approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, docId: documentId)).whenComplete(() => {isResult = true});
 
     return isResult;
   }

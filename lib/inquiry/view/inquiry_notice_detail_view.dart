@@ -10,8 +10,10 @@ import 'package:mycompany/inquiry/db/inquiry_firestore_repository.dart';
 import 'package:mycompany/inquiry/method/notice_method.dart';
 import 'package:mycompany/inquiry/model/notice_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -36,11 +38,13 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
   late TextEditingController _commentTextController;
 
   ValueNotifier<CommentModel?> commentValue = ValueNotifier<CommentModel?>(null);
+  late UserModel loginUser;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
     _commentTextController = TextEditingController();
   }
 
@@ -169,7 +173,7 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
                           },
                         ),
                         StreamBuilder<QuerySnapshot>(
-                          stream: _inquiryFirebaseRepository.getNoticeComment(companyCode: loginUser!.companyCode!, docId: widget.notice.reference!.id.toString()),
+                          stream: _inquiryFirebaseRepository.getNoticeComment(companyCode: loginUser.companyCode!, docId: widget.notice.reference!.id.toString()),
                           builder: (context, snapshot) {
                             if(!snapshot.hasData) {
                               return Container();
@@ -292,7 +296,7 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
                         }
 
                         NoticeMethod().insertNoticeCommentMethod(
-                          companyCode: loginUser!.companyCode!,
+                          loginUser: loginUser,
                           model: commentValue.value,
                           noticeComment: _commentTextController,
                           noticeMode: widget.notice

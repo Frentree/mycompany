@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/widget/approval_detail_widget.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +28,17 @@ class ApprovalRequestDetailView extends StatefulWidget {
 
 class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
   DateFormatCustom _format = DateFormatCustom();
+
+  late UserModel loginUser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery
@@ -147,7 +160,7 @@ class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
                                         topPadding: 81.0.h,
                                         buttonName: "dialogConfirm".tr(),
                                         buttonAction: () async {
-                                          Navigator.pop(context, await ApprovalFirebaseRepository().requestApprovalCencel(model: widget.model, companyCode: loginUser!.companyCode.toString()));
+                                          Navigator.pop(context, await ApprovalFirebaseRepository().requestApprovalCencel(model: widget.model, companyCode: loginUser.companyCode.toString()));
                                         },
                                         customWidth: 80.0,
                                         customHeight: 40.0

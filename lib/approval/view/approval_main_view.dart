@@ -8,8 +8,10 @@ import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/approval/view/approval_request_detail_view.dart';
 import 'package:mycompany/approval/view/approval_response_detail_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
@@ -44,15 +46,18 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   List<ApprovalModel> responseCompleteApproval = [];
   List<ApprovalModel> responseCancelApproval = [];
 
+  late UserModel loginUser;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    loginUser = PublicFunction().getUserProviderSetting(context);
     getApprovalData();
   }
 
   getApprovalData() async {
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser!.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);
 
     setState(() {
       employeeList = employee;
@@ -425,7 +430,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                 child: TabBarView(
                   children: [
                     StreamBuilder<QuerySnapshot>(
-                      stream: _approvalFirebaseRepository.getRequestApprovalDataSnashot(companyCode: loginUser!.companyCode!),
+                      stream: _approvalFirebaseRepository.getRequestApprovalDataSnashot(loginUser: loginUser),
                       builder: (context, snapshot) {
                        if(!snapshot.hasData) {
                          return Container();
@@ -466,7 +471,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                       },
                     ),
                     StreamBuilder<QuerySnapshot>(
-                      stream: _approvalFirebaseRepository.getResponseApprovalDataSnashot(companyCode: loginUser!.companyCode!),
+                      stream: _approvalFirebaseRepository.getResponseApprovalDataSnashot(loginUser: loginUser),
                       builder: (context, snapshot) {
                         if(!snapshot.hasData) {
                           return Container();
