@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
@@ -140,7 +141,16 @@ class _ScheduleViewState extends State<ScheduleView> {
         key: _scaffoldKey,
         //floatingActionButton: getMainCircularMenu(context: context, navigator: 'home', isToggleChk: false),
         drawer: Drawer(
-          child: Center(child: Text('Left!')),
+          child: Center(
+            child: IconButton(
+              icon: Icon(
+                Icons.logout,
+              ),
+              onPressed: (){
+                SignOutFunction().signOutFunction(context: context);
+              },
+            ),
+          ),
         ),
         body: RefreshIndicator(
           onRefresh: () => _getDataSource(),

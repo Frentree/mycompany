@@ -86,6 +86,9 @@ class JoinCompanySuccessViewState extends State<JoinCompanySuccessView> {
               buttonName: 'startButton'.tr(),
               buttonAction: () async {
                 UserModel loginUserData = await loginFirestoreRepository.readUserData(email: userInfoProvider.getUserData()!.mail);
+
+                loginUserData.state = 2;
+
                 EmployeeModel loginEmployeeData = await loginFirestoreRepository.readEmployeeData(companyId: loginUserData.companyCode!, email: loginUserData.mail);
 
                 //UserInfoProvider 업데이트

@@ -12,7 +12,7 @@
 퇴사승인자 : resignationApprover
 
 
-approvalStatus
+state
 0 : 승인 대기
 1 : 승인 완료
 2 : 승인 반려
@@ -22,6 +22,7 @@ approvalStatus
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class JoinCompanyApprovalModel {
+  String? documentId;
   String mail;
   String name;
   String? phone;
@@ -34,6 +35,7 @@ class JoinCompanyApprovalModel {
   String? resignationApprover;
 
   JoinCompanyApprovalModel({
+    this.documentId,
     required this.mail,
     required this.name,
     this.phone,
@@ -46,8 +48,9 @@ class JoinCompanyApprovalModel {
     this.resignationDate,
   });
 
-  JoinCompanyApprovalModel.fromMap({required Map mapData})
-      : mail = mapData["mail"] ?? "",
+  JoinCompanyApprovalModel.fromMap({required Map mapData, String? documentId})
+      : documentId = documentId ?? "",
+        mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",
         phone = mapData["phone"] ?? "",
         birthday = mapData["birthday"] ?? "",

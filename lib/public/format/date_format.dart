@@ -71,7 +71,15 @@ class DateFormatCustom {
     return today;
   }
 
+  String dateStringFormatSeparatorDot({required dynamic date, bool? isIncludeWeekday}){
+    if(date.runtimeType == Timestamp){
+      date = changeTimestampToDateTime(timestamp: date);
+    }
 
+    String returnString = (isIncludeWeekday != null && isIncludeWeekday == true)? "${date.year}.${twoDigitsFormat(date.month)}.${twoDigitsFormat(date.day)}(${changeWeekDay(date: date)})" : "${date.year}.${twoDigitsFormat(date.month)}.${twoDigitsFormat(date.day)}";
+
+    return returnString;
+  }
 
   String changeTimeToString({required dynamic time}){
     if(time.runtimeType == Timestamp){

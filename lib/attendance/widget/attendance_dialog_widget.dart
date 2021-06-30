@@ -63,7 +63,7 @@ Future<dynamic> changeWorkingStatusDialog({required BuildContext context, requir
                           ),
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
-                          onPressed: () => backPage(context: context),
+                          onPressed: () => backPage(context: context, returnValue: attendance),
                         ),
                       ],
                     ),

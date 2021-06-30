@@ -81,4 +81,14 @@ class FirebaseAuthService {
       return false;
     }
   }
+
+  Future<void> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+
+    } on FirebaseAuthException catch (error) {
+      print(error.code);
+      setFirebaseAuthErrorCode(errorCode: error.code);
+    }
+  }
 }

@@ -38,6 +38,7 @@ class SignInFunction {
       if(_userModel.state == 2){
         _employeeModel = await loginFirestoreRepository.readEmployeeData(companyId: _userModel.companyCode!, email: _userModel.mail);
       }
+
       //저장된 기기ID 값이 없을 때(다른 기기에서 로그인 되어 있지 않음)
       if (_userModel.deviceId == "") {
         _userModel.token = await firebaseMessaging.getToken(); //토큰값 가져오기
@@ -51,31 +52,37 @@ class SignInFunction {
 
       //저장된 기기ID 값이 있을 때(다른 기기에서 로그인 되어 있음)
       else {
-        await loginDialogWidget(
-          context: context,
-          message: 'duplicateLoginWarning'.tr(),
-          actions: [
-            loginDialogConfirmButton(
-              buttonName: 'dialogConfirm'.tr(),
-              buttonAction: () async {
-                _userModel.token = await firebaseMessaging.getToken();
-                _userModel.deviceId = _deviceId; //기기Id 가져오기
-                await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
-                userInfoProvider.saveUserDataToPhone(userModel: _userModel);
-                if(_employeeModel != null){
-                  employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: _employeeModel);
-                }
-                backPage(context: context);
-              }
-            ),
-            loginDialogCancelButton(
-              buttonName: 'dialogCancel'.tr(),
-              buttonAction: () {
-                backPage(context: context);
-              }
-            ),
-          ],
-        );
+        if(_userModel.deviceId != _deviceId){
+          await loginDialogWidget(
+            context: context,
+            message: 'duplicateLoginWarning'.tr(),
+            actions: [
+              loginDialogConfirmButton(
+                  buttonName: 'dialogConfirm'.tr(),
+                  buttonAction: () async {
+                    _userModel.token = await firebaseMessaging.getToken();
+                    _userModel.deviceId = _deviceId; //기기Id 가져오기
+                    await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
+                    userInfoProvider.saveUserDataToPhone(userModel: _userModel);
+                    if(_employeeModel != null){
+                      employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: _employeeModel);
+                    }
+                    backPage(context: context);
+                  }
+              ),
+              loginDialogCancelButton(
+                  buttonName: 'dialogCancel'.tr(),
+                  buttonAction: () {
+                    backPage(context: context);
+                  }
+              ),
+            ],
+          );
+        }
+        userInfoProvider.saveUserDataToPhone(userModel: _userModel);
+        if(_employeeModel != null){
+          employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: _employeeModel);
+        }
       }
     }
     //firebase 인증 실패

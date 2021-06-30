@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/approval/view/approval_join_company_view.dart';
 import 'package:mycompany/approval/view/approval_main_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_view.dart';
 import 'package:mycompany/public/format/date_format.dart';
@@ -14,12 +15,12 @@ class InquiryView extends StatefulWidget {
 }
 
 class _InquiryViewState extends State<InquiryView> {
-  PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
+  PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  var typeList = ["approval".tr(), "notice".tr()];
+  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청"];
   int typeChkCount = 0;
 
-  var pageList =[ApprovalMainView(), InquiryNoticeView()];
+  var pageList =[ApprovalMainView(), InquiryNoticeView(), ApprovalJoinCompanyView()];
 
   late ScrollController _scrollController;
 
@@ -42,7 +43,7 @@ class _InquiryViewState extends State<InquiryView> {
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return WillPopScope(
-        onWillPop: () => _publicFunctionReprository.onScheduleBackPressed(context: context),
+        onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
         child: Scaffold(
           body: Container(
             width: double.infinity,
@@ -74,7 +75,7 @@ class _InquiryViewState extends State<InquiryView> {
                                 )),
                           ),
                         ),
-                        onTap: () => _publicFunctionReprository.onBackPressed(context: context),
+                        onTap: () => _publicFunctionRepository.onBackPressed(context: context),
                       ),
                       Text("inquiry".tr(), style: getNotoSantRegular(fontSize: 18.0, color: textColor)),
                     ],

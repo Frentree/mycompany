@@ -4,6 +4,7 @@ import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
+import 'package:mycompany/schedule/model/team_model.dart';
 
 class LoginFirestoreCrud {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -37,6 +38,13 @@ class LoginFirestoreCrud {
     await _firebaseFirestore.collection(USER).doc(userModel.mail).update(userModel.toJson());
   }
 
+  Future<void> updateUserJoinCompanyState({required String userMail, int? state, String? companyId,}) async {
+    await _firebaseFirestore.collection(USER).doc(userMail).update({
+      "lastModDate": Timestamp.now(),
+      "companyCode": companyId,
+    });
+  }
+
   //Company 관련
   Future<void> createCompanyData({required CompanyModel companyModel}) async {
     await _firebaseFirestore.collection(COMPANY).doc(companyModel.companyCode).set(companyModel.toJson());
@@ -53,8 +61,27 @@ class LoginFirestoreCrud {
     return await _firebaseFirestore.collection(COMPANY).where("companySearch", arrayContains: keyWord).get();
   }
 
+  Future<List<TeamModel>> readTeamData({required String companyId}) async {
+    List<TeamModel> teamData = [];
+    QuerySnapshot<Map<String, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(TEAM).get();
+
+    teamData = getData.docs.map((doc) => TeamModel.fromMap(mapData: doc.data())).toList();
+
+    return teamData;
+  }
+
   //JoinCompanyApproval 관련
   Future<void> createJoinCompanyApprovalData({required String companyId, required JoinCompanyApprovalModel joinCompanyApprovalModel}) async {
     await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(JOINCOMPANYAPPROVAL).add(joinCompanyApprovalModel.toJson());
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> readJoinCompanyApprovalData({required String companyId}){
+    return _firebaseFirestore.collection(COMPANY).doc(companyId).collection(JOINCOMPANYAPPROVAL).where("state", isEqualTo: 0).snapshots();
+  }
+
+  Future<void> updateJoinCompanyApprovalData({required String companyId, required JoinCompanyApprovalModel joinCompanyApprovalModel}) async {
+    joinCompanyApprovalModel.approvalDate = Timestamp.now();
+
+    await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(JOINCOMPANYAPPROVAL).doc(joinCompanyApprovalModel.documentId).update(joinCompanyApprovalModel.toJson());
   }
 }

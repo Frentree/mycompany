@@ -46,10 +46,8 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
       body: FutureBuilder<List<AttendanceModel>>(
         future: _attendanceFirestoreRepository.readMyAttendanceData(employeeData: loginEmployeeData!, today: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today)),
         builder: (context, snapshot) {
-          if(snapshot.hasData == false){
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+          if(snapshot.hasData == false || snapshot.data == null){
+            return Container();
           }
 
           snapshot.data!.sort((a, b) => b.createDate!.compareTo(a.createDate!));
