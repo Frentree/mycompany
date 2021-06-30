@@ -52,4 +52,10 @@ class ScheduleFirebaseReository {
 
   Future<int> insertScheduleComment({required companyCode, required scheduleId, required model}) =>
       _curd.insertScheduleComment(companyCode, scheduleId, model);
+
+  Stream<QuerySnapshot> getTeamStream({required String companyCode}) =>
+      _curd.getTeamStream(companyCode);
+
+  Stream<QuerySnapshot> getPositionStream({required String companyCode}) =>
+      _curd.getPositionStream(companyCode);
 }

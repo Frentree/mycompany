@@ -15,7 +15,7 @@ import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
@@ -48,7 +48,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(loginUser: loginUser);
 
     setState(() {
       teamList = team;

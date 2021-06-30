@@ -11,7 +11,7 @@ import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/view/schedule_approval_view.dart';
 import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
@@ -133,6 +133,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
 
   Widget setHomeWork(BuildContext context) {
     widget.workColleagueChkList.clear();
+    widget.workTeamChkList.clear();
     widget.locationController.text = "";
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24.0.w),
@@ -149,6 +150,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
 
   Widget setAnnual(BuildContext context) {
     widget.workColleagueChkList.clear();
+    widget.workTeamChkList.clear();
     widget.locationController.text = "";
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24.0.w),

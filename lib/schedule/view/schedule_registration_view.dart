@@ -8,14 +8,13 @@ import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 
 class ScheduleRegisrationView extends StatefulWidget {
@@ -43,7 +42,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
-    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(companyCode: loginUser.companyCode);
+    List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(loginUser: loginUser);
 
     setState(() {
       teamList = team;

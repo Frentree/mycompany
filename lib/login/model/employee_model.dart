@@ -44,6 +44,7 @@ class EmployeeModel {
   List<dynamic>? userSearch;
   String? employeeNum;
   int? status;
+  DocumentReference? reference;
 
   EmployeeModel({
     this.token,
@@ -67,7 +68,7 @@ class EmployeeModel {
     this.status,
   });
 
-  EmployeeModel.fromMap({required Map mapData})
+  EmployeeModel.fromMap({required Map mapData, this.reference})
       : token = mapData["token"] ?? "",
         mail = mapData["mail"] ?? "",
         name = mapData["name"] ?? "",

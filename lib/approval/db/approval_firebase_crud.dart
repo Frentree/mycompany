@@ -43,6 +43,12 @@ class ApprovalFirebaseCurd {
     return _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser.mail).snapshots();
   }
 
+  Stream<QuerySnapshot> getResponseApprovalDataCount(UserModel loginUser){
+    return _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORKAPPROVAL).where("approvalMail", isEqualTo: loginUser.mail)
+        .where("status", isEqualTo: "요청")
+        .snapshots();
+  }
+
   /*
   *  결재 Doc
   *

@@ -21,6 +21,9 @@ class ApprovalFirebaseRepository {
   Stream<QuerySnapshot> getResponseApprovalDataSnashot({required UserModel loginUser}) =>
       _curd.getResponseApprovalDataSnashot(loginUser);
 
+  Stream<QuerySnapshot> getResponseApprovalDataCount({required UserModel loginUser}) =>
+      _curd.getResponseApprovalDataCount(loginUser);
+
   Future<bool> insertWorkApproval({required WorkModel workModel,required EmployeeModel approvalUser,required UserModel loginUser, String? docId}) =>
       _curd.insertWorkApproval(workModel, approvalUser, loginUser, docId);
 

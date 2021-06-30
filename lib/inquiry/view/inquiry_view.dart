@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/view/approval_main_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_view.dart';
-import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 
 class InquiryView extends StatefulWidget {
+  final bool? approvalChk;
+
+  InquiryView({this.approvalChk});
+
   @override
   _InquiryViewState createState() => _InquiryViewState();
 }
@@ -17,9 +20,12 @@ class _InquiryViewState extends State<InquiryView> {
   PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
 
   var typeList = ["approval".tr(), "notice".tr()];
-  int typeChkCount = 0;
 
-  var pageList =[ApprovalMainView(), InquiryNoticeView()];
+
+
+  late int typeChkCount;
+
+  late List<Widget> pageList;
 
   late ScrollController _scrollController;
 
@@ -28,6 +34,14 @@ class _InquiryViewState extends State<InquiryView> {
     // TODO: implement initState
     _scrollController = ScrollController();
     super.initState();
+
+    if(widget.approvalChk != null){
+      typeChkCount = typeList.indexOf("approval".tr());
+    }else {
+      typeChkCount = 0;
+    }
+
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView()];
   }
 
   @override

@@ -8,7 +8,7 @@ import 'package:mycompany/main.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
@@ -139,5 +139,13 @@ class ScheduleFirebaseMethods {
         .whenComplete(() => {result = 0});
 
     return result;
+  }
+
+  Stream<QuerySnapshot> getTeamStream(String companyCode){
+    return _store.collection(COMPANY).doc(companyCode).collection(TEAM).snapshots();
+  }
+
+  Stream<QuerySnapshot> getPositionStream(String companyCode){
+    return _store.collection(COMPANY).doc(companyCode).collection(POSITION).snapshots();
   }
 }
