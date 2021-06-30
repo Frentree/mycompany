@@ -1,9 +1,7 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 
 /// Define a top-level named handler which background/terminated messages will
 /// call.
@@ -23,10 +21,15 @@ late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 /// Enroll mipmap/ic_launcher icon to message icon
-AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid, iOS: null, macOS: null);
+
+
 
 void FcmInit() async {
-
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   if (!kIsWeb) {
@@ -34,10 +37,18 @@ void FcmInit() async {
       'high_importance_channel', // id
       'High Importance Notifications', // title
       'This channel is used for important notifications.', // description
-      importance: Importance.high,
+      importance: Importance.max,
     );
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    Future selectNotification(String? payload) async {
+      print('select notification function started');
+      print(payload);
+    }
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
 
     /// Create an Android Notification Channel.
     ///
@@ -45,7 +56,7 @@ void FcmInit() async {
     /// default FCM channel to enable heads up notifications.
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     /// Update the iOS foreground notification presentation options to allow
@@ -64,40 +75,44 @@ void OnMessage() {
     print("message is : $message");
     print(message.notification);
     print(message.notification!.android);
-    print(message.notification!.android!.clickAction);
+    print(message.data);
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
+    print(android?.clickAction);
     if (notification != null && android != null && !kIsWeb) {
       flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channel.description,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: '@mipmap/ic_launcher',
-              styleInformation: DefaultStyleInformation(true, true),
-              importance: Importance.max,
-
-            ),
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channel.description,
+            // TODO add a proper drawable resource to android, for now using
+            //      one that already exists in example app.
+            icon: '@mipmap/ic_launcher',
+            styleInformation: DefaultStyleInformation(true, true),
+            importance: Importance.max,
           ),
-        payload: "",
+        ),
+        payload: message.data['alarmId'].toString(),
       );
     }
   });
 }
 
-void OnMessageOpenedApp() {
+
+
+void OnMessageOpenedDo(RemoteMessage message) {
+  print('On Message Opened Do function has been started');
+  print(message);
+  print(message.data);
+}
+
+void OnMessageOpenedIos() {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print('A new onMessageOpenedApp event was published!');
-    print(message);
-    print(message.runtimeType);
-    print(message.data);
-    print(message.data["alarmId"]);
+    OnMessageOpenedDo(message);
     // TODO add a proper navigation router here, for bypass to the destination
   });
 }

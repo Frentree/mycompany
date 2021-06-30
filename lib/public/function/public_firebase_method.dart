@@ -91,6 +91,7 @@ class PublicFirebaseMethods {
         "route": payload["route"],
         "alarmId": _alarmId.toString(),
       };
+      print('payload is $_payload');
 
       try {
         await callFcm.call(_payload);

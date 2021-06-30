@@ -76,7 +76,7 @@ class SplashViewWhiteState extends State<SplashViewWhite> {
       }
     });
     OnMessage();
-    OnMessageOpenedApp();
+    OnMessageOpenedIos();
     requestPermissions();
 
     // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
