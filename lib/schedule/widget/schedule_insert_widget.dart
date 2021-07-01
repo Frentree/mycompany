@@ -405,8 +405,12 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 FutureBuilder<CompanyModel>(
                   future: PublicFirebaseReository().getVacation(widget.companyCode),
                   builder: (context, snapshot) {
+                    if(!snapshot.hasData){
+                      return Container();
+                    }
+
                     return Text(
-                      snapshot!.data!.vacation! == false ? "입사년도 기준" : "회계년도 기준",
+                      snapshot.data!.vacation! == false ? "입사년도 기준" : "회계년도 기준",
                       style: getNotoSantBold(fontSize: 13, color: textColor),
                     );
                   }
@@ -574,8 +578,11 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                       padding: 0,
                       value: value,
                       onToggle: (values){
-                        widget.isHalfway.value = values;
+                        if(!widget.isAllDay.value){
+                          return;
+                        }
 
+                        widget.isHalfway.value = values;
                         if(!values){
                           widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
                           widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
