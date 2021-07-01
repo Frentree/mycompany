@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/vacation/vacation.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_item.dart';
@@ -15,8 +18,10 @@ Widget getMainCircularMenu(
     {required BuildContext context, required String navigator}) {
 
   UserInfoProvider _userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
-
   UserModel? _userModel = _userInfoProvider.getUserData();
+
+  EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
+  EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
 
   return CircularMenu(
       alignment: Alignment.bottomRight,
@@ -50,12 +55,7 @@ Widget getMainCircularMenu(
         CircularMenuItem(
             icon: Icons.star,
             color: navigator != 'good' ? Colors.blue : Colors.black38,
-            onTap: () => sendFcmWithTokens(
-                _userModel,
-                ["junios@test.com", "junand@test.com"],
-                "[결재 요청]",
-                "홍길동 님이 외근결재를 요청 했습니다.",
-                "/")
+            onTap: () => TotalVacation('2018.10.10', 0),
             // onTap: () => navigator != 'schedule'
             //     ? _reprository.mainNavigator(
             //         context: context, navigator: ScheduleView(), isMove: false)
