@@ -119,14 +119,18 @@ class _SettingPositionViewState extends State<SettingPositionView> {
 
                   List<DocumentSnapshot> docs = snapshot.data!.docs;
 
-                  docs.sort((a, b) => a.get('position').compareTo(b.get('position')));
+                  List<PositionModel> positionList = [];
+
+                  docs.map((e) => positionList.add(PositionModel.fromMap(mapData: (e.data() as dynamic), reference: e.reference))).toList();
+
+                  positionList.sort((a, b) => a.positionNum!.compareTo(b.positionNum!));
 
                   return ListView.builder(
-                    itemCount: docs.length + 1,
+                    itemCount: positionList.length + 1,
                     itemBuilder: (context, index) {
                       late PositionModel positionModel;
-                      if (index != docs.length) {
-                        positionModel = PositionModel.fromMap(mapData: (docs[index].data() as dynamic), reference: docs[index].reference);
+                      if (index != positionList.length) {
+                        positionModel = positionList[index];
                       } else
                         positionModel = PositionModel(position: "other".tr());
 
@@ -202,6 +206,13 @@ class _SettingPositionViewState extends State<SettingPositionView> {
                                           ),
                                         ),
                                         PopupMenuItem(
+                                          value: 5,
+                                          child: Text(
+                                            "우선순위 변경".tr(),
+                                            style: getNotoSantMedium(fontSize: 12.0, color: textColor),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
                                           value: 3,
                                           child: Text(
                                             "position_menu_3".tr(),
@@ -224,6 +235,9 @@ class _SettingPositionViewState extends State<SettingPositionView> {
                                             break;
                                           case 4:
                                             result = await deletePositionUserDialog(context, list);
+                                            break;
+                                          case 5:
+                                            result = await priorityPositionDialog(context, positionList);
                                             break;
                                         }
 

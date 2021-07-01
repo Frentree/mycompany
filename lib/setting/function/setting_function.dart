@@ -11,8 +11,11 @@ import 'package:easy_localization/easy_localization.dart';
 List<SettingModel> getSettingMenu({required BuildContext context}) {
   List<SettingModel> list = [];
 
-  list.add(SettingModel(munuName: "setting_menu_1".tr(), menuLavel: 0, menuIcon: Icon(Icons.account_box, color: workInsertColor, size: 30.0.h),
+  list.add(SettingModel(munuName: "setting_menu_1".tr(), menuLavel: 0, menuIcon: Icon(Icons.contact_mail, color: workInsertColor, size: 30.0.h),
     widget: SettingUnomplementedScreen()
+  ));
+  list.add(SettingModel(munuName: "setting_menu_9".tr(), menuLavel: 0, menuIcon: Icon(Icons.airplanemode_on_sharp, color: workInsertColor, size: 30.0.h),
+      widget: SettingUnomplementedScreen()
   ));
   list.add(SettingModel(munuName: "setting_menu_2".tr(), menuLavel: 0, menuIcon: Icon(Icons.home_work_outlined, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()

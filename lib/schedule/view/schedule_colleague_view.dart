@@ -1,16 +1,13 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/public/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
-
-import 'package:mycompany/public/style/text_style.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/public/style/text_style.dart';
 
 class ScheduleColleagueView extends StatefulWidget {
 

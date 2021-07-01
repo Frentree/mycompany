@@ -10,7 +10,6 @@ import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/public/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/view/schedule_registration_update_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';

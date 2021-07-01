@@ -2,10 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/public/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
-import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:mycompany/schedule/function/calender_method.dart';
 
 class ScheduleFunctionReprository {
   CalenderMethod _calenderFunction = CalenderMethod();

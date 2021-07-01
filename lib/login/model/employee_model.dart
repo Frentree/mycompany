@@ -44,6 +44,7 @@ class EmployeeModel {
   List<dynamic>? userSearch;
   String? employeeNum;
   int? status;
+  int? vacation;
   DocumentReference? reference;
 
   EmployeeModel({
@@ -66,6 +67,7 @@ class EmployeeModel {
     this.userSearch,
     this.employeeNum,
     this.status,
+    this.vacation,
   });
 
   EmployeeModel.fromMap({required Map mapData, this.reference})
@@ -87,7 +89,8 @@ class EmployeeModel {
         level = mapData["level"] ?? [],
         userSearch = mapData["userSearch"] ?? [],
         employeeNum = mapData["employeeNum"] ?? "",
-        status = mapData["status"] ?? 0;
+        status = mapData["status"] ?? 0,
+        vacation = mapData["vacation"] ?? 0;
 
   toJson(){
     return {
@@ -110,6 +113,7 @@ class EmployeeModel {
       "userSearch": name.split(""),
       "employeeNum": employeeNum,
       "status": status,
+      "vacation": vacation ?? 0,
     };
   }
 }

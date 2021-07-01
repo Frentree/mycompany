@@ -12,7 +12,6 @@ import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/public/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
 import 'package:mycompany/schedule/view/schedule_approval_view.dart';
 import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
@@ -158,11 +157,13 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         children: [
           getAnnual(),
           getNote(),
-          getApproval()
+          getApproval(),
+          getAnnualTotal(context),
         ],
       ),
     );
   }
+
 
   Widget setMeeting(BuildContext context) {
     return Container(
@@ -345,6 +346,66 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         ),
         SizedBox(
           height: 11.0.h,
+        )
+      ],
+    );
+  }
+
+  Widget getAnnualTotal(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(0.7),
+          width: double.infinity,
+          height: 90.0.h,
+          decoration: BoxDecoration(
+            color: Color(0xff2093F0),
+            borderRadius: BorderRadius.circular(12.0.r),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(12.0.w),
+            decoration: BoxDecoration(
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(12.0.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "잔여 연차 현황",
+                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "7.5",
+                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        ),
+                        Text(
+                          " / ",
+                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        ),
+                        Text(
+                          "15",
+                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0.h,
+                ),
+                Text(
+                  "입사 년도 기준",
+                  style: getNotoSantBold(fontSize: 13, color: textColor),
+                ),
+              ],
+            ),
+          ),
         )
       ],
     );
