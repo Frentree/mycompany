@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/widget/approval_dialog_widget.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
@@ -9,13 +11,11 @@ import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class ApprovalJoinCompanyView extends StatefulWidget {
   @override

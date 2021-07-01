@@ -18,6 +18,10 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 
 
 class ApprovalMainView extends StatefulWidget {
+  final bool? approvalChk;
+
+  ApprovalMainView({this.approvalChk});
+
   @override
   _ApprovalMainViewState createState() => _ApprovalMainViewState();
 }
@@ -48,12 +52,21 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
 
   late UserModel loginUser;
 
+  late int approvalChk;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loginUser = PublicFunction().getUserProviderSetting(context);
     getApprovalData();
+
+
+    if(widget.approvalChk != null){
+      approvalChk = 1;
+    }else {
+      approvalChk = 0;
+    }
   }
 
   getApprovalData() async {
@@ -395,6 +408,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
+      initialIndex: approvalChk,
       child: Scaffold(
         body: Container(
           width: double.infinity,

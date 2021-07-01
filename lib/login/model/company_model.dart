@@ -43,8 +43,8 @@ class CompanyModel {
         companyPhoto = mapData["companyPhoto"] ?? "",
         companyNo = mapData["companyNo"] ?? "",
         companyWeb = mapData["companyWeb"] ?? "",
-        vacation = mapData["vacation"] ?? "",
-        companySearch = mapData["companySearch"] ?? [];
+        companySearch = mapData["companySearch"] ?? [],
+        vacation = mapData["vacation"] ?? false;
 
   toJson(){
     return {
@@ -55,8 +55,8 @@ class CompanyModel {
       "companyPhoto": companyPhoto,
       "companyNo": companyNo,
       "companyWeb": companyWeb,
-      "vacation": vacation,
       "companySearch": companyName.split(""),
+      "vacation": vacation,
     };
   }
 }
