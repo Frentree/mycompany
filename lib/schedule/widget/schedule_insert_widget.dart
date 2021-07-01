@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/db/public_firestore_repository.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -33,6 +34,7 @@ class ScheduleInsertWidget extends StatefulWidget {
   final List<EmployeeModel> workColleagueChkList;
   final List<String> workTeamChkList;
   final ValueNotifier<EmployeeModel> approvalUser;
+  final String companyCode;
 
   ScheduleInsertWidget({
     required this.workName,
@@ -48,6 +50,7 @@ class ScheduleInsertWidget extends StatefulWidget {
     required this.workColleagueChkList,
     required this.workTeamChkList,
     required this.approvalUser,
+    required this.companyCode,
   });
 
 
@@ -399,9 +402,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 SizedBox(
                   height: 10.0.h,
                 ),
-                Text(
-                  "입사 년도 기준",
-                  style: getNotoSantBold(fontSize: 13, color: textColor),
+                FutureBuilder<CompanyModel>(
+                  future: PublicFirebaseReository().getVacation(widget.companyCode),
+                  builder: (context, snapshot) {
+                    return Text(
+                      snapshot!.data!.vacation! == false ? "입사년도 기준" : "회계년도 기준",
+                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                    );
+                  }
                 ),
               ],
             ),
@@ -661,7 +669,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           child: Container(
                               width: double.infinity,
                               height: 48.0.h,
-                              child: widget.workColleagueChkList.length == 0 ? Text("동료 초대",style: getNotoSantRegular(
+                              child: widget.workColleagueChkList.length == 0 ? Text(
+                                "Invite_colleague".tr(),
+                                style: getNotoSantRegular(
                                 fontSize: 14.0,
                                 color: hintTextColor,
                               ),) : GridView(
@@ -749,7 +759,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "위치",
+                    hintText: "location".tr(),
                     hintStyle: getNotoSantRegular(
                       fontSize: 14.0,
                       color: hintTextColor,
@@ -795,7 +805,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                             width: double.infinity,
                             child: widget.approvalUser.value.mail == "" ?
                             Text(
-                              "결재자 선택",
+                              "approver".tr(),
                               style: getNotoSantRegular(
                                 fontSize: 14.0,
                                 color: hintTextColor,

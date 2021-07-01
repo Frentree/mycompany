@@ -50,7 +50,7 @@ Future<bool> addTeamDialog(BuildContext context, String companyCode, TextEditing
                       }
 
                       TeamModel model = TeamModel(teamName: teamNameContoller.text);
-                      result = await _publicFirebaseReository.createTeam(companyUser: companyCode, team: model);
+                      result = await _publicFirebaseReository.createTeam(companyCode: companyCode, team: model);
                       teamNameContoller.text = "";
                       Navigator.pop(context, true);
                     },
@@ -423,7 +423,7 @@ Future<bool> addPositionDialog(BuildContext context, String companyCode, TextEdi
                       }
 
                       PositionModel model = PositionModel(position: positionNameContoller.text);
-                      result = await _publicFirebaseReository.createPosition(companyUser: companyCode, position: model);
+                      result = await _publicFirebaseReository.createPosition(companyCode: companyCode, position: model);
                       positionNameContoller.text = "";
                       Navigator.pop(context, true);
                     },

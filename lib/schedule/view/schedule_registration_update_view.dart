@@ -348,6 +348,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                 workColleagueChkList: workColleagueChkList,
                                 workTeamChkList: workTeamChkList,
                                 approvalUser: approvalUser,
+                                companyCode: loginUser.companyCode!,
                               ),
                             ),
                           ),
