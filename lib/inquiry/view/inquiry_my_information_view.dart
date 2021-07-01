@@ -198,6 +198,11 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                         loginEmployeeData.profilePhoto = uploadImageUrl;
                                         loginUserData.profilePhoto = uploadImageUrl;
                                       }
+
+                                      loginEmployeeData.birthday = _birthdayTextController.text;
+                                      loginEmployeeData.phone = _phoneTextController.text;
+                                      
+
                                       loginFirestoreRepository.updateUserData(userModel: loginUserData);
                                       loginFirestoreRepository.updateEmployeeData(employeeModel: loginEmployeeData);
 
@@ -433,15 +438,15 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                   color: value == false ? hintTextColor : Color(0xff2093F0),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 9,
-                                    child: ValueListenableBuilder(
-                                      valueListenable: bankName,
-                                      builder: (BuildContext context, String? bankNameValue, Widget? child) {
-                                        return TextFormField(
+                              ValueListenableBuilder(
+                                valueListenable: bankName,
+                                builder: (BuildContext context, String? bankNameValue, Widget? child) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 9,
+                                        child: TextFormField(
                                           controller: _bankNameTextController,
                                           readOnly: true,
                                           style: TextStyle(
@@ -458,7 +463,7 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                               onPressed: null,
                                             ),
                                           ),
-                                          onTap: () async {
+                                          onTap: value == false ? null : () async {
                                             bankName.value = await selectBankDialog(context: context);
                                             if(bankName.value != null){
                                               _bankNameTextController.text = bankName.value!;
@@ -467,29 +472,29 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                               _bankNameTextController = TextEditingController();
                                             }
                                           },
-                                        );
-                                      }
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(),
-                                  ),
-                                  Expanded(
-                                    flex: 9,
-                                    child: TextFormField(
-                                      controller: _accountTextController,
-                                      readOnly: true,
-                                      style: TextStyle(
-                                        fontSize: 14.0.sp,
-                                        color: textColor,
+                                        ),
                                       ),
-                                      decoration: loginTextFormRoundBorderDecoration(
-                                        hintText: value == false ? "" : "계좌번호",
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                      Expanded(
+                                        flex: 9,
+                                        child: TextFormField(
+                                          controller: _accountTextController,
+                                          readOnly: (value == false || bankName.value == null) ? true : false,
+                                          style: TextStyle(
+                                            fontSize: 14.0.sp,
+                                            color: textColor,
+                                          ),
+                                          decoration: loginTextFormRoundBorderDecoration(
+                                            hintText: value == false ? "" : "계좌번호",
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                }
                               ),
                             ],
                           ),
