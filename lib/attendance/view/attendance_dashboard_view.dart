@@ -14,6 +14,7 @@ import 'package:mycompany/attendance/widget/attendance_dialog_widget.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
@@ -28,6 +29,8 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
   AttendanceFirestoreRepository _attendanceFirestoreRepository = AttendanceFirestoreRepository();
   DateFormatCustom dateFormatCustom = DateFormatCustom();
   TotalOfficeHoursCalculationFunction _totalOfficeHoursCalculationFunction = TotalOfficeHoursCalculationFunction();
+
+  PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
   DateTime now = DateTime.now();
 
@@ -99,7 +102,7 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                         ),
                         iconSize: 24.0.h,
                         splashRadius: 24.0.r,
-                        onPressed: () => backPage(context: context),
+                        onPressed: () => _publicFunctionRepository.onBackPressed(context: context),
                         padding: EdgeInsets.zero,
                         alignment: Alignment.centerLeft,
                         color: Color(0xff2093F0),

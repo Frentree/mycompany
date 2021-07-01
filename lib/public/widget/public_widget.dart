@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/attendance/view/attendance_dashboard_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
@@ -349,7 +350,7 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                   icon: Icons.home,
                   boxShadow: [BoxShadow(color: Colors.black)],
                   color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false)),
+                  onTap: () => _reprository.mainNavigator(context: context, navigator: AttendanceDashboardView(), isMove: false)),
               CircularMenuItem(
                   icon: Icons.schedule,
                   boxShadow: [BoxShadow(color: Colors.black)],
