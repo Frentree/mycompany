@@ -19,6 +19,7 @@ import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_item.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
+import 'package:mycompany/setting/view/setting_view.dart';
 
 getCommentsWidget(
     {required BuildContext context,
@@ -368,7 +369,7 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                   icon: Icons.settings,
                   boxShadow: [BoxShadow(color: Colors.black)],
                   color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false)),
+                  onTap: () => _reprository.mainNavigator(context: context, navigator: SettingView(), isMove: false)),
             ]);
       });
 }

@@ -53,11 +53,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserInfoProvider>(
           create: (_) => UserInfoProvider(),
-          child: ScheduleView(),
         ),
         ChangeNotifierProvider<EmployeeInfoProvider>(
           create: (_) => EmployeeInfoProvider(),
-          child: ScheduleView(),
         ),
         ChangeNotifierProvider<DeviceInfoProvider>(
           create: (_) => DeviceInfoProvider(),

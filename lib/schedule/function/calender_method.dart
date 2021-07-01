@@ -9,8 +9,7 @@ import 'package:mycompany/main.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/view/schedule_registration_update_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
@@ -129,7 +128,7 @@ class CalenderMethod{
     List<QueryDocumentSnapshot> teamSnapshot = teamData.docs;
 
     for (var doc in teamSnapshot) {
-      teamList.add(TeamModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
+      teamList.add(TeamModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>), reference: doc.reference));
     }
 
     return teamList;
@@ -156,7 +155,7 @@ class CalenderMethod{
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
     for (var doc in empSnapshot) {
-      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
+      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>), reference: doc.reference));
     }
 
     return empList;

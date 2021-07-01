@@ -3,8 +3,8 @@ import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
 
 class LoginFirestoreCrud {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;

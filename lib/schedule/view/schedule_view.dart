@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -7,23 +8,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mycompany/approval/db/approval_firestore_repository.dart';
+import 'package:mycompany/inquiry/view/inquiry_view.dart';
 import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
-import 'package:mycompany/public/provider/employee_Info_provider.dart';
-import 'package:mycompany/public/provider/user_info_provider.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/public_widget.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
@@ -31,7 +31,6 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_them
 import 'package:mycompany/schedule/widget/schedule_calender_widget.dart';
 import 'package:mycompany/schedule/widget/schedule_circular_menu.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
-import 'package:provider/provider.dart';
 
 class ScheduleView extends StatefulWidget {
   @override
@@ -453,7 +452,50 @@ class _ScheduleViewState extends State<ScheduleView> {
                   ],
                 ),
               ),
+              StreamBuilder<QuerySnapshot>(
+                  stream: ApprovalFirebaseRepository().getResponseApprovalDataCount(loginUser: loginUser),
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) {
+                      return Container();
+                    }
 
+                    List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+                    return Positioned(
+                      right: 10.0.w,
+                      bottom: 70.0.h,
+                      child: (docs.length != 0) ? Stack(
+                        children: [
+                          FloatingActionButton(
+                            backgroundColor: blackColor,
+                            child: Icon(
+                                Icons.mail
+                            ),
+                            onPressed: () => PublicFunctionRepository().mainNavigator(context: context, navigator: InquiryView(approvalChk: true,), isMove: false)),
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: new Container(
+                                padding: EdgeInsets.symmetric(vertical: 2.0.h, horizontal: 5.0.w),
+                                constraints: BoxConstraints(
+                                  minWidth: 4.0.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: errorTextColor,
+                                  borderRadius: BorderRadius.circular(5.0.r),
+                                ),
+                                child: Text(
+                                  docs.length.toString(),
+                                  style: getNotoSantRegular(fontSize: 10, color: whiteColor),
+                                  textAlign: TextAlign.center,
+                                )
+                            ),
+                          ),
+                        ],
+                      ) : Container(),
+                    );
+                  }
+              ),
               getMainCircularMenu(context: context, isMenu: isMenu, key: _circularKey),
             ],
           ),

@@ -5,12 +5,15 @@ import 'package:mycompany/approval/view/approval_join_company_view.dart';
 import 'package:mycompany/approval/view/approval_main_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_my_information_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_view.dart';
-import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 
 class InquiryView extends StatefulWidget {
+  final bool? approvalChk;
+
+  InquiryView({this.approvalChk});
+
   @override
   _InquiryViewState createState() => _InquiryViewState();
 }
@@ -19,9 +22,10 @@ class _InquiryViewState extends State<InquiryView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
   var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청", "내정보"];
-  int typeChkCount = 0;
 
-  var pageList =[ApprovalMainView(), InquiryNoticeView(), ApprovalJoinCompanyView(), InquiryMyInformationView()];
+  late int typeChkCount;
+
+  late List<Widget> pageList;
 
   late ScrollController _scrollController;
 
@@ -30,6 +34,14 @@ class _InquiryViewState extends State<InquiryView> {
     // TODO: implement initState
     _scrollController = ScrollController();
     super.initState();
+
+    if(widget.approvalChk != null){
+      typeChkCount = typeList.indexOf("approval".tr());
+    }else {
+      typeChkCount = 0;
+    }
+
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView(), InquiryMyInformationView()];
   }
 
   @override
