@@ -70,7 +70,6 @@ Future<bool> checkConnectWifi() async {
   List<String> wifiName = ["AndroidWifi", "Frentree5G"];
 
   ConnectivityResult connectivityResult = await connectivity.checkConnectivity();
-  print(connectivityResult == ConnectivityResult.wifi);
   if(connectivityResult == ConnectivityResult.wifi){
     connectedWifiName = (await wifiInfo.getWifiName())!;
     if(wifiName.contains(connectedWifiName)){

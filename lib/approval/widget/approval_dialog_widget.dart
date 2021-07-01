@@ -116,7 +116,7 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
                                     hintText: "입사일",
                                   ),
                                   style: TextStyle(
-                                    fontSize: 13.0.sp,
+                                    fontSize: 14.0.sp,
                                     color: textColor,
                                   ),
                                 ),

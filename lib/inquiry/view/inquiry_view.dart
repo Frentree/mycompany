@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/view/approval_join_company_view.dart';
 import 'package:mycompany/approval/view/approval_main_view.dart';
+import 'package:mycompany/inquiry/view/inquiry_my_information_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_view.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
@@ -17,10 +18,10 @@ class InquiryView extends StatefulWidget {
 class _InquiryViewState extends State<InquiryView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청"];
+  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청", "내정보"];
   int typeChkCount = 0;
 
-  var pageList =[ApprovalMainView(), InquiryNoticeView(), ApprovalJoinCompanyView()];
+  var pageList =[ApprovalMainView(), InquiryNoticeView(), ApprovalJoinCompanyView(), InquiryMyInformationView()];
 
   late ScrollController _scrollController;
 

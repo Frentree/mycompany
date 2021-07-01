@@ -34,10 +34,8 @@ import 'package:easy_localization/easy_localization.dart';
         allDayAppointment.add(appoint);
       } else if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(DateTime.parse(appoint.startTime.toString())).inHours){
         amAppointment.add(appoint);
-        //print("오전");
       } else {
         pmAppointment.add(appoint);
-        //print("오후");
       }
     }
 

@@ -23,8 +23,6 @@ class ScheduleFirebaseMethods {
 
     var result = await _store.collection(COMPANY).doc(companyCode).collection(WORK).where("colleagues", isGreaterThan: mailChkList).get();
 
-    print(result.docs.length);
-
     return result;
   }
   
@@ -87,8 +85,6 @@ class ScheduleFirebaseMethods {
   Future<bool> getApprovalListSizeDocument(String companyCode, String documentId) async {
     bool isResult = false;
 
-    print(documentId);
-
     await _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).where("workIds", isEqualTo: documentId).where("status", isEqualTo: "요청").get().then((value) {
       if(value.size < 1) {
         isResult = true;
@@ -121,8 +117,6 @@ class ScheduleFirebaseMethods {
 
   Future<int> workColleaguesDelete(String companyCode, String documentId, List<Map<String,String>> map) async {
     int result = 0;
-
-    print(map);
 
     await _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(documentId).update({"colleagues": map}).onError((error, stackTrace) =>{result = 405});
 

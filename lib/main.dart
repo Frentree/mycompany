@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/function/permission_function.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -23,6 +24,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '6LcchGkbAAAAADBFLdIS3DsYbfgLW7ifJUNMlY9v');
+
+
   bool isPermissionGranted = await checkPermissionFunction();
 
   runApp(

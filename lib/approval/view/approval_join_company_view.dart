@@ -46,164 +46,157 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
 
           joinCompanyApprovalData = [];
 
-          print("스냅샷 : ${snapshot.data!.docs.length}");
-          print("리스트 : ${joinCompanyApprovalData.length}");
-
-          var i = 0;
           snapshot.data!.docs.forEach((element) {
             joinCompanyApprovalData.add(JoinCompanyApprovalModel.fromMap(mapData: element.data(),documentId: element.id));
-
-            print("i = $i");
           });
-
-          print("리스트3 : ${joinCompanyApprovalData.length}");
 
           joinCompanyApprovalData.sort((a, b) => a.requestDate.compareTo(b.requestDate));
 
-          return GridView.builder(
-            padding: EdgeInsets.only(
-              left: 27.5.w,
-              right: 27.5.w,
-              top: 20.0.h,
-            ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemCount: joinCompanyApprovalData.length,
-            itemBuilder: (BuildContext context, int index) {
-              print(joinCompanyApprovalData.length);
-              return GridTile(
-                child: ValueListenableBuilder(
-                  valueListenable: selectedIndex,
-                  builder: (BuildContext context, int value, Widget? child) {
-                    return GestureDetector(
-                      onTap: (){
-                        if(selectedIndex.value == index){
-                          selectedIndex.value = -1;
-                        }
-                        else{
-                          selectedIndex.value = index;
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: value != index ? <BoxShadow>[
-                            BoxShadow(
-                              color: Color(0xff9C9C9C).withOpacity(0.3),
-                              offset: Offset(1.0, 15.0),
-                              blurRadius: 20.0,
-                            ),
-                          ] : null,
-                          color: value == index ? Color(0xff2093F0).withOpacity(0.1) : whiteColor,
-                          borderRadius: BorderRadius.circular(12.0.r),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16.0.w,
-                                vertical: 10.0.h,
+          return Container(
+            child: GridView.builder(
+              padding: EdgeInsets.only(
+                left: 27.5.w,
+                right: 27.5.w,
+                top: 20.0.h,
+              ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: joinCompanyApprovalData.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GridTile(
+                  child: ValueListenableBuilder(
+                    valueListenable: selectedIndex,
+                    builder: (BuildContext context, int value, Widget? child) {
+                      return GestureDetector(
+                        onTap: (){
+                          if(selectedIndex.value == index){
+                            selectedIndex.value = -1;
+                          }
+                          else{
+                            selectedIndex.value = index;
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            boxShadow: value != index ? <BoxShadow>[
+                              BoxShadow(
+                                color: Color(0xff9C9C9C).withOpacity(0.3),
+                                offset: Offset(1.0, 15.0),
+                                blurRadius: 20.0,
                               ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff2093F0),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.0.r),
-                                  topRight: Radius.circular(12.0.r),
+                            ] : null,
+                            color: value == index ? Color(0xff2093F0).withOpacity(0.1) : whiteColor,
+                            borderRadius: BorderRadius.circular(12.0.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16.0.w,
+                                  vertical: 10.0.h,
                                 ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    joinCompanyApprovalData[index].name,
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 13.0.sp,
-                                      fontWeight: fontWeight['Medium'],
-                                      color: whiteColor,
-                                    ),
+                                decoration: BoxDecoration(
+                                  color: Color(0xff2093F0),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12.0.r),
+                                    topRight: Radius.circular(12.0.r),
                                   ),
-                                  Text(
-                                    dateFormatCustom.dateStringFormatSeparatorDot(date: joinCompanyApprovalData[index].requestDate),
-                                    style: TextStyle(
-                                      fontSize: 12.0.sp,
-                                      color: whiteColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
+                                ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: Icon(
-                                            Icons.cake,
-                                            color: textColor,
-                                            size: 15.0.w,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 7,
-                                          child: Container(
-                                            child: Text(
-                                              joinCompanyApprovalData[index].birthday == null ? "-" : dateFormatCustom.dateStringFormatSeparatorDot(date: dateFormatCustom.changeStringToDateTime(dateString: joinCompanyApprovalData[index].birthday!)),
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 13.0.sp,
-                                                fontWeight: fontWeight['Medium'],
-                                                color: textColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      joinCompanyApprovalData[index].name,
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 13.0.sp,
+                                        fontWeight: fontWeight['Medium'],
+                                        color: whiteColor,
+                                      ),
                                     ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: Icon(
-                                            Icons.phone,
-                                            color: textColor,
-                                            size: 15.0.w,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 7,
-                                          child: Container(
-                                            child: Text(
-                                              joinCompanyApprovalData[index].phone == null ? "-" : joinCompanyApprovalData[index].phone!,
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 13.0.sp,
-                                                fontWeight: fontWeight['Medium'],
-                                                color: textColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      dateFormatCustom.dateStringFormatSeparatorDot(date: joinCompanyApprovalData[index].requestDate),
+                                      style: TextStyle(
+                                        fontSize: 12.0.sp,
+                                        color: whiteColor,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: Icon(
+                                              Icons.cake,
+                                              color: textColor,
+                                              size: 15.0.w,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 7,
+                                            child: Container(
+                                              child: Text(
+                                                joinCompanyApprovalData[index].birthday == null ? "-" : dateFormatCustom.dateStringFormatSeparatorDot(date: dateFormatCustom.changeStringToDateTime(dateString: joinCompanyApprovalData[index].birthday!)),
+                                                style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 13.0.sp,
+                                                  fontWeight: fontWeight['Medium'],
+                                                  color: textColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: Icon(
+                                              Icons.phone,
+                                              color: textColor,
+                                              size: 15.0.w,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 7,
+                                            child: Container(
+                                              child: Text(
+                                                joinCompanyApprovalData[index].phone == null ? "-" : joinCompanyApprovalData[index].phone!,
+                                                style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 13.0.sp,
+                                                  fontWeight: fontWeight['Medium'],
+                                                  color: textColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                ),
-              );
-            },
+                      );
+                    }
+                  ),
+                );
+              },
+            ),
           );
         },
       ),
@@ -254,10 +247,6 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                           teamList: teamList,
                           confirmUser: confirmUser,
                         );
-
-
-                        print(confirmUser.enteredDate);
-                        print("confirmUser.team : ${confirmUser.team}");
 
                         if(confirmUser.enteredDate == "" || confirmUser.team == null){
                           await loginDialogWidget(

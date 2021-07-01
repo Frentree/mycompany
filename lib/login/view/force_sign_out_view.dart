@@ -30,7 +30,7 @@ class ForceSignOutView extends StatelessWidget {
               await userInfoProvider.deleteUserDataToPhone();
               await employeeInfoProvider.deleteEmployeeDataToPhone();
 
-              /*pageMoveAndRemoveBackPage(context: context, pageName: AuthView());*/
+              pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
             }
           ),
         ],

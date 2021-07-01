@@ -69,6 +69,7 @@ class FirebaseAuthService {
 
       if(_newUserCredential.user != null) {
         _newUserCredential.user!.updateProfile();
+
         return true;
       }
 

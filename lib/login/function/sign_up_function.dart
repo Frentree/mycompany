@@ -24,7 +24,6 @@ class SignUpFunction {
 
     bool _firebaseAuthResult;
 
-
     _firebaseAuthResult = await loginServiceRepository.signUpWithEmailAndPassword(email: email, password: password);
     //firebase 인증 성공
     if (_firebaseAuthResult == true) {

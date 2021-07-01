@@ -12,7 +12,6 @@ import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 Future<dynamic> changeWorkingStatusDialog({required BuildContext context, required String buttonName}) {
-  AttendanceFirestoreRepository _attendanceFirestoreRepository = AttendanceFirestoreRepository();
   DateFormatCustom dateFormatCustom = DateFormatCustom();
 
   int? attendance = 0;

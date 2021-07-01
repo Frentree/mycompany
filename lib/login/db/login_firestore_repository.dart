@@ -17,6 +17,8 @@ class LoginFirestoreRepository {
           {required String companyId, required String email}) =>
       _loginFirebaseCrud.readEmployeeData(companyId: companyId, email: email);
 
+  Future<void> updateEmployeeData({required EmployeeModel employeeModel}) => _loginFirebaseCrud.updateEmployeeData(employeeModel: employeeModel);
+
   //User 관련
   Future<void> createUserData({required UserModel userModel}) =>
       _loginFirebaseCrud.createUserData(userModel: userModel);
