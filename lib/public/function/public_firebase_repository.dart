@@ -19,7 +19,4 @@ class PublicFirebaseRepository {
       String alarmId) =>
       _methods.setAlarmReadToTrue(companyCode, mail, alarmId);
 
-  Future<double> usedVacationWithDuration(String? companyCode, String? mail, DateTime start, DateTime end) =>
-      _methods.usedVacationWithDuration(companyCode, mail, start, end);
-
 }
