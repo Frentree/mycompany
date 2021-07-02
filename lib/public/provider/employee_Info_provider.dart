@@ -27,20 +27,30 @@ class EmployeeInfoProvider with ChangeNotifier {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     dynamic encodeData = employeeModel.toJson();
 
-    encodeData['createDate'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
-    encodeData['lastModDate'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['lastModDate']).toIso8601String();
+    encodeData['createDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
+    encodeData['lastModDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['lastModDate']).toIso8601String();
 
-    _sharedPreferences.setString(USER, jsonEncode(encodeData));
+    _sharedPreferences.setString(EMPLOYEE, jsonEncode(encodeData));
     setEmployeeData(employeeModel: employeeModel);
+  }
+
+  Future<void> saveEmployeeDataToPhoneWithoutNotifyListener({required EmployeeModel employeeModel}) async {
+    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+    dynamic encodeData = employeeModel.toJson();
+
+    encodeData['createDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
+    encodeData['lastModDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['lastModDate']).toIso8601String();
+
+    _sharedPreferences.setString(EMPLOYEE, jsonEncode(encodeData));
   }
 
   Future<void> loadEmployeeDataToPhone() async {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    if(_sharedPreferences.getString(USER) != null){
-      dynamic decodeData = jsonDecode(_sharedPreferences.getString(USER)!);
+    if(_sharedPreferences.getString(EMPLOYEE) != null){
+      dynamic decodeData = jsonDecode(_sharedPreferences.getString(EMPLOYEE)!);
 
-      decodeData['createDate'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['createDate']));
-      decodeData['lastModDate'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['lastModDate']));
+      decodeData['createDate'] = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.parse(decodeData['createDate']));
+      decodeData['lastModDate'] = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.parse(decodeData['lastModDate']));
 
       _employeeModel = EmployeeModel.fromMap(mapData: decodeData);
 

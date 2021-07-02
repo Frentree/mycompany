@@ -24,7 +24,6 @@ class SignUpFunction {
 
     bool _firebaseAuthResult;
 
-
     _firebaseAuthResult = await loginServiceRepository.signUpWithEmailAndPassword(email: email, password: password);
     //firebase 인증 성공
     if (_firebaseAuthResult == true) {
@@ -34,8 +33,8 @@ class SignUpFunction {
         name: name,
         birthday: birthday,
         phone: phone,
-        createDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-        lastModDate: _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+        createDate: _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
+        lastModDate: _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
       );
 
       //User DB 생성

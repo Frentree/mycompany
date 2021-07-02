@@ -194,7 +194,7 @@ class SearchCompanyAddressViewState extends State<SearchCompanyAddressView> {
               Row(
                 children: [
                   Container(
-                    width: 40.0.w,
+                    width: 60.0.w,
                     alignment: Alignment.center,
                     child: Text(
                       companyAddressList[index].zipNo,
@@ -225,7 +225,7 @@ class SearchCompanyAddressViewState extends State<SearchCompanyAddressView> {
               Row(
                 children: [
                   Container(
-                    width: 40.0.w,
+                    width: 60.0.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0.r),
@@ -264,7 +264,7 @@ class SearchCompanyAddressViewState extends State<SearchCompanyAddressView> {
               Row(
                 children: [
                   Container(
-                    width: 40.0.w,
+                    width: 60.0.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0.r),

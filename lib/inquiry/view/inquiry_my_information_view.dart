@@ -1,0 +1,544 @@
+import 'dart:io';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:mycompany/inquiry/function/profile_edit_function.dart';
+import 'package:mycompany/inquiry/widget/inquiry_dialog_widget.dart';
+import 'package:mycompany/login/db/login_firestore_repository.dart';
+import 'package:mycompany/login/function/form_validation_function.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/login/style/decoration_style.dart';
+import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
+import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/fontWeight.dart';
+import 'package:mycompany/schedule/widget/userProfileImage.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+
+
+class InquiryMyInformationView extends StatefulWidget {
+  @override
+  InquiryMyInformationViewState createState() => InquiryMyInformationViewState();
+}
+
+class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
+  ImagePicker imagePicker = ImagePicker();
+  LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
+  ProfileEditFunction profileEditFunction = ProfileEditFunction();
+  FormValidationFunction formValidationFunction = FormValidationFunction();
+
+  GlobalKey<FormState> _birthdayFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _phoneFormKey = GlobalKey<FormState>();
+
+  TextEditingController _birthdayTextController = MaskedTextController(mask: '0000.00.00');
+  TextEditingController _phoneTextController = MaskedTextController(mask: '000-0000-0000');
+  TextEditingController _bankNameTextController = TextEditingController();
+  TextEditingController _accountTextController = TextEditingController();
+
+  ValueNotifier<bool> isEdit = ValueNotifier<bool>(false);
+  ValueNotifier<List<bool>> isNoError = ValueNotifier<List<bool>>([true, true, true,]);
+  ValueNotifier<String?> changeImagePath = ValueNotifier<String?>(null);
+  ValueNotifier<String?> bankName = ValueNotifier<String?>(null);
+  ValueNotifier<String> birthdayFormErrorMessage = ValueNotifier<String>("");
+  ValueNotifier<String> phoneFormErrorMessage = ValueNotifier<String>("");
+
+  String? uploadImageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
+
+    UserModel loginUserData = userInfoProvider.getUserData()!;
+    EmployeeModel loginEmployeeData = employeeInfoProvider.getEmployeeData()!;
+
+    _birthdayTextController.text = loginEmployeeData.birthday == "" ? "" : loginEmployeeData.birthday!;
+    _phoneTextController.text = loginEmployeeData.phone == "" ? "" : loginEmployeeData.phone!;
+    _accountTextController.text = loginEmployeeData.account == "" ? "" : loginEmployeeData.account!.split("/")[1];
+    _bankNameTextController.text = loginEmployeeData.account == "" ? "" : loginEmployeeData.account!.split("/")[0];
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 27.5.w,
+        ),
+        child: ValueListenableBuilder(
+          valueListenable: isEdit,
+          builder: (BuildContext context, bool value, Widget? child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 75.0.h,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: 20.0.h,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: ClipOval(
+                              child: Container(
+                                width: 55.0.h,
+                                height: 55.0.h,
+                                color: value == false ? hintTextColor : Color(0xff2093F0),
+                                alignment: Alignment.center,
+                                child: ClipOval(
+                                  child: Container(
+                                    width: 52.5.h,
+                                    height: 52.5.h,
+                                    color: Colors.white,
+                                    alignment: Alignment.center,
+                                    child: ValueListenableBuilder(
+                                      valueListenable: changeImagePath,
+                                      builder: (BuildContext context, String? pickImagePath, Widget? child) {
+                                        return InkWell(
+                                          onTap: value == false ? null : () async {
+                                            int? result = await changeProfileDialog(context: context,);
+                                            switch (result) {
+                                              case 1:
+                                                changeImagePath.value = "";
+                                                uploadImageUrl = "";
+                                                break;
+                                              case 2:
+                                                await profileEditFunction.selectImage(imageSource: ImageSource.gallery).then((selectImage) async {
+                                                  if(selectImage != null){
+                                                    isNoError.value = List.from(isNoError.value)..replaceRange(0, 1, [false]);
+                                                    changeImagePath.value = selectImage.path;
+                                                    await profileEditFunction.uploadImageToStorage(context: context, pickImagePath: selectImage.path).then((uploadUrl){
+                                                      uploadImageUrl = uploadUrl;
+                                                      isNoError.value = List.from(isNoError.value)..replaceRange(0, 1, [true]);
+                                                    });
+                                                 }
+                                                });
+                                                break;
+                                              case 3:
+                                                await profileEditFunction.selectImage(imageSource: ImageSource.camera).then((selectImage) async {
+                                                  if(selectImage != null){
+                                                    isNoError.value = List.from(isNoError.value)..replaceRange(0, 1, [false]);
+                                                    changeImagePath.value = selectImage.path;
+                                                    await profileEditFunction.uploadImageToStorage(context: context, pickImagePath: selectImage.path).then((uploadUrl){
+                                                      uploadImageUrl = uploadUrl;
+                                                      isNoError.value = List.from(isNoError.value)..replaceRange(0, 1, [true]);
+                                                    });
+                                                  }
+                                                });
+                                                break;
+                                              default:
+                                            }
+                                          },
+                                          borderRadius: BorderRadius.circular(20),
+                                          child: value == false || pickImagePath == null ? getProfileImage(
+                                            ImageUri: loginEmployeeData.profilePhoto,
+                                            size: 50.0,
+                                          ) : showTempProfileImage(
+                                            imageUri: pickImagePath,
+                                            size: 50.0
+                                          )
+                                        );
+                                      }
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  loginUserData.name,
+                                  style: TextStyle(
+                                    fontSize: 13.0.sp,
+                                    fontWeight: fontWeight['Medium'],
+                                    color: textColor,
+                                  ),
+                                ),
+                                Text(
+                                  (loginEmployeeData.position == null ? "" : loginEmployeeData.position!) + "/" + (loginEmployeeData.team == null ? "" : loginEmployeeData.team!),
+                                  style: TextStyle(
+                                    fontSize: 13.0.sp,
+                                    fontWeight: fontWeight['Medium'],
+                                    color: hintTextColor,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: ValueListenableBuilder(
+                              valueListenable: isNoError,
+                              builder: (BuildContext context, List<bool> isNoErrorValue, Widget? child) {
+                                return IconButton(
+                                  icon: Icon(
+                                    value == false ? Icons.mode_edit : Icons.check,
+                                    color: isNoErrorValue.contains(false) == true ? hintTextColor : Color(0xff2093F0),
+                                  ),
+                                  onPressed: isNoErrorValue.contains(false) == false ? (){
+                                    if(value == true){
+                                      if(uploadImageUrl != null){
+                                        loginEmployeeData.profilePhoto = uploadImageUrl;
+                                        loginUserData.profilePhoto = uploadImageUrl;
+                                      }
+
+                                      loginEmployeeData.birthday = _birthdayTextController.text;
+                                      loginEmployeeData.phone = _phoneTextController.text;
+                                      
+
+                                      loginFirestoreRepository.updateUserData(userModel: loginUserData);
+                                      loginFirestoreRepository.updateEmployeeData(employeeModel: loginEmployeeData);
+
+                                      userInfoProvider.saveUserDataToPhone(userModel: loginUserData);
+                                      employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: loginEmployeeData);
+                                    }
+                                    isEdit.value = !isEdit.value;
+                                  } : null,
+                                );
+                              }
+                            )
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 20.0.h,
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "이메일",
+                                    style: TextStyle(
+                                      fontSize: 13.0.sp,
+                                      color: hintTextColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    value == false ? "" : "비밀번호 변경",
+                                    style: TextStyle(
+                                      fontSize: 13.0.sp,
+                                      color: Color(0xff2093F0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 305.0.w,
+                                height: 40.0.h,
+                                child: TextFormField(
+                                  decoration: loginTextFormRoundBorderDecoration(),
+                                  readOnly: true,
+                                  initialValue: loginEmployeeData.mail,
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 8.0.h,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "생일",
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                  color: value == false ? hintTextColor : Color(0xff2093F0),
+                                ),
+                              ),
+                              ValueListenableBuilder(
+                                  valueListenable: birthdayFormErrorMessage,
+                                  builder: (BuildContext context, String birthdayErrorMessage, Widget? child) {
+                                    return Form(
+                                      key: _birthdayFormKey,
+                                      onChanged: (){
+                                        print("bool 값 : ${isNoError.value[0]} ");
+                                        _birthdayFormKey.currentState!.validate();
+                                        if(_birthdayTextController.text == "" || birthdayFormErrorMessage.value == ""){
+                                          isNoError.value = List.from(isNoError.value)..replaceRange(1, 2, [true]);
+                                          birthdayFormErrorMessage.value = "";
+                                        }
+                                        else{
+                                          isNoError.value = List.from(isNoError.value)..replaceRange(1, 2, [false]);
+                                        }
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 305.0.w,
+                                            height: 40.0.h,
+                                            child: TextFormField(
+                                              controller: _birthdayTextController,
+                                              validator: ((text){
+                                                String? result = formValidationFunction.formValidationFunction(type: "birthday", value: text!);
+                                                if(result != null){
+                                                  birthdayFormErrorMessage.value = result;
+                                                }
+                                                else{
+                                                  birthdayFormErrorMessage.value = "";
+                                                }
+                                              }),
+                                              decoration: loginTextFormRoundBorderDecoration(
+                                                hintText: value == false ? "" : 'birthdayHint'.tr(),
+                                              ),
+                                              readOnly: value == false ? true : false,
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                color: textColor,
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: birthdayFormErrorMessage.value != "",
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 12.0.w),
+                                              child: Text(
+                                                birthdayErrorMessage,
+                                                style: TextStyle(
+                                                  fontSize: 12.0.sp,
+                                                  color: errorTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 8.0.h,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "전화번호",
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                  color: value == false ? hintTextColor : Color(0xff2093F0),
+                                ),
+                              ),
+                              ValueListenableBuilder(
+                                  valueListenable: phoneFormErrorMessage,
+                                  builder: (BuildContext context, String phoneErrorMessage, Widget? child) {
+                                    return Form(
+                                      key: _phoneFormKey,
+                                      onChanged: (){
+                                        print("bool 값 : ${isNoError.value[0]} ");
+                                        _phoneFormKey.currentState!.validate();
+                                        if(_phoneTextController.text == "" || phoneFormErrorMessage.value == ""){
+                                          isNoError.value = List.from(isNoError.value)..replaceRange(2, 3, [true]);
+                                          phoneFormErrorMessage.value = "";
+                                        }
+                                        else{
+                                          isNoError.value = List.from(isNoError.value)..replaceRange(2, 3, [false]);
+                                        }
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 305.0.w,
+                                            height: 40.0.h,
+                                            child: TextFormField(
+                                              controller: _phoneTextController,
+                                              validator: ((text){
+                                                String? result = formValidationFunction.formValidationFunction(type: "phone", value: text!);
+                                                if(result != null){
+                                                  phoneFormErrorMessage.value = result;
+                                                }
+                                                else{
+                                                  phoneFormErrorMessage.value = "";
+                                                }
+                                              }),
+                                              decoration: loginTextFormRoundBorderDecoration(
+                                                hintText: value == false ? "" : 'phone'.tr(),
+                                              ),
+                                              readOnly: value == false ? true : false,
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                color: textColor,
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: phoneFormErrorMessage.value != "",
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 12.0.w),
+                                              child: Text(
+                                                phoneErrorMessage,
+                                                style: TextStyle(
+                                                  fontSize: 12.0.sp,
+                                                  color: errorTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 8.0.h,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "계좌번호",
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                  color: value == false ? hintTextColor : Color(0xff2093F0),
+                                ),
+                              ),
+                              ValueListenableBuilder(
+                                valueListenable: bankName,
+                                builder: (BuildContext context, String? bankNameValue, Widget? child) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 9,
+                                        child: TextFormField(
+                                          controller: _bankNameTextController,
+                                          readOnly: true,
+                                          style: TextStyle(
+                                            fontSize: 14.0.sp,
+                                            color: textColor,
+                                          ),
+                                          decoration: loginTextFormRoundBorderDecoration(
+                                            hintText: value == false ? "" : "은행 선택",
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                Icons.arrow_drop_down,
+                                                color: Color(0xff949494),
+                                              ),
+                                              onPressed: null,
+                                            ),
+                                          ),
+                                          onTap: value == false ? null : () async {
+                                            bankName.value = await selectBankDialog(context: context);
+                                            if(bankName.value != null){
+                                              _bankNameTextController.text = bankName.value!;
+                                            }
+                                            else{
+                                              _bankNameTextController = TextEditingController();
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(),
+                                      ),
+                                      Expanded(
+                                        flex: 9,
+                                        child: TextFormField(
+                                          controller: _accountTextController,
+                                          readOnly: (value == false || bankName.value == null) ? true : false,
+                                          style: TextStyle(
+                                            fontSize: 14.0.sp,
+                                            color: textColor,
+                                          ),
+                                          decoration: loginTextFormRoundBorderDecoration(
+                                            hintText: value == false ? "" : "계좌번호",
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                }
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 8.0.h,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "입사일",
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                  color: hintTextColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 305.0.w,
+                                height: 40.0.h,
+                                child: TextFormField(
+                                  decoration: loginTextFormRoundBorderDecoration(),
+                                  readOnly: true,
+                                  initialValue: loginEmployeeData.enteredDate,
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+
+              ],
+            );
+          }
+        ),
+      )
+    );
+  }
+}

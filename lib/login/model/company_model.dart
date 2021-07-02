@@ -20,8 +20,8 @@ class CompanyModel {
   String? companyPhoto;
   String? companyNo;
   String? companyWeb;
+  bool? vacation;
   List<dynamic>? companySearch;
-  int vacation;
 
   CompanyModel({
     required this.companyCode,
@@ -31,8 +31,8 @@ class CompanyModel {
     this.companyPhoto,
     this.companyNo,
     this.companyWeb,
+    this.vacation = false,
     this.companySearch,
-    this.vacation = 0,
   });
 
   CompanyModel.fromMap({required Map mapData})
@@ -44,7 +44,7 @@ class CompanyModel {
         companyNo = mapData["companyNo"] ?? "",
         companyWeb = mapData["companyWeb"] ?? "",
         companySearch = mapData["companySearch"] ?? [],
-        vacation = mapData["vacation"] ?? 0;
+        vacation = mapData["vacation"] ?? false;
 
   toJson(){
     return {
@@ -54,7 +54,7 @@ class CompanyModel {
       "companyPhone": companyPhone,
       "companyPhoto": companyPhoto,
       "companyNo": companyNo,
-      "webUrl": companyWeb,
+      "companyWeb": companyWeb,
       "companySearch": companyName.split(""),
       "vacation": vacation,
     };

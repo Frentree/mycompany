@@ -2,40 +2,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class DateFormatCustom {
-  DateTime changeTimeStampToDateTime({required Timestamp timestamp}) {
-    DateTime dateTime = timestamp.toDate();
-
-    return dateTime;
-  }
-
   String changeWeekDay({required DateTime date}){
     late String dateText;
 
     switch(date.weekday){
       case 1: dateText = "월";
-        break;
+      break;
       case 2: dateText = "화";
-        break;
+      break;
       case 3: dateText = "수";
-        break;
+      break;
       case 4: dateText = "목";
-        break;
+      break;
       case 5: dateText = "금";
-        break;
+      break;
       case 6: dateText = "토";
-        break;
+      break;
       case 7: dateText = "일";
-        break;
+      break;
     }
 
     return dateText;
   }
 
-  Timestamp changeDateTimeToTimeStamp({required DateTime dateTime}) {
+  DateTime changeTimestampToDateTime({required Timestamp timestamp}) {
+    DateTime dateTime = timestamp.toDate();
 
-    Timestamp timestamp = Timestamp.fromDate(dateTime);
+    return dateTime;
+  }
 
-    return timestamp;
+  DateTime showDateTimeUpToMinutes({required DateTime dateTime}) {
+    DateTime returnDatetime = DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
+
+    return returnDatetime;
   }
 
   DateTime changeStringToDateTime({required String dateString}) {
@@ -44,7 +43,21 @@ class DateFormatCustom {
     return dateTime;
   }
 
-  Timestamp changeStringToTimeStamp({required String dateString}) {
+  Timestamp changeDateTimeToTimestamp({required DateTime dateTime}) {
+
+    Timestamp timestamp = Timestamp.fromDate(dateTime);
+
+    return timestamp;
+  }
+
+  Timestamp showTimestampUpToMinutes({required Timestamp timestamp}) {
+    DateTime changeDateTime = changeTimestampToDateTime(timestamp: timestamp);
+    Timestamp returnTimestamp = changeDateTimeToTimestamp(dateTime: showDateTimeUpToMinutes(dateTime: changeDateTime));
+
+    return returnTimestamp;
+  }
+
+  Timestamp changeStringToTimestamp({required String dateString}) {
     Timestamp timestamp = Timestamp.fromDate(
         changeStringToDateTime(dateString: dateString));
 
@@ -57,6 +70,37 @@ class DateFormatCustom {
 
     return today;
   }
+
+  String dateStringFormatSeparatorDot({required dynamic date, bool? isIncludeWeekday}){
+    if(date.runtimeType == Timestamp){
+      date = changeTimestampToDateTime(timestamp: date);
+    }
+
+    String returnString = (isIncludeWeekday != null && isIncludeWeekday == true)? "${date.year}.${twoDigitsFormat(date.month)}.${twoDigitsFormat(date.day)}(${changeWeekDay(date: date)})" : "${date.year}.${twoDigitsFormat(date.month)}.${twoDigitsFormat(date.day)}";
+
+    return returnString;
+  }
+
+  String changeTimeToString({required dynamic time}){
+    if(time.runtimeType == Timestamp){
+      time = changeTimestampToDateTime(timestamp: time);
+    }
+
+    String returnString = "${time.hour}:${twoDigitsFormat(time.minute)}";
+
+    return returnString;
+  }
+
+  String changeDateToString({required dynamic date, bool? isIncludeWeekday}){
+    if(date.runtimeType == Timestamp){
+      date = changeTimestampToDateTime(timestamp: date);
+    }
+
+    String returnString = (isIncludeWeekday != null && isIncludeWeekday == true)? "${date.month}/${date.day}(${changeWeekDay(date: date)})" : "${date.month}/${date.day}";
+
+    return returnString;
+  }
+
 
   String dateFormat({required DateTime date}){
     String dateText;

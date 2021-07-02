@@ -1,16 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
-import 'package:mycompany/public/function/fcm/__init__.dart';
+import 'package:mycompany/public/provider/device_Info_provider.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/run_app/view/permission_request_view.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:provider/provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/run_app/function/permission_function.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -21,17 +24,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
-  bool a = await checkPermissionFunction();
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '6LcchGkbAAAAADBFLdIS3DsYbfgLW7ifJUNMlY9v');
 
-  ///Initialize configurations for Firebase Cloud Messaging
-  FcmInit();
 
-  String? token = await FirebaseMessaging.instance.getToken(
-      vapidKey:
-      "BD93gpQXenmF_dTiN2tcVyf7zKxMxHDkhLAj50jYI6ZI0FDxvPG5jH8xmH0PIagfT3g-HaVdk8wHkM5Rdyf5s5E'"
-  );
-
-  print(token);
+  bool isPermissionGranted = await checkPermissionFunction();
 
   runApp(
     EasyLocalization(
@@ -41,12 +37,15 @@ void main() async {
       ],
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
-      child: a ? YesPermission() : NoPermission(),
+      child: MyApp(isPermissionGranted: isPermissionGranted,),
     )
   );
 }
 
-class NoPermission extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  bool isPermissionGranted;
+
+  MyApp({required this.isPermissionGranted});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,10 @@ class NoPermission extends StatelessWidget {
         ),
         ChangeNotifierProvider<EmployeeInfoProvider>(
           create: (_) => EmployeeInfoProvider(),
-        )
+        ),
+        ChangeNotifierProvider<DeviceInfoProvider>(
+          create: (_) => DeviceInfoProvider(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: Size(360, 756),
@@ -72,44 +74,9 @@ class NoPermission extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
 
-          // home: PermissionRequestView(),
-          home: SplashViewWhite(),
+          home: isPermissionGranted ? SplashViewWhite() : PermissionRequestView(),
         ),
       ),
     );
   }
 }
-
-class YesPermission extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<UserInfoProvider>(
-          create: (_) => UserInfoProvider(),
-        ),
-        ChangeNotifierProvider<EmployeeInfoProvider>(
-          create: (_) => EmployeeInfoProvider(),
-        )
-      ],
-      child: ScreenUtilInit(
-        designSize: Size(360, 756),
-        builder: () => MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            fontFamily: 'NotoSansKR',
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-
-          home: SplashViewWhite(),
-        ),
-      ),
-    );
-  }
-}
-

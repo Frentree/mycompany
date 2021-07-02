@@ -23,12 +23,12 @@ class StartWorkFunction {
       name: loginUserData.name,
       phone: loginUserData.phone,
       birthday: loginUserData.birthday,
-      requestDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      requestDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
     );
 
     //로그인 사용자 joinStatus 및 companyCode 업데이트
     loginUserData.state = 1;
-    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now());
+    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now());
 
     await loginFirestoreRepository.updateUserData(userModel: loginUserData);
   }

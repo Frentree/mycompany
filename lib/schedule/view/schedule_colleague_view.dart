@@ -1,22 +1,20 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mycompany/schedule/function/schedule_function_repository.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
-
-import 'package:mycompany/public/style/text_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/public/style/text_style.dart';
 
 class ScheduleColleagueView extends StatefulWidget {
 
   Key? key;
   final List<TeamModel> teamList;
-  final List<CompanyUserModel> employeeList;
-  final List<CompanyUserModel> workColleagueChkList;
+  final List<EmployeeModel> employeeList;
+  final List<EmployeeModel> workColleagueChkList;
   final List<String> workTeamChkList;
 
   ScheduleColleagueView({key, required this.teamList, required this.employeeList, required this.workColleagueChkList, required this.workTeamChkList});
@@ -28,181 +26,190 @@ class ScheduleColleagueView extends StatefulWidget {
 class _ScheduleColleagueViewState extends State<ScheduleColleagueView> {
 
   late List<TeamModel> teamList = widget.teamList;
-  late List<CompanyUserModel> employeeList = widget.employeeList;
+  late List<EmployeeModel> employeeList = widget.employeeList;
 
-  late List<CompanyUserModel> workColleague = List.from(widget.workColleagueChkList);
+  late List<EmployeeModel> workColleague = List.from(widget.workColleagueChkList);
   late List<String> workTeam = List.from(widget.workTeamChkList);
 
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: whiteColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 72.0.h + statusBarHeight,
-              width: double.infinity,
-              color: whiteColor,
-              padding: EdgeInsets.only(
-                  top: statusBarHeight,
-                  left: 26.0.w
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        child: Container(
-                          color: whiteColor,
-                          width: 20.0.w,
-                          height: 30.0.h,
-                          alignment: Alignment.centerLeft,
-                          child: SizedBox(
-                            child: Container(
-                                width: 14.9.w,
-                                height: 14.9.h,
-                                child: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: workInsertColor,
-                                )
+
+
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context,false);
+        return true;
+      },
+      child: Scaffold(
+
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: whiteColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 72.0.h + statusBarHeight,
+                width: double.infinity,
+                color: whiteColor,
+                padding: EdgeInsets.only(
+                    top: statusBarHeight,
+                    left: 26.0.w
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            color: whiteColor,
+                            width: 20.0.w,
+                            height: 30.0.h,
+                            alignment: Alignment.centerLeft,
+                            child: SizedBox(
+                              child: Container(
+                                  width: 14.9.w,
+                                  height: 14.9.h,
+                                  child: Icon(
+                                    Icons.arrow_back_ios,
+                                    color: workInsertColor,
+                                  )
+                              ),
                             ),
                           ),
+                          onTap: () => Navigator.pop(context,true),
                         ),
-                        onTap: () => Navigator.pop(context,true),
-                      ),
-                      Text(
-                          "Invite_colleague".tr(),
-                          style: getNotoSantRegular(
-                              fontSize: 18.0,
-                              color: textColor
-                          )
-                      ),
-                    ],
-                  ),
-                  /*GestureDetector(
-                    child: Container(
-                      width: 50.0.w,
-                      height: 20.0.h,
-                      alignment: Alignment.centerRight,
-                      color: whiteColor.withOpacity(0),
-                      padding: EdgeInsets.only(right: 27.0.w),
-                      child: SvgPicture.asset(
-                        'assets/icons/check.svg',
-                        width: 16.51.w,
-                        height: 11.37.h,
-                        color: workInsertColor,
-                      ),
+                        Text(
+                            "Invite_colleague".tr(),
+                            style: getNotoSantRegular(
+                                fontSize: 18.0,
+                                color: textColor
+                            )
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                    },
-                  ),*/
-                ],
+                    /*GestureDetector(
+                      child: Container(
+                        width: 50.0.w,
+                        height: 20.0.h,
+                        alignment: Alignment.centerRight,
+                        color: whiteColor.withOpacity(0),
+                        padding: EdgeInsets.only(right: 27.0.w),
+                        child: SvgPicture.asset(
+                          'assets/icons/check.svg',
+                          width: 16.51.w,
+                          height: 11.37.h,
+                          color: workInsertColor,
+                        ),
+                      ),
+                      onTap: () {
+                      },
+                    ),*/
+                  ],
+                ),
               ),
-            ),
 
-            Expanded(
-              child: ListView.builder(
-                itemCount: super.widget.teamList.length + 1,
-                itemBuilder: (context, index) {
-                  List<CompanyUserModel> list = [];
+              Expanded(
+                child: ListView.builder(
+                  itemCount: widget.teamList.length + 1,
+                  itemBuilder: (context, index) {
+                    List<EmployeeModel> list = [];
 
-                  employeeList.map((data) {
-                    if(index != teamList.length){
-                      if(data.team == teamList[index].teamName){
-                        list.add(data);
+                    employeeList.map((data) {
+                      if(index != teamList.length){
+                        if(data.team == teamList[index].teamName){
+                          list.add(data);
+                        }
+                      } else {
+                        if(data.team == "" || data.team == null){
+                          list.add(data);
+                        }
+
                       }
-                    } else {
-                      if(data.team == "" || data.team == null){
-                        list.add(data);
-                      }
+                    }).toList();
 
+                    if(list.length == 0) {
+                      return Container();
                     }
-                  }).toList();
 
-                  if(list.length == 0) {
-                    return Container();
-                  }
-
-                  if(teamList.length == 0 || index >= teamList.length){
+                    if(teamList.length == 0 || index >= teamList.length){
+                      return getTeam(
+                          index: index,
+                          list: list,
+                          teamName: "other_team".tr(),
+                      );
+                    }
                     return getTeam(
-                        index: index,
-                        list: list,
-                        teamName: "other_team".tr(),
+                      index: index,
+                      list: list,
+                      teamName: teamList[index].teamName.toString(),
                     );
-                  }
-                  return getTeam(
-                    index: index,
-                    list: list,
-                    teamName: teamList[index].teamName.toString(),
-                  );
-                },
+                  },
+                ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 57.0.h,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: calendarLineColor.withOpacity(0.1),
-                      child: InkWell(
-                        child: Center(
-                          child: Text(
-                            "cencel".tr(),
-                            style: getNotoSantMedium(fontSize: 15.0, color: textColor),
+              Container(
+                width: double.infinity,
+                height: 57.0.h,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: calendarLineColor.withOpacity(0.1),
+                        child: InkWell(
+                          child: Center(
+                            child: Text(
+                              "cencel".tr(),
+                              style: getNotoSantMedium(fontSize: 15.0, color: textColor),
+                            ),
                           ),
+                          onTap: () => Navigator.pop(context,true),
                         ),
-                        onTap: () => Navigator.pop(context,true),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: workInsertColor,
-                      child: InkWell(
-                        child: Center(
-                          child: Text(
-                            "invite".tr(),
-                            style: getNotoSantMedium(fontSize: 15.0, color: whiteColor),
+                    Expanded(
+                      child: Container(
+                        color: workInsertColor,
+                        child: InkWell(
+                          child: Center(
+                            child: Text(
+                              "invite".tr(),
+                              style: getNotoSantMedium(fontSize: 15.0, color: whiteColor),
+                            ),
                           ),
+                          onTap: () {
+                            widget.workColleagueChkList.clear();
+                            widget.workTeamChkList.clear();
+
+                            workColleague.map((data) {
+                              if(!widget.workColleagueChkList.contains(data))
+                                widget.workColleagueChkList.add(data);
+                            }).toList();
+                            workTeam.map((data) {
+                              if(!widget.workTeamChkList.contains(data))
+                                widget.workTeamChkList.add(data);
+                            }).toList();
+
+                            Navigator.pop(context,true);
+                          },
                         ),
-                        onTap: () {
-                          widget.workColleagueChkList.clear();
-                          widget.workTeamChkList.clear();
-
-                          workColleague.map((data) {
-                            if(!widget.workColleagueChkList.contains(data))
-                              widget.workColleagueChkList.add(data);
-                          }).toList();
-                          workTeam.map((data) {
-                            if(!widget.workTeamChkList.contains(data))
-                              widget.workTeamChkList.add(data);
-                          }).toList();
-
-                          Navigator.pop(context,true);
-                        },
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
 
-  Widget getTeam({required int index,required List<CompanyUserModel> list, required String teamName}) {
+  Widget getTeam({required int index,required List<EmployeeModel> list, required String teamName}) {
 
     return Column(
       children: [

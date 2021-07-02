@@ -1,19 +1,18 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/login/model/company_model.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/public/db/public_firestore_repository.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:mycompany/schedule/model/team_model.dart';
-import 'package:mycompany/schedule/model/company_user_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/view/schedule_approval_view.dart';
 import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
@@ -31,10 +30,11 @@ class ScheduleInsertWidget extends StatefulWidget {
   final ValueNotifier<bool> isAllDay;
   final ValueNotifier<bool> isHalfway;
   final List<TeamModel> teamList;
-  final List<CompanyUserModel> employeeList;
-  final List<CompanyUserModel> workColleagueChkList;
+  final List<EmployeeModel> employeeList;
+  final List<EmployeeModel> workColleagueChkList;
   final List<String> workTeamChkList;
-  final ValueNotifier<CompanyUserModel> approvalUser;
+  final ValueNotifier<EmployeeModel> approvalUser;
+  final String companyCode;
 
   ScheduleInsertWidget({
     required this.workName,
@@ -50,6 +50,7 @@ class ScheduleInsertWidget extends StatefulWidget {
     required this.workColleagueChkList,
     required this.workTeamChkList,
     required this.approvalUser,
+    required this.companyCode,
   });
 
 
@@ -66,6 +67,8 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         return setInWork(context);
       case "외근":
         return setOutWork(context);
+      case "요청":
+        return setRequest(context);
       case "미팅":
         return setMeeting(context);
       case "재택":
@@ -115,8 +118,24 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
     );
   }
 
+  Widget setRequest(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.0.w),
+      child: Column(
+        children: [
+          getTitleWidget(),
+          getDateTime(),
+          getLocation(),
+          getNote(),
+          getApproval()
+        ],
+      ),
+    );
+  }
+
   Widget setHomeWork(BuildContext context) {
     widget.workColleagueChkList.clear();
+    widget.workTeamChkList.clear();
     widget.locationController.text = "";
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24.0.w),
@@ -133,6 +152,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
 
   Widget setAnnual(BuildContext context) {
     widget.workColleagueChkList.clear();
+    widget.workTeamChkList.clear();
     widget.locationController.text = "";
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24.0.w),
@@ -140,11 +160,13 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         children: [
           getAnnual(),
           getNote(),
-          getApproval()
+          getApproval(),
+          getAnnualTotal(context),
         ],
       ),
     );
   }
+
 
   Widget setMeeting(BuildContext context) {
     return Container(
@@ -153,6 +175,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         children: [
           getTitleWidget(),
           getDateTime(),
+          getLocation(),
           getNote(),
           getColleague()
         ],
@@ -184,7 +207,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         TextFormField(
             controller: widget.titleController,
             decoration: InputDecoration(
-              hintText: "제목을 입력하세요",
+              hintText: "title_input".tr(),
               hintStyle: getNotoSantRegular(
                 fontSize: 18.0,
                 color: hintTextColor,
@@ -331,6 +354,75 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
     );
   }
 
+  Widget getAnnualTotal(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(0.7),
+          width: double.infinity,
+          height: 90.0.h,
+          decoration: BoxDecoration(
+            color: Color(0xff2093F0),
+            borderRadius: BorderRadius.circular(12.0.r),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(12.0.w),
+            decoration: BoxDecoration(
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(12.0.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "잔여 연차 현황",
+                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "7.5",
+                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        ),
+                        Text(
+                          " / ",
+                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        ),
+                        Text(
+                          "15",
+                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0.h,
+                ),
+                FutureBuilder<CompanyModel>(
+                  future: PublicFirebaseReository().getVacation(widget.companyCode),
+                  builder: (context, snapshot) {
+                    if(!snapshot.hasData){
+                      return Container();
+                    }
+
+                    return Text(
+                      snapshot.data!.vacation! == false ? "입사년도 기준" : "회계년도 기준",
+                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                    );
+                  }
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   // 시간
   Widget getAnnual() {
     return Column(
@@ -427,7 +519,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "halfway".tr(),
+                      value? "halfway".tr() : "annual".tr(),
                       style: getNotoSantRegular(
                           fontSize: 14.0,
                           color: widget.isAllDay.value ? workInsertColor : hintTextColor
@@ -470,7 +562,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "pm".tr(),
+                      value ? "pm".tr() : "am".tr(),
                       style: getNotoSantRegular(
                           fontSize: 14.0,
                           color: value ? workInsertColor : hintTextColor
@@ -486,8 +578,11 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                       padding: 0,
                       value: value,
                       onToggle: (values){
-                        widget.isHalfway.value = values;
+                        if(!widget.isAllDay.value){
+                          return;
+                        }
 
+                        widget.isHalfway.value = values;
                         if(!values){
                           widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
                           widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
@@ -535,7 +630,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "세부 내용",
+                    hintText: "details".tr(),
                     hintStyle: getNotoSantRegular(
                       fontSize: 14.0,
                       color: hintTextColor,
@@ -581,7 +676,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           child: Container(
                               width: double.infinity,
                               height: 48.0.h,
-                              child: widget.workColleagueChkList.length == 0 ? Text("동료 초대",style: getNotoSantRegular(
+                              child: widget.workColleagueChkList.length == 0 ? Text(
+                                "Invite_colleague".tr(),
+                                style: getNotoSantRegular(
                                 fontSize: 14.0,
                                 color: hintTextColor,
                               ),) : GridView(
@@ -669,7 +766,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "위치",
+                    hintText: "location".tr(),
                     hintStyle: getNotoSantRegular(
                       fontSize: 14.0,
                       color: hintTextColor,
@@ -715,7 +812,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                             width: double.infinity,
                             child: widget.approvalUser.value.mail == "" ?
                             Text(
-                              "결재자 선택",
+                              "approver".tr(),
                               style: getNotoSantRegular(
                                 fontSize: 14.0,
                                 color: hintTextColor,

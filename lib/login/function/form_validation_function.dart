@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -90,6 +93,13 @@ class FormValidationFunction {
         return validationFunction(
             validators: [
               regularExpressionValidator(type: "birthday", value: value, errorMessage: 'birthdayRegularExpressionValidationError'.tr()),
+            ]
+        );
+
+      case "companyEnterDate":
+        return validationFunction(
+            validators: [
+              regularExpressionValidator(type: "birthday", value: value, errorMessage: "올바른 날짜 형식이 아닙니다."),
             ]
         );
 

@@ -178,19 +178,9 @@ Container signUpViewValidationForm({
                     maxLength: maxLength,
                     controller: textEditingController,
                     validator: ((value) {
-                      if (_loginFunctionRepository.formValidationFunction(
-                            type: type,
-                            value: value!,
-                            value2: comparisonValue,
-                          ) !=
-                          null) {
+                      if (_loginFunctionRepository.formValidationFunction(type: type, value: value!, value2: comparisonValue,) != null) {
                         setState(() {
-                          errorMessage =
-                              _loginFunctionRepository.formValidationFunction(
-                            type: type,
-                            value: value,
-                            value2: comparisonValue,
-                          )!;
+                          errorMessage = _loginFunctionRepository.formValidationFunction(type: type,value: value, value2: comparisonValue,)!;
                         });
                       } else {
                         setState(() {

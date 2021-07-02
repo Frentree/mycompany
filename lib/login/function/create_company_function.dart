@@ -6,6 +6,7 @@ import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -77,6 +78,8 @@ class CreateCompanyFunction {
     required String companyAddress,
   }) async {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false,);
+    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false,);
+
     DateFormatCustom dateFormatCustom = DateFormatCustom();
 
     UserModel loginUserData = userInfoProvider.getUserData()!;
@@ -97,17 +100,19 @@ class CreateCompanyFunction {
       phone: loginUserData.phone,
       birthday: loginUserData.birthday,
       companyCode: companyId,
-      createDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
-      lastModDate: dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now()),
+      createDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
+      lastModDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
     );
 
+    employeeInfoProvider.saveEmployeeDataToPhoneWithoutNotifyListener(employeeModel: employeeModel);
     await loginFirestoreRepository.createEmployeeData(employeeModel: employeeModel);
 
     //로그인 사용자 joinStatus 및 companyCode 업데이트
     loginUserData.state = 2;
     loginUserData.companyCode = companyId;
-    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.now());
+    loginUserData.lastModDate = dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now());
 
     await loginFirestoreRepository.updateUserData(userModel: loginUserData);
+
   }
 }

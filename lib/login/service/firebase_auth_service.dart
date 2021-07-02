@@ -69,6 +69,7 @@ class FirebaseAuthService {
 
       if(_newUserCredential.user != null) {
         _newUserCredential.user!.updateProfile();
+
         return true;
       }
 
@@ -79,6 +80,16 @@ class FirebaseAuthService {
       setFirebaseAuthErrorCode(errorCode: error.code);
 
       return false;
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+
+    } on FirebaseAuthException catch (error) {
+      print(error.code);
+      setFirebaseAuthErrorCode(errorCode: error.code);
     }
   }
 }

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/view/schedule_detail_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
@@ -16,24 +18,29 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widg
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
   DateFormatCustom _format = DateFormatCustom();
 
-  Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date}) {
+  Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date, required List<EmployeeModel> employeeList}) {
+    data.sort((a,b) => a.startTime.compareTo(b.startTime));
+
+    List<Appointment> allDayAppointment = [];
     List<Appointment> amAppointment = [];
     List<Appointment> pmAppointment = [];
 
     for(Appointment appoint in data) {
-      if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(DateTime.parse(appoint.startTime.toString())).inHours){
+      if(appoint.isAllDay == true){
+        allDayAppointment.add(appoint);
+      } else if(0 < DateTime(date.year, date.month, date.day, 12, 00).difference(DateTime.parse(appoint.startTime.toString())).inHours){
         amAppointment.add(appoint);
-        //print("오전");
       } else {
         pmAppointment.add(appoint);
-        //print("오후");
       }
     }
 
-    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
-    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+/*    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));*/
 
     showDialog(
       context: context,
@@ -57,11 +64,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                     children: [
                       Text(
                         _format.dateFormat(date: date),
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'NotoSansKR'
-                        ),
+                        style: getNotoSantBold(fontSize: 14.0, color: textColor),
                       ),
                       GestureDetector(
                         child: Container(
@@ -82,18 +85,24 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                     ],
                   ),
                 ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1),
-                      ),
-                      Column(
-                        children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2),
-                      )
-                    ]
-                  ),
+                Container(
+                  height: 540.0.h,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                          children: getCalendarPerseonalDetail(context: context, appointment: allDayAppointment, timeZone: 0, employeeList: employeeList),
+                        ),
+                        Column(
+                          children: getCalendarPerseonalDetail(context: context, appointment: amAppointment, timeZone: 1, employeeList: employeeList),
+                        ),
+                        Column(
+                          children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2, employeeList: employeeList),
+                        )
+                      ]
+                    ),
 
+                  ),
                 ),
               ],
             ),
@@ -104,8 +113,8 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
   }
 
 
-  getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone}) {
-    var list = <Widget>[Container(width: 16)]; // container is left padding
+  getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone, required List<EmployeeModel> employeeList}) {
+    var list = <Widget>[Container(width: 16.w)]; // container is left padding
 
     if(appointment.isEmpty){
       return list;
@@ -120,7 +129,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
           padding: EdgeInsets.only(left: 17.0.w),
           alignment: Alignment.centerLeft,
           child: Text(
-            timeZone == 0 ? "종일" : timeZone == 1 ? "오전" : "오후",
+            timeZone == 0 ? "all_day".tr() : timeZone == 1 ? "am".tr() : "pm".tr(),
             style: TextStyle(
                 fontSize: 12.0.sp,
                 fontFamily: "NotoSansKR"
@@ -144,32 +153,24 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                   children: [
                     getProfileImage(
                       size: 36.0,
-                      ImageUri: mailChkList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
+                      ImageUri: employeeList.firstWhere((element) => element.mail == app.profile).profilePhoto.toString(),
                     ),
                     SizedBox(
                       width: 6.0.w,
                     ),
                     Container(
+                      width: 50.0.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             app.subject,
-                            style: TextStyle(
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "NotoSansKR"
-                            ),
+                            style: getNotoSantBold(fontSize: 12.0, color: textColor)
                           ),
                           Text(
                             app.position.toString(),
-                            style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "NotoSansKR",
-                              color: hintTextColor
-                            ),
+                            style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
                           ),
                         ],
                       ),
@@ -191,44 +192,42 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
                       children: [
                         Text(
                           _format.getTime(date: app.startTime),
-                          style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: "Roboto"
-                          ),
+                          style: getRobotoMedium(fontSize: 10.0, color: textColor),
                         ),
                         Text(
                           _format.getTime(date: app.endTime),
-                          style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: "Roboto",
-                              color: hintTextColor
-                          ),
+                          style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
                         ),
                       ],
                     ),
                     Expanded(
                       child: Container(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: app.color,
-                            borderRadius: BorderRadius.all(Radius.circular(20.0))
-                          ),
-                          width: 34.0.w,
-                          height: 19.0.h,
-                          child: Center(
-                            child: Text(
-                              app.type.toString(),
-                              style: TextStyle(
-                                fontSize: 10.0.sp,
-                                color: whiteColor,
-                                fontFamily: "NotoSansKR",
-                                fontWeight: FontWeight.w500
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: app.color,
+                                borderRadius: BorderRadius.all(Radius.circular(20.0))
+                              ),
+                              width: 34.0.w,
+                              height: 19.0.h,
+                              child: Center(
+                                child: Text(
+                                  app.type.toString(),
+                                  style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                                ),
                               ),
                             ),
-                          ),
+                            Visibility(
+                              visible: app.type == "미팅",
+                              child: app.profile == app.organizerId ?
+                                Text("organizer".tr(), style: getNotoSantRegular(fontSize: 9.0, color: hintTextColor),)
+                                  :  Text("participants".tr(), style: getNotoSantRegular(fontSize: 9.0, color: hintTextColor),),
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -238,7 +237,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
               SizedBox(height: 15.0.h,),
             ],
           ),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleDetailView(appointment: app,))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleDetailView(appointment: app, employeeList: employeeList,))),
         ),
       );
     }

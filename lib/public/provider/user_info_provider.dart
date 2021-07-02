@@ -16,20 +16,19 @@ class UserInfoProvider with ChangeNotifier {
   }
 
   void setUserData({UserModel? userModel}) {
-    print("데이터저장");
     _userModel = userModel;
     notifyListeners();
   }
 
   Future<void> saveUserDataToPhone({required UserModel userModel}) async {
-    print("데이터 저장");
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     dynamic encodeData = userModel.toJson();
 
-    encodeData['createDate'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
-    encodeData['lastModDate'] = _dateFormatCustom.changeTimeStampToDateTime(timestamp: encodeData['lastModDate']).toIso8601String();
+    encodeData['createDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['createDate']).toIso8601String();
+    encodeData['lastModDate'] = _dateFormatCustom.changeTimestampToDateTime(timestamp: encodeData['lastModDate']).toIso8601String();
 
     _sharedPreferences.setString(USER, jsonEncode(encodeData));
+
     setUserData(userModel: userModel);
   }
 
@@ -38,8 +37,8 @@ class UserInfoProvider with ChangeNotifier {
     if(_sharedPreferences.getString(USER) != null){
       dynamic decodeData = jsonDecode(_sharedPreferences.getString(USER)!);
 
-      decodeData['createDate'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['createDate']));
-      decodeData['lastModDate'] = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: DateTime.parse(decodeData['lastModDate']));
+      decodeData['createDate'] = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.parse(decodeData['createDate']));
+      decodeData['lastModDate'] = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.parse(decodeData['lastModDate']));
 
       _userModel = UserModel.fromMap(mapData: decodeData);
 

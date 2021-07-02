@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
@@ -72,8 +73,8 @@ class WaitJoinCompanyApprovalViewState extends State<WaitJoinCompanyApprovalView
             ),
             loginElevatedButton(
               topPadding: 81.0.h,
-              buttonName: 'closeAppButton'.tr(),
-              buttonAction: () => {SystemNavigator.pop()}
+              buttonName: '로그인 페이지로 이동',
+              buttonAction: () => {SignOutFunction().signOutFunction(context: context)}
             )
           ],
         ),
