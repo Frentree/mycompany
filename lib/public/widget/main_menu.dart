@@ -55,7 +55,13 @@ Widget getMainCircularMenu(
         CircularMenuItem(
             icon: Icons.star,
             color: navigator != 'good' ? Colors.blue : Colors.black38,
-            onTap: () => TotalVacation('2018.10.10', 0),
+            onTap: () {
+              testForUsedVacation();
+            }
+            // onTap: ()  {
+            //   UsedVacation('0S9YLBX',
+            //       'jun@frentree.com', '2018.10.23', false);}
+            // onTap: () => TotalVacation('2018.10.10', false, 0),
             // onTap: () => navigator != 'schedule'
             //     ? _reprository.mainNavigator(
             //         context: context, navigator: ScheduleView(), isMove: false)
@@ -71,3 +77,4 @@ Widget getMainCircularMenu(
                 : {}),
       ]);
 }
+
