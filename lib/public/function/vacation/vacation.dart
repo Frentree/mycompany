@@ -1,26 +1,24 @@
 import 'package:mycompany/public/function/public_firebase_repository.dart';
 
-
 /// UsedVacation(
 /// 1. String 회사코드,
 /// 2. String 유저 이메일,
 /// 3. String 입사일,
 /// 4. Boolean 계산 방식(입사일 - False / 회계연도 - True,
 /// )
-/// return double(총 사용 연차 수)
+/// return Future<double>(총 사용 연차 수)
 
 double UsedVacation(
     String? companyCode, String? mail, String? date, bool type) {
   print('================== S T A R T UsedVacation ==================');
   print('입사일 : $date');
-  PublicFirebaseRepository _repository = PublicFirebaseRepository();
   double result = 0.0;
+  PublicFirebaseRepository _repository = PublicFirebaseRepository();
   String? _enteredDate = date;
   DateTime _present = DateTime.now();
 
   _enteredDate = _enteredDate?.replaceAll('.', '');
   DateTime _enterDate = DateTime.parse(_enteredDate!);
-  var tmp;
 
   /// 입사일 기준
   if (!type) {
@@ -29,19 +27,29 @@ double UsedVacation(
         _present.day - _enterDate.day + 1);
     String _yearChecker = DateTime(_sub.year).toString()[0];
     if (_yearChecker == '0') {
-      tmp = _repository.usedVacationWithDuration(
+      Future _double = _repository.usedVacationWithDuration(
           companyCode,
           mail,
           DateTime(_present.year, _enterDate.month, _enterDate.day),
           DateTime(_present.year, _present.month, _present.day));
-      print('${_present.year}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
+      _double.then((data) {
+        result = data;
+        print('inside function result is : $result');
+      });
+      print(
+          '${_present.year}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
     } else {
-      tmp = _repository.usedVacationWithDuration(
+      Future _double = _repository.usedVacationWithDuration(
           companyCode,
           mail,
           DateTime(_present.year - 1, _enterDate.month, _enterDate.day),
           DateTime(_present.year, _present.month, _present.day));
-      print('${_present.year - 1}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
+      _double.then((data) {
+        result = data;
+        print('inside function result is : $result');
+      });
+      print(
+          '${_present.year - 1}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
     }
   }
 
@@ -50,22 +58,32 @@ double UsedVacation(
     print('회계연도 기준');
 
     if (_present.year - _enterDate.year >= 2) {
-      tmp = _repository.usedVacationWithDuration(
+      Future _double = _repository.usedVacationWithDuration(
           companyCode,
           mail,
           DateTime(_present.year, 1, 1),
           DateTime(_present.year, _present.month, _present.day));
-      print('${_present.year}.01.01 ~ ${_present.year}.${_present.month}.${_present.day}');
+      _double.then((data) {
+        result = data;
+        print('inside function result is : $result');
+      });
+      print(
+          '${_present.year}.01.01 ~ ${_present.year}.${_present.month}.${_present.day}');
     } else {
-      tmp = _repository.usedVacationWithDuration(
+      Future _double = _repository.usedVacationWithDuration(
           companyCode,
           mail,
           DateTime(_enterDate.year, _enterDate.month, _enterDate.day),
           DateTime(_present.year, _present.month, _present.day));
-      print('${_enterDate.year}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
+      _double.then((data) {
+        result = data;
+        print('inside function result is : $result');
+      });
+      print(
+          '${_enterDate.year}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
     }
   }
-  result = tmp;
+  print('result is $result');
   return result;
 }
 
@@ -89,8 +107,6 @@ double TotalVacation(String date, bool type, double addition) {
 
   /// 입사일 기준
   if (!type) {
-
-
     var _sub = DateTime(_present.year - _tmp.year, _present.month - _tmp.month,
         _present.day - _tmp.day);
     String _yearChecker = DateTime(_sub.year - 1).toString()[0];
@@ -265,8 +281,7 @@ double MoreThanThird(DateTime date, double addition) {
 // TotalVacation('2021.01.02', false, 0);
 // TotalVacation('2021.01.03', true, 0);
 
-
-/*void testForUsedVacation() {
+void testForUsedVacation() {
   UsedVacation('0S9YLBX', 'jun@frentree.com', '2018.01.01', false);
   UsedVacation('0S9YLBX', 'jun@frentree.com', '2018.01.03', false);
   UsedVacation('0S9YLBX', 'jun@frentree.com', '2018.02.01', false);
@@ -302,4 +317,4 @@ double MoreThanThird(DateTime date, double addition) {
   UsedVacation('0S9YLBX', 'jun@frentree.com', '2021.07.01', true);
   UsedVacation('0S9YLBX', 'jun@frentree.com', '2021.07.02', true);
   UsedVacation('0S9YLBX', 'jun@frentree.com', '2021.07.03', true);
-}*/
+}
