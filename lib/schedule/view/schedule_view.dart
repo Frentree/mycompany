@@ -84,9 +84,9 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
     isMenu.dispose();
+    super.dispose();
   }
 
   _getResetChose() {
@@ -95,7 +95,6 @@ class _ScheduleViewState extends State<ScheduleView> {
 
 
   _getInitSetting() async {
-
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);
     List<Appointment> schedules = await CalenderMethod().getSheduleData(companyCode: loginUser.companyCode.toString(), empList: employee);
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);

@@ -5,8 +5,9 @@ import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-Future<dynamic> loginDialogWidget({required BuildContext context, required String message, List<Widget>? actions}) {
+Future<dynamic> loginDialogWidget({required BuildContext context, required String message, List<Widget>? actions, bool? barrierDismissibleValue}) {
   return showDialog(
+    barrierDismissible: barrierDismissibleValue == null ? true : barrierDismissibleValue,
     context: context,
     builder: (BuildContext context){
       return Dialog(

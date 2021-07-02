@@ -92,4 +92,27 @@ class FirebaseAuthService {
       setFirebaseAuthErrorCode(errorCode: error.code);
     }
   }
+
+  Future<bool> passwordConfirm({required String email, required String password}) async {
+    bool isConfirm = false;
+
+    isConfirm = await signInWithEmailAndPassword(email: email, password: password);
+
+    print(isConfirm);
+
+    return isConfirm;
+  }
+
+  Future<bool> changePassword({required String password}) async {
+    User? loginUser = firebaseAuth.currentUser;
+    bool result = false;
+
+    if(loginUser != null){
+      await loginUser.updatePassword(password).whenComplete((){
+        result = true;
+      });
+    }
+
+    return result;
+  }
 }

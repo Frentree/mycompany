@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:mycompany/attendance/db/attendance_firestore_repository.dart';
 import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:wifi_info_flutter/wifi_info_flutter.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
 Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) async {
 
@@ -64,14 +63,14 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
 
 Future<bool> checkConnectWifi() async {
   Connectivity connectivity = Connectivity();
-  WifiInfo wifiInfo = WifiInfo();
+  NetworkInfo networkInfo = NetworkInfo();
 
   String connectedWifiName = "";
   List<String> wifiName = ["AndroidWifi", "Frentree5G"];
 
   ConnectivityResult connectivityResult = await connectivity.checkConnectivity();
   if(connectivityResult == ConnectivityResult.wifi){
-    connectedWifiName = (await wifiInfo.getWifiName())!;
+    connectedWifiName = (await networkInfo.getWifiName())!;
     if(wifiName.contains(connectedWifiName)){
       return true;
     }

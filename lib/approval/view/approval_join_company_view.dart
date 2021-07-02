@@ -146,7 +146,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                                             flex: 7,
                                             child: Container(
                                               child: Text(
-                                                joinCompanyApprovalData[index].birthday == null ? "-" : dateFormatCustom.dateStringFormatSeparatorDot(date: dateFormatCustom.changeStringToDateTime(dateString: joinCompanyApprovalData[index].birthday!)),
+                                                joinCompanyApprovalData[index].birthday == "" ? "-" : dateFormatCustom.dateStringFormatSeparatorDot(date: dateFormatCustom.changeStringToDateTime(dateString: joinCompanyApprovalData[index].birthday!)),
                                                 style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   fontSize: 13.0.sp,
@@ -172,7 +172,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                                             flex: 7,
                                             child: Container(
                                               child: Text(
-                                                joinCompanyApprovalData[index].phone == null ? "-" : joinCompanyApprovalData[index].phone!,
+                                                joinCompanyApprovalData[index].phone == "" ? "-" : joinCompanyApprovalData[index].phone!,
                                                 style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   fontSize: 13.0.sp,

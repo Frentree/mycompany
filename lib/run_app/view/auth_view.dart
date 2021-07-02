@@ -27,13 +27,12 @@ class AuthView extends StatelessWidget {
     EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
     String? deviceId = deviceInfoProvider.getDeviceId();
 
-
     if(loginUserData == null){
       return SignInView();
     }
 
     else{
-      if(loginUserData.deviceId != deviceId){
+      if((loginUserData.deviceId != "") && (loginUserData.deviceId != deviceId)){
         return ForceSignOutView();
       }
       switch(loginUserData.state){

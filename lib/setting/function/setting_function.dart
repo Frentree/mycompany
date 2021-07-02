@@ -7,6 +7,7 @@ import 'package:mycompany/setting/view/setting_position_view.dart';
 import 'package:mycompany/setting/view/setting_team_view.dart';
 import 'package:mycompany/setting/view/setting_unimplemented_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/setting/view/setting_wifi_view.dart';
 
 List<SettingModel> getSettingMenu({required BuildContext context}) {
   List<SettingModel> list = [];
@@ -27,7 +28,7 @@ List<SettingModel> getSettingMenu({required BuildContext context}) {
       widget: SettingPositionView()
   ));
   list.add(SettingModel(munuName: "setting_menu_4".tr(), menuLavel: 0, menuIcon: Icon(Icons.wifi, color: workInsertColor, size: 30.0.h),
-      widget: SettingUnomplementedScreen()
+      widget: SettingWifiView()
   ));
   list.add(SettingModel(munuName: "setting_menu_5".tr(), menuLavel: 0, menuIcon: Icon(Icons.perm_device_info, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()

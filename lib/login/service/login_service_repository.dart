@@ -8,4 +8,6 @@ class LoginServiceRepository {
   Future<bool> signInWithEmailAndPassword({required String email, required String password}) => _firebaseAuthService.signInWithEmailAndPassword(email: email, password: password);
   Future<bool> signUpWithEmailAndPassword({required String email, required String password}) => _firebaseAuthService.signUpWithEmailAndPassword(email: email, password: password);
   Future<void> signOut() => _firebaseAuthService.signOut();
+  Future<bool> passwordConfirm({required String email, required String password}) => _firebaseAuthService.passwordConfirm(email: email, password: password);
+  Future<bool> changePassword({required String password}) => _firebaseAuthService.changePassword(password: password);
 }

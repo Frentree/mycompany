@@ -6,14 +6,20 @@ import 'package:mycompany/inquiry/function/profile_edit_function.dart';
 import 'package:mycompany/inquiry/widget/inquiry_dialog_widget.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/function/form_validation_function.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/login/style/decoration_style.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
+import 'package:mycompany/run_app/view/auth_view.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,6 +35,7 @@ class InquiryMyInformationView extends StatefulWidget {
 class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
   ImagePicker imagePicker = ImagePicker();
   LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
+  LoginServiceRepository loginServiceRepository = LoginServiceRepository();
   ProfileEditFunction profileEditFunction = ProfileEditFunction();
   FormValidationFunction formValidationFunction = FormValidationFunction();
 
@@ -51,8 +58,8 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
 
   @override
   Widget build(BuildContext context) {
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
 
     UserModel loginUserData = userInfoProvider.getUserData()!;
     EmployeeModel loginEmployeeData = employeeInfoProvider.getEmployeeData()!;
@@ -161,7 +168,7 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  loginUserData.name,
+                                  loginEmployeeData.name,
                                   style: TextStyle(
                                     fontSize: 13.0.sp,
                                     fontWeight: fontWeight['Medium'],
@@ -199,9 +206,14 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                         loginUserData.profilePhoto = uploadImageUrl;
                                       }
 
-                                      loginEmployeeData.birthday = _birthdayTextController.text;
+                                      loginEmployeeData.birthday = _birthdayTextController.text.replaceAll(".", "");
                                       loginEmployeeData.phone = _phoneTextController.text;
-                                      
+                                      if(_bankNameTextController.text != "" && _accountTextController.text != ""){
+                                        loginEmployeeData.account = _bankNameTextController.text+"/"+_accountTextController.text.replaceAll(" ", "");
+                                      }
+
+                                      loginUserData.birthday = _birthdayTextController.text;
+                                      loginUserData.phone = _phoneTextController.text;
 
                                       loginFirestoreRepository.updateUserData(userModel: loginUserData);
                                       loginFirestoreRepository.updateEmployeeData(employeeModel: loginEmployeeData);
@@ -242,11 +254,45 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                       color: hintTextColor,
                                     ),
                                   ),
-                                  Text(
-                                    value == false ? "" : "비밀번호 변경",
-                                    style: TextStyle(
-                                      fontSize: 13.0.sp,
-                                      color: Color(0xff2093F0),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      bool? result = await oldPasswordConfirmDialog(
+                                        context: context,
+                                        userModel: loginUserData,
+                                      );
+
+                                      if(result == true){
+                                        bool? result = await changePasswordDialog(context: context);
+                                        if(result == true){
+                                          await loginDialogWidget(
+                                            context: context,
+                                            message: "비밀번호 변경이 완료되었습니다\n다시 로그인해주세요.",
+                                            actions: [
+                                              loginDialogConfirmButton(
+                                                buttonName: 'dialogConfirm'.tr(),
+                                                buttonAction: () async {
+                                                  await loginServiceRepository.signOut();
+
+                                                  loginUserData.deviceId = "";
+                                                  await loginFirestoreRepository.updateUserData(userModel: loginUserData);
+
+                                                  userInfoProvider.deleteUserDataToPhone();
+                                                  employeeInfoProvider.deleteEmployeeDataToPhone();
+                                                  pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
+                                                }
+                                              ),
+                                            ],
+                                            barrierDismissibleValue: false,
+                                          );
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      value == false ? "" : "비밀번호 변경",
+                                      style: TextStyle(
+                                        fontSize: 13.0.sp,
+                                        color: Color(0xff2093F0),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -288,7 +334,6 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                     return Form(
                                       key: _birthdayFormKey,
                                       onChanged: (){
-                                        print("bool 값 : ${isNoError.value[0]} ");
                                         _birthdayFormKey.currentState!.validate();
                                         if(_birthdayTextController.text == "" || birthdayFormErrorMessage.value == ""){
                                           isNoError.value = List.from(isNoError.value)..replaceRange(1, 2, [true]);
@@ -366,7 +411,6 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                     return Form(
                                       key: _phoneFormKey,
                                       onChanged: (){
-                                        print("bool 값 : ${isNoError.value[0]} ");
                                         _phoneFormKey.currentState!.validate();
                                         if(_phoneTextController.text == "" || phoneFormErrorMessage.value == ""){
                                           isNoError.value = List.from(isNoError.value)..replaceRange(2, 3, [true]);
@@ -490,6 +534,20 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                           decoration: loginTextFormRoundBorderDecoration(
                                             hintText: value == false ? "" : "계좌번호",
                                           ),
+                                          onTap: bankNameValue == null ? () async {
+                                            await loginDialogWidget(
+                                              context: context,
+                                              message: "은행을 먼저 선택해주세요.",
+                                              actions: [
+                                                loginDialogConfirmButton(
+                                                  buttonName: 'dialogConfirm'.tr(),
+                                                  buttonAction: () {
+                                                    backPage(context: context);
+                                                  }
+                                                ),
+                                              ]
+                                            );
+                                          } : null,
                                         ),
                                       )
                                     ],
