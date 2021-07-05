@@ -136,6 +136,7 @@
   "schedule_detail_view_dialog_4" : "Failed to delete schedule. Please contact the manager.",
   "schedule_detail_view_dialog_5" : "It cannot be modified because it is being approved.\nPlease cancel the payment request and correct it.",
   "schedule_detail_view_dialog_6" : "The schedule modification failed. Please contact the manager.",
+  "schedule_detail_view_dialog_7" : "일정 주최자가 아니므로 수정이 불가능합니다",
 
   "notice_detail_view_dialog_1" : "Are you sure you want to delete the comments?",
   "notice_view_dialog_1" : "Are you sure you want to delete the announcement?",

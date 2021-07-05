@@ -141,7 +141,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                             if(widget.appointment.profile != widget.appointment.organizerId){
                               loginDialogWidget(
                                   context: context,
-                                  message: "일정 생성자가 아니므로 수정이 불가능합니다.",
+                                  message: "schedule_detail_view_dialog_7".tr(),
                                   actions: [
                                     confirmElevatedButton(
                                         topPadding: 81.0.h,

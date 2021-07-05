@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mycompany/attendance/db/attendance_firestore_repository.dart';
+import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
+import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/word/database_name.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
@@ -9,6 +12,7 @@ import 'package:mycompany/schedule/model/work_model.dart';
 class ApprovalFirebaseCurd {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
   ApprovalFirebaseCurd.setting({persistenceEnabled: true});
+  DateFormatCustom _formatCustom = DateFormatCustom();
 
   Future<List<ApprovalModel>> getRequestApprovalData(UserModel loginUser) async {
     List<ApprovalModel> approvalList = [];
@@ -113,20 +117,31 @@ class ApprovalFirebaseCurd {
       startTime: model.requestStartDate,
       endTime: model.requestEndDate,
       colleagues: model.colleagues,
-      name: model.approvalType == "요청" ? model.user : model.approvalUser,
-      createUid: model.approvalType == "요청" ? model.userMail : model.approvalMail,
+      name: model.approvalType == "요청" ? model.approvalUser :  model.user,
+      createUid: model.approvalType == "요청" ? model.approvalMail : model.userMail,
       createDate: model.createDate,
     );
 
     model.status = approval;
     model.approvalDate = Timestamp.now();
-    model.approvalContent = "";
+    model.approvalContent = content;
 
     if(approval == "승인"){
       switch(model.approvalType) {
-        case "재택": case "외출": case "연차" : case "Annual":
+        case "재택": case "외출": case "연차": case "반차":
         await _store.collection(COMPANY).doc(companyCode).collection(WORK).add(workModel.toJson());
         break;
+      }
+      if(model.approvalType == "연차") {
+        AttendanceFirestoreRepository().createAttendanceData(
+          companyId: companyCode,
+          attendanceModel: AttendanceModel(
+              mail: model.userMail,
+              name: model.user,
+              createDate: _formatCustom.updateAttendance(date: model.requestStartDate),
+              status: 5
+          )
+        );
       }
     } else if(approval == "반려") {
       switch(model.approvalType) {
@@ -135,6 +150,7 @@ class ApprovalFirebaseCurd {
         break;
       }
     }
+
 
     // 결재 상태 변경
     await _store.collection(COMPANY).doc(companyCode).collection(WORKAPPROVAL).doc(model.reference!.id).update(model.toJson())

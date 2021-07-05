@@ -137,6 +137,7 @@
   "schedule_detail_view_dialog_4" : "일정 삭제에 실패하였습니다. 관리자에게 문의해주세요.",
   "schedule_detail_view_dialog_5" : "결재 중인 항목이므로 수정이 불가능합니다.\n결재 요청 취소 후 수정 해주세요.",
   "schedule_detail_view_dialog_6" : "일정 수정이 실패하였습니다. 관리자에게 문의해주세요.",
+  "schedule_detail_view_dialog_7" : "일정 주최자가 아니므로 수정이 불가능합니다",
 
   "notice_detail_view_dialog_1" : "댓글을 삭제하시겠습니까?",
   "notice_view_dialog_1" : "공지사항을 삭제하시겠습니까?",

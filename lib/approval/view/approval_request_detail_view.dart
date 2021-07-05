@@ -107,16 +107,43 @@ class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
                   child: ListView(
                     padding: EdgeInsets.only(top: 0),
                     children: [
-                      getContents(title: "titles", content: widget.model.title),
-                      getContents(title: "content", content: widget.model.requestContent),
-                      getContents(title: "approval_type", content: widget.model.approvalType),
-                      getContents(title: "location", content: widget.model.location),
-                      getContents(title: "target_date", content: "${_format.getDate(date: widget.model.requestStartDate.toDate())} - ${_format.getDate(date: widget.model.requestEndDate.toDate())}"),
-                      getContents(title: "approver", content: widget.model.approvalUser),
-                      getContents(title: "approval_request_date", content: "${_format.getDate(date: widget.model.createDate!.toDate())}"),
-                      getContents(title: "approval_status", content: widget.model.status),
-                      getContents(title: "approval_completion_date", content: widget.model.status == "요청" ? "" :  _format.getDate(date: widget.model.approvalDate!.toDate())),
-                      getContents(title: "approval_content", content: widget.model.approvalContent!),
+                      getDetailsContents(title: "titles", content: widget.model.title, size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsScrollContents(title: "content", content: widget.model.requestContent, size: 150),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "approval_type", content: widget.model.approvalType, size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "target_date", content: "${_format.getDate(date: widget.model.requestStartDate.toDate())} - ${_format.getDate(date: widget.model.requestEndDate.toDate())}", size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "location", content: widget.model.location, size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsScrollContents(title: "approval_content", content: widget.model.approvalContent!, size: 150),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "approver", content: widget.model.approvalUser, size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "approval_request_date", content: "${_format.getDate(date: widget.model.createDate!.toDate())}", size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "approval_status", content: widget.model.status, size: 70),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      getDetailsContents(title: "approval_completion_date", content: widget.model.status == "요청" ? "" :  _format.getDate(date: widget.model.approvalDate!.toDate()), size: 70),
                     ],
                   )
               ),

@@ -80,7 +80,7 @@ class CalenderMethod{
               position: empModel.position,
               location: location != null ? location : "",
               resourceIds: <Object>[mail.hashCode],
-              organizerId: model.createUid
+              organizerId: model.name
             ));
           }
       }
@@ -196,6 +196,13 @@ class CalenderMethod{
       }).toList();
     }
 
+    if(workName == "연차" && allDay){
+      workName = "반차";
+      title = "반차";
+    } else {
+      title = "연차";
+    }
+
     WorkModel workModel = WorkModel(
       allDay: allDay,
       type: workName,
@@ -216,7 +223,7 @@ class CalenderMethod{
       case "외근": case "요청":
         result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
         break;
-      case "재택": case "외출": case "연차":
+      case "재택": case "외출": case "연차": case "반차":
         result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
         break;
     }

@@ -7,6 +7,7 @@ import 'package:mycompany/setting/view/setting_position_view.dart';
 import 'package:mycompany/setting/view/setting_team_view.dart';
 import 'package:mycompany/setting/view/setting_unimplemented_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:mycompany/setting/view/setting_vacation_view.dart';
 
 List<SettingModel> getSettingMenu({required BuildContext context}) {
   List<SettingModel> list = [];
@@ -15,7 +16,7 @@ List<SettingModel> getSettingMenu({required BuildContext context}) {
     widget: SettingUnomplementedScreen()
   ));
   list.add(SettingModel(munuName: "setting_menu_9".tr(), menuLavel: 0, menuIcon: Icon(Icons.airplanemode_on_sharp, color: workInsertColor, size: 30.0.h),
-      widget: SettingUnomplementedScreen()
+      widget: SettingVacationView()
   ));
   list.add(SettingModel(munuName: "setting_menu_2".tr(), menuLavel: 0, menuIcon: Icon(Icons.home_work_outlined, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()

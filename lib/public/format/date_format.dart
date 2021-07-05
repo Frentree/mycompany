@@ -157,5 +157,14 @@ class DateFormatCustom {
 
     return date.year.toString() + "." +  twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + changeWeekDay(date: date) +")";
   }
+  
+  // 연차 등록시 12시 변경
+  Timestamp updateAttendance({required Timestamp date}){
+    DateTime parseDate = date.toDate();
+    parseDate = DateTime(parseDate.year, parseDate.month, parseDate.day, 12, 00, 00);
+
+    Timestamp dateTime = Timestamp.fromDate(parseDate);
+    return dateTime;
+  }
 
 }

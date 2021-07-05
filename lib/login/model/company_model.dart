@@ -31,7 +31,7 @@ class CompanyModel {
     this.companyPhoto,
     this.companyNo,
     this.companyWeb,
-    this.vacation = false,
+    this.vacation,
     this.companySearch,
   });
 
@@ -56,7 +56,7 @@ class CompanyModel {
       "companyNo": companyNo,
       "companyWeb": companyWeb,
       "companySearch": companyName.split(""),
-      "vacation": vacation,
+      "vacation": vacation ?? false,
     };
   }
 }
