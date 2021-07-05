@@ -244,6 +244,8 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
       );
     }
 
+    list.add(SizedBox(height: 20.0.h,));
+
     return list;
   }
 
@@ -400,6 +402,8 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
         ),
       );
     }
+
+    list.add(SizedBox(height: 20.0.h,));
 
     return list;
   }

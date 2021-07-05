@@ -56,7 +56,7 @@ class _SettingPositionViewState extends State<SettingPositionView> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => addTeamDialog(context, loginUser.companyCode!, positionNameContoller),
+        onPressed: () => addPositionDialog(context, loginUser.companyCode!, positionNameContoller),
       ),
       body: Container(
         width: double.infinity,
