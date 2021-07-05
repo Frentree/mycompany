@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/function/public_firebase_method.dart';
 
@@ -21,5 +22,8 @@ class PublicFirebaseRepository {
 
   Future<double> usedVacationWithDuration(String? companyCode, String? mail, DateTime start, DateTime end) =>
       _methods.usedVacationWithDuration(companyCode, mail, start, end);
+
+  Stream<QuerySnapshot> getCompanyUsers({required UserModel loginUser}) =>
+      _methods.getCompanyUsers(loginUser);
 
 }

@@ -3,6 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/fcm/alarmModel.dart';
+import 'package:mycompany/public/word/database_name.dart';
 
 class PublicFirebaseMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -154,5 +155,9 @@ class PublicFirebaseMethods {
     }
 
     return result;
+  }
+
+  Stream<QuerySnapshot> getCompanyUsers(UserModel loginUser){
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode!).collection(USER).snapshots();
   }
 }
