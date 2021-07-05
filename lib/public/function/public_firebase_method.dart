@@ -128,9 +128,9 @@ class PublicFirebaseMethods {
       DateTime start, DateTime end) async {
     double result = 0.0;
 
-    Timestamp _start = _dateFormatCustom.changeDateTimeToTimeStamp(
+    Timestamp _start = _dateFormatCustom.changeDateTimeToTimestamp(
         dateTime: start);
-    Timestamp _end = _dateFormatCustom.changeDateTimeToTimeStamp(dateTime: end);
+    Timestamp _end = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: end);
 
     late QuerySnapshot _querySnapshots;
 
