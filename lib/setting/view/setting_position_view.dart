@@ -16,6 +16,9 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:mycompany/setting/widget/setting_dialog.dart';
 
 class SettingPositionView extends StatefulWidget {
+  final List<dynamic> gradeLevel;
+
+  SettingPositionView({required this.gradeLevel});
   @override
   _SettingPositionViewState createState() => _SettingPositionViewState();
 }
@@ -51,10 +54,10 @@ class _SettingPositionViewState extends State<SettingPositionView> {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (widget.gradeLevel.contains(6) || widget.gradeLevel.contains(9)) ? FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => addPositionDialog(context, loginUser.companyCode!, positionNameContoller),
-      ),
+      ) : Container(),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -175,7 +178,7 @@ class _SettingPositionViewState extends State<SettingPositionView> {
                                     ],
                                   ),
                                   Visibility(
-                                    visible: "other".tr() != positionModel.position,
+                                    visible: "other".tr() != positionModel.position && widget.gradeLevel.contains(6) || widget.gradeLevel.contains(9),
                                     child: PopupMenuButton<int>(
                                       padding: EdgeInsets.all(0),
                                       icon: Icon(Icons.settings),

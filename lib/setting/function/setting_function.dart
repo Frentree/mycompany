@@ -31,15 +31,17 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
     ));
   }
   if(getGradeChk(employeeModel: employeeModel, level: [6,8,9])){
-    list.add(SettingModel(munuName: "team_setting".tr(), menuLavel: [0], menuIcon: Icon(Icons.group, color: workInsertColor, size: 30.0.h),
-        widget: SettingTeamView()
-    ));
+
   }
-  if(getGradeChk(employeeModel: employeeModel, level: [6,8,9])){
-    list.add(SettingModel(munuName: "setting_menu_3".tr(), menuLavel: [0], menuIcon: Icon(Icons.supervised_user_circle_outlined, color: workInsertColor, size: 30.0.h),
-        widget: SettingPositionView()
-    ));
-  }
+  list.add(SettingModel(munuName: "team_setting".tr(), menuLavel: [0], menuIcon: Icon(Icons.group, color: workInsertColor, size: 30.0.h),
+      widget: SettingTeamView(gradeLevel: employeeModel.level!,)
+  ));
+
+  list.add(SettingModel(munuName: "setting_menu_3".tr(), menuLavel: [0], menuIcon: Icon(Icons.supervised_user_circle_outlined, color: workInsertColor, size: 30.0.h),
+        widget: SettingPositionView(gradeLevel: employeeModel.level!,)
+  ));
+
+
   if(getGradeChk(employeeModel: employeeModel, level: [8,9])){
     list.add(SettingModel(munuName: "grade_setting".tr(), menuLavel: [0], menuIcon: Icon(Icons.lock_open, color: workInsertColor, size: 30.0.h),
         widget: SettingGradeView()

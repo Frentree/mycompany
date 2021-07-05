@@ -202,7 +202,8 @@
 
   "grade_dialog_1" : "권한 인원 추가",
   "grade_dialog_2" : "권한 인원 삭제",
-  "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다."
+  "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다.",
+  "approver_choise" : "결재자 선택"
 
 
 
