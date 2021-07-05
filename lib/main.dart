@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart' as loc;
 import 'package:mycompany/public/provider/device_Info_provider.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
@@ -9,6 +12,8 @@ import 'package:mycompany/run_app/view/permission_request_view.dart';
 import 'package:mycompany/run_app/view/splash_view_white.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
+import 'package:network_info_plus/network_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
@@ -28,6 +33,34 @@ void main() async {
 
 
   bool isPermissionGranted = await checkPermissionFunction();
+
+
+
+
+  // print('getting network information started');
+  // var wifiBSSID = await (NetworkInfo().getWifiBSSID());
+  // var wifiIP = await (NetworkInfo().getWifiIP());
+  // var wifiName = await (NetworkInfo().getWifiName());
+  //
+  // sleep(const Duration(seconds:3));
+  //
+  // print('print information');
+  // print(wifiBSSID);
+  // print(wifiIP);
+  // print(wifiName);
+  //
+  // print('request permission for location');
+  // await Permission.location.request();
+  // print(Permission.location);
+  // print(await Permission.location.status);
+  // await Permission.locationAlways.request();
+  // await Permission.locationWhenInUse.request();
+  // await Permission.camera.request();
+
+
+
+
+
 
   runApp(
     EasyLocalization(

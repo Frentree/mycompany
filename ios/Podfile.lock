@@ -370,6 +370,8 @@ PODS:
   - image_picker (0.0.1):
     - Flutter
   - leveldb-library (1.22.1)
+  - location (0.0.1):
+    - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -399,6 +401,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
   - network_info_plus (from `.symlinks/plugins/network_info_plus/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -452,6 +455,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
   network_info_plus:
     :path: ".symlinks/plugins/network_info_plus/ios"
   permission_handler:
@@ -490,6 +495,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   network_info_plus: b78876159360f5580608c2cea620d6ceffabd0ad
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
@@ -497,6 +503,6 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
 
-PODFILE CHECKSUM: 31eefe87fa4cfd75a5b51366ddf29ac1d8323d83
+PODFILE CHECKSUM: dcfd2eb7669d37e9f796f4fba46158b8ea13ddba
 
 COCOAPODS: 1.10.1
