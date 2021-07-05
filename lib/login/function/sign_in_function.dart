@@ -44,10 +44,12 @@ class SignInFunction {
         _userModel.token = await firebaseMessaging.getToken(); //토큰값 가져오기
         _userModel.deviceId = _deviceId; //기기Id 가져오기
         await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 및 기기Id DB에 업데이트
-        userInfoProvider.saveUserDataToPhone(userModel: _userModel); //로그인 정보 핸드폰에 저장
         if(_employeeModel != null){
+          _employeeModel.token = _userModel.token;
+          await loginFirestoreRepository.updateEmployeeData(employeeModel: _employeeModel);
           employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: _employeeModel);
         }
+        userInfoProvider.saveUserDataToPhone(userModel: _userModel); //로그인 정보 핸드폰에 저장
       }
 
       //저장된 기기ID 값이 있을 때(다른 기기에서 로그인 되어 있음)
@@ -62,11 +64,14 @@ class SignInFunction {
                   buttonAction: () async {
                     _userModel.token = await firebaseMessaging.getToken();
                     _userModel.deviceId = _deviceId; //기기Id 가져오기
+
                     await loginFirestoreRepository.updateUserData(userModel: _userModel); //토큰값 DB에 업데이트
-                    userInfoProvider.saveUserDataToPhone(userModel: _userModel);
                     if(_employeeModel != null){
+                      _employeeModel.token = _userModel.token;
+                      await loginFirestoreRepository.updateEmployeeData(employeeModel: _employeeModel);
                       employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: _employeeModel);
                     }
+                    userInfoProvider.saveUserDataToPhone(userModel: _userModel);
                     backPage(context: context);
                   }
               ),
@@ -79,10 +84,10 @@ class SignInFunction {
             ],
           );
         }
-        userInfoProvider.saveUserDataToPhone(userModel: _userModel);
         if(_employeeModel != null){
           employeeInfoProvider.saveEmployeeDataToPhone(employeeModel: _employeeModel);
         }
+        userInfoProvider.saveUserDataToPhone(userModel: _userModel);
       }
     }
     //firebase 인증 실패

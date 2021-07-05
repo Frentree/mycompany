@@ -4,7 +4,9 @@ import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
+import 'package:mycompany/setting/model/wifi_model.dart';
 
 class LoginFirestoreRepository {
   LoginFirestoreCrud _loginFirebaseCrud = LoginFirestoreCrud.settings();
@@ -41,7 +43,8 @@ class LoginFirestoreRepository {
   Future<QuerySnapshot> findCompanyDataWithName({required String keyWord}) =>
       _loginFirebaseCrud.findCompanyDataWithName(keyWord: keyWord);
 
-  Future<List<TeamModel>> readTeamData({required String companyId}) async => _loginFirebaseCrud.readTeamData(companyId: companyId);
+  Future<List<TeamModel>> readTeamData({required String companyId}) => _loginFirebaseCrud.readTeamData(companyId: companyId);
+  Future<List<PositionModel>> readPositionData({required String companyId}) => _loginFirebaseCrud.readPositionData(companyId: companyId);
 
   //JoinCompanyApproval 관련
   Future<void> createJoinCompanyApprovalData({

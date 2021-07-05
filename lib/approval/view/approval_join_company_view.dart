@@ -11,6 +11,7 @@ import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -146,7 +147,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                                             flex: 7,
                                             child: Container(
                                               child: Text(
-                                                joinCompanyApprovalData[index].birthday == null ? "-" : dateFormatCustom.dateStringFormatSeparatorDot(date: dateFormatCustom.changeStringToDateTime(dateString: joinCompanyApprovalData[index].birthday!)),
+                                                joinCompanyApprovalData[index].birthday == "" ? "-" : dateFormatCustom.dateStringFormatSeparatorDot(date: dateFormatCustom.changeStringToDateTime(dateString: joinCompanyApprovalData[index].birthday!)),
                                                 style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   fontSize: 13.0.sp,
@@ -172,7 +173,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                                             flex: 7,
                                             child: Container(
                                               child: Text(
-                                                joinCompanyApprovalData[index].phone == null ? "-" : joinCompanyApprovalData[index].phone!,
+                                                joinCompanyApprovalData[index].phone == "" ? "-" : joinCompanyApprovalData[index].phone!,
                                                 style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   fontSize: 13.0.sp,
@@ -231,6 +232,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                       buttonColor: Color(0xff2093F0),
                       buttonAction: () async {
                         List<TeamModel> teamList = await loginFirestoreRepository.readTeamData(companyId: loginEmployeeData.companyCode);
+                        List<PositionModel> positionList = await loginFirestoreRepository.readPositionData(companyId: loginEmployeeData.companyCode);
                         EmployeeModel confirmUser = EmployeeModel(
                           mail: joinCompanyApprovalData[selectedIndex.value].mail,
                           name: joinCompanyApprovalData[selectedIndex.value].name,
@@ -245,10 +247,11 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                           context: context,
                           buttonName: "확인",
                           teamList: teamList,
+                          positionList: positionList,
                           confirmUser: confirmUser,
                         );
 
-                        if(confirmUser.enteredDate == "" || confirmUser.team == null){
+                        if(confirmUser.enteredDate == "" || confirmUser.team == null || confirmUser.position == null){
                           await loginDialogWidget(
                             context: context,
                             message: "직원 정보 입력이 완료되지 않았습니다\n직원 정보 조회 페이지에서\n직원 정보를 수정해주세요.",

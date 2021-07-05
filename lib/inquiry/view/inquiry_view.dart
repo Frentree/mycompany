@@ -21,7 +21,7 @@ class InquiryView extends StatefulWidget {
 class _InquiryViewState extends State<InquiryView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청", "내정보"];
+  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청",];
 
   late int typeChkCount;
 
@@ -41,7 +41,7 @@ class _InquiryViewState extends State<InquiryView> {
       typeChkCount = 0;
     }
 
-    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView(), InquiryMyInformationView()];
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView()];
   }
 
   @override

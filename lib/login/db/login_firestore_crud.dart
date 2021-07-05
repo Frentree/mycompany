@@ -3,8 +3,10 @@ import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
+import 'package:mycompany/setting/model/wifi_model.dart';
 
 class LoginFirestoreCrud {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -74,6 +76,15 @@ class LoginFirestoreCrud {
     teamData = getData.docs.map((doc) => TeamModel.fromMap(mapData: doc.data())).toList();
 
     return teamData;
+  }
+
+  Future<List<PositionModel>> readPositionData({required String companyId}) async {
+    List<PositionModel> positionData = [];
+    QuerySnapshot<Map<String, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(POSITION).get();
+
+    positionData = getData.docs.map((doc) => PositionModel.fromMap(mapData: doc.data())).toList();
+
+    return positionData;
   }
 
   //JoinCompanyApproval 관련
