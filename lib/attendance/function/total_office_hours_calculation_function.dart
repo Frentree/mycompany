@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:flutter/material.dart ';
+import 'package:flutter/material.dart';
 
 class TotalOfficeHoursCalculationFunction {
   LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
