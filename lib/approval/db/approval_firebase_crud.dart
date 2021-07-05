@@ -124,9 +124,7 @@ class ApprovalFirebaseCurd {
 
     model.status = approval;
     model.approvalDate = Timestamp.now();
-    model.appr
-
-    covalContent = content;
+    model.approvalContent = content;
 
     if(approval == "승인"){
       switch(model.approvalType) {
