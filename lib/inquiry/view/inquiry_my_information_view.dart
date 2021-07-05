@@ -1,4 +1,4 @@
-import 'dart:io';
+/*
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -6,14 +6,12 @@ import 'package:mycompany/inquiry/function/profile_edit_function.dart';
 import 'package:mycompany/inquiry/widget/inquiry_dialog_widget.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/function/form_validation_function.dart';
-import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/login/style/decoration_style.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
@@ -208,9 +206,7 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
 
                                       loginEmployeeData.birthday = _birthdayTextController.text.replaceAll(".", "");
                                       loginEmployeeData.phone = _phoneTextController.text;
-                                      if(_bankNameTextController.text != "" && _accountTextController.text != ""){
-                                        loginEmployeeData.account = _bankNameTextController.text+"/"+_accountTextController.text.replaceAll(" ", "");
-                                      }
+                                      loginEmployeeData.account = _bankNameTextController.text+"/"+_accountTextController.text.replaceAll(" ", "");
 
                                       loginUserData.birthday = _birthdayTextController.text;
                                       loginUserData.phone = _phoneTextController.text;
@@ -510,10 +506,13 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
                                           onTap: value == false ? null : () async {
                                             bankName.value = await selectBankDialog(context: context);
                                             if(bankName.value != null){
-                                              _bankNameTextController.text = bankName.value!;
-                                            }
-                                            else{
-                                              _bankNameTextController = TextEditingController();
+                                              if(bankName.value == "선택안함"){
+                                                _bankNameTextController.clear();
+                                                _accountTextController.clear();
+                                              }
+                                              else {
+                                                _bankNameTextController.text = bankName.value!;
+                                              }
                                             }
                                           },
                                         ),
@@ -600,3 +599,4 @@ class InquiryMyInformationViewState extends State<InquiryMyInformationView> {
     );
   }
 }
+*/

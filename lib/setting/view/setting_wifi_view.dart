@@ -106,252 +106,252 @@ class SettingWifiViewState extends State<SettingWifiView> {
                   top: 20.0.h,
                 ),
                 child: ValueListenableBuilder(
-                  valueListenable: isEdit,
-                  builder: (BuildContext context, bool value, Widget? child) {
-                    return Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(
-                            right: 27.5.w,
-                            left: 27.5.w,
-                          ),
-                          height: 45.0.h,
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "등록된 WIFI",
-                                style: getNotoSantBold(fontSize: 14.0.sp, color: textColor),
-                              ),
-                              IconButton(
-                                splashRadius: 20.0.r,
-                                icon: Icon(
-                                  value == false ? Icons.mode_edit : Icons.check,
-                                  color: Color(0xff2093F0),
-                                ),
-                                onPressed: value == false ? () async {
-                                  registerAbleWifiList.value = [];
-                                  selectedIndex.value = 0;
-                                  connectedWifiName = await NetworkInfo().getWifiName();
-
-                                  if(connectedWifiName != null){
-                                    List<String> _registeredWifiName = [];
-
-                                    registeredWifiList.value.forEach((element) {
-                                      _registeredWifiName.add(element.wifiName);
-                                    });
-
-                                    if(!_registeredWifiName.contains(connectedWifiName)){
-                                      WifiModel connectedWifiModel = WifiModel(
-                                        wifiName: connectedWifiName!,
-                                        registrantMail: loginEmployeeData.mail,
-                                        registrantName: loginEmployeeData.name,
-                                      );
-
-                                      registerAbleWifiList.value = List.from(registerAbleWifiList.value)..add(connectedWifiModel);
-                                    }
-                                  }
-                                  isEdit.value = !isEdit.value;
-                                } : (){
-                                  registeredWifiList.value.forEach((element){
-                                    print("등록된 와이파이 리스트 : ${element.documentId} : ${element.wifiName}");
-                                    if(element.documentId == "" || element.documentId == null){
-                                      _settingFirestoreRepository.createWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
-                                    }
-                                  });
-
-                                  registerAbleWifiList.value.forEach((element){
-                                    print("등록가능한 와이파이 리스트 : ${element.documentId} : ${element.wifiName}");
-                                    if(element.documentId != ""){
-                                      _settingFirestoreRepository.deleteWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
-                                    }
-                                  });
-
-                                  isEdit.value = !isEdit.value;
-                                }
-                              ),
-                            ],
-                          ),
-                        ),
-                        ValueListenableBuilder(
-                          valueListenable: registeredWifiList,
-                          builder: (BuildContext context, List<WifiModel> registeredWifiValue, Widget? child) {
-                            if(registeredWifiValue.length == 0){
-                              return Container(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.only(
-                                  right: 27.5.w,
-                                  left: 39.5.w,
-                                  top: 9.0.h,
-                                  bottom: 9.0.h,
-                                ),
-                                child: Text(
-                                  "등록된 WIFI 없음",
-                                  style: TextStyle(
-                                    fontSize: 13.0.sp,
-                                    color: Color(0xff9C9C9C),
-                                  ),
-                                ),
-                              );
-                            }
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              itemCount: registeredWifiValue.length,
-                              itemBuilder: (context, index){
-                                return ValueListenableBuilder(
-                                  valueListenable: selectedIndex,
-                                  builder: (BuildContext context, int selectedIndexValue, Widget? child) {
-                                    return ElevatedButton(
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                          right: 27.5.w,
-                                          left: 39.5.w,
-                                          top: 9.0.h,
-                                          bottom: 9.0.h,
-                                        ),
-                                        color: selectedIndexValue == (index + 1) ? Color(0xff2093F0).withOpacity(0.1) : null,
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          registeredWifiValue[index].wifiName,
-                                          style: TextStyle(
-                                            fontSize: 13.0.sp,
-                                            color: textColor,
-                                          ),
-                                        ),
-                                      ),
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                          if (states.contains(MaterialState.disabled)) {
-                                            return whiteColor;
-                                          }
-                                          else {
-                                            return whiteColor;
-                                          }
-                                        }),
-                                        elevation: MaterialStateProperty.all(
-                                          0.0,
-                                        ),
-                                        padding: MaterialStateProperty.all(
-                                          EdgeInsets.zero,
-                                        ),
-                                      ),
-                                      onPressed: value == false ? null : (){
-                                        if(selectedIndexValue == (index + 1)){
-                                          selectedIndex.value = 0;
-                                        }
-                                        else{
-                                          selectedIndex.value = (index + 1);
-                                        }
-                                      },
-                                    );
-                                  }
-                                );
-                              },
-                            );
-                          }
-                        ),
-                        Visibility(
-                          visible: value,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(
-                                  right: 27.5.w,
-                                  left: 27.5.w,
-                                ),
-                                height: 45.0.h,
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "등록가능한 WIFI",
+                    valueListenable: isEdit,
+                    builder: (BuildContext context, bool value, Widget? child) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                              right: 27.5.w,
+                              left: 27.5.w,
+                            ),
+                            height: 45.0.h,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "등록된 WIFI",
                                   style: getNotoSantBold(fontSize: 14.0.sp, color: textColor),
                                 ),
-                              ),
-                              ValueListenableBuilder(
-                                  valueListenable: registerAbleWifiList,
-                                  builder: (BuildContext context, List<WifiModel> registerAbleWifiValue, Widget? child) {
-                                    if(registerAbleWifiValue.length == 0){
-                                      return Container(
-                                        alignment: Alignment.centerLeft,
-                                        padding: EdgeInsets.only(
-                                          right: 27.5.w,
-                                          left: 39.5.w,
-                                          top: 9.0.h,
-                                          bottom: 9.0.h,
-                                        ),
-                                        child: Text(
-                                          "등록가능한 WIFI 없음",
-                                          style: TextStyle(
-                                            fontSize: 13.0.sp,
-                                            color: Color(0xff9C9C9C),
-                                          ),
-                                        ),
-                                      );
+                                IconButton(
+                                    splashRadius: 20.0.r,
+                                    icon: Icon(
+                                      value == false ? Icons.mode_edit : Icons.check,
+                                      color: Color(0xff2093F0),
+                                    ),
+                                    onPressed: value == false ? () async {
+                                      registerAbleWifiList.value = [];
+                                      selectedIndex.value = 0;
+                                      connectedWifiName = await NetworkInfo().getWifiName();
+
+                                      if(connectedWifiName != null){
+                                        List<String> _registeredWifiName = [];
+
+                                        registeredWifiList.value.forEach((element) {
+                                          _registeredWifiName.add(element.wifiName);
+                                        });
+
+                                        if(!_registeredWifiName.contains(connectedWifiName)){
+                                          WifiModel connectedWifiModel = WifiModel(
+                                            wifiName: connectedWifiName!,
+                                            registrantMail: loginEmployeeData.mail,
+                                            registrantName: loginEmployeeData.name,
+                                          );
+
+                                          registerAbleWifiList.value = List.from(registerAbleWifiList.value)..add(connectedWifiModel);
+                                        }
+                                      }
+                                      isEdit.value = !isEdit.value;
+                                    } : (){
+                                      registeredWifiList.value.forEach((element){
+                                        print("등록된 와이파이 리스트 : ${element.documentId} : ${element.wifiName}");
+                                        if(element.documentId == "" || element.documentId == null){
+                                          _settingFirestoreRepository.createWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
+                                        }
+                                      });
+
+                                      registerAbleWifiList.value.forEach((element){
+                                        print("등록가능한 와이파이 리스트 : ${element.documentId} : ${element.wifiName}");
+                                        if(element.documentId != ""){
+                                          _settingFirestoreRepository.deleteWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
+                                        }
+                                      });
+
+                                      isEdit.value = !isEdit.value;
                                     }
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.zero,
-                                      itemCount: registerAbleWifiValue.length,
-                                      itemBuilder: (context, index){
-                                        return ValueListenableBuilder(
-                                            valueListenable: selectedIndex,
-                                            builder: (BuildContext context, int selectedIndexValue, Widget? child) {
-                                              return ElevatedButton(
-                                                child: Container(
-                                                  padding: EdgeInsets.only(
-                                                    right: 27.5.w,
-                                                    left: 39.5.w,
-                                                    top: 9.0.h,
-                                                    bottom: 9.0.h,
-                                                  ),
-                                                  color: selectedIndexValue == (index - 1) ? Color(0xff2093F0).withOpacity(0.1) : null,
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Text(
-                                                    registerAbleWifiValue[index].wifiName,
-                                                    style: TextStyle(
-                                                      fontSize: 13.0.sp,
-                                                      color: textColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                          ValueListenableBuilder(
+                              valueListenable: registeredWifiList,
+                              builder: (BuildContext context, List<WifiModel> registeredWifiValue, Widget? child) {
+                                if(registeredWifiValue.length == 0){
+                                  return Container(
+                                    alignment: Alignment.centerLeft,
+                                    padding: EdgeInsets.only(
+                                      right: 27.5.w,
+                                      left: 39.5.w,
+                                      top: 9.0.h,
+                                      bottom: 9.0.h,
+                                    ),
+                                    child: Text(
+                                      "등록된 WIFI 없음",
+                                      style: TextStyle(
+                                        fontSize: 13.0.sp,
+                                        color: Color(0xff9C9C9C),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemCount: registeredWifiValue.length,
+                                  itemBuilder: (context, index){
+                                    return ValueListenableBuilder(
+                                        valueListenable: selectedIndex,
+                                        builder: (BuildContext context, int selectedIndexValue, Widget? child) {
+                                          return ElevatedButton(
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                right: 27.5.w,
+                                                left: 39.5.w,
+                                                top: 9.0.h,
+                                                bottom: 9.0.h,
+                                              ),
+                                              color: selectedIndexValue == (index + 1) ? Color(0xff2093F0).withOpacity(0.1) : null,
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                registeredWifiValue[index].wifiName,
+                                                style: TextStyle(
+                                                  fontSize: 13.0.sp,
+                                                  color: textColor,
+                                                ),
+                                              ),
+                                            ),
+                                            style: ButtonStyle(
+                                              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                                if (states.contains(MaterialState.disabled)) {
+                                                  return whiteColor;
+                                                }
+                                                else {
+                                                  return whiteColor;
+                                                }
+                                              }),
+                                              elevation: MaterialStateProperty.all(
+                                                0.0,
+                                              ),
+                                              padding: MaterialStateProperty.all(
+                                                EdgeInsets.zero,
+                                              ),
+                                            ),
+                                            onPressed: value == false ? null : (){
+                                              if(selectedIndexValue == (index + 1)){
+                                                selectedIndex.value = 0;
+                                              }
+                                              else{
+                                                selectedIndex.value = (index + 1);
+                                              }
+                                            },
+                                          );
+                                        }
+                                    );
+                                  },
+                                );
+                              }
+                          ),
+                          Visibility(
+                            visible: value,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    right: 27.5.w,
+                                    left: 27.5.w,
+                                  ),
+                                  height: 45.0.h,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "등록가능한 WIFI",
+                                    style: getNotoSantBold(fontSize: 14.0.sp, color: textColor),
+                                  ),
+                                ),
+                                ValueListenableBuilder(
+                                    valueListenable: registerAbleWifiList,
+                                    builder: (BuildContext context, List<WifiModel> registerAbleWifiValue, Widget? child) {
+                                      if(registerAbleWifiValue.length == 0){
+                                        return Container(
+                                          alignment: Alignment.centerLeft,
+                                          padding: EdgeInsets.only(
+                                            right: 27.5.w,
+                                            left: 39.5.w,
+                                            top: 9.0.h,
+                                            bottom: 9.0.h,
+                                          ),
+                                          child: Text(
+                                            "등록가능한 WIFI 없음",
+                                            style: TextStyle(
+                                              fontSize: 13.0.sp,
+                                              color: Color(0xff9C9C9C),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.zero,
+                                        itemCount: registerAbleWifiValue.length,
+                                        itemBuilder: (context, index){
+                                          return ValueListenableBuilder(
+                                              valueListenable: selectedIndex,
+                                              builder: (BuildContext context, int selectedIndexValue, Widget? child) {
+                                                return ElevatedButton(
+                                                  child: Container(
+                                                    padding: EdgeInsets.only(
+                                                      right: 27.5.w,
+                                                      left: 39.5.w,
+                                                      top: 9.0.h,
+                                                      bottom: 9.0.h,
+                                                    ),
+                                                    color: selectedIndexValue == (index - 1) ? Color(0xff2093F0).withOpacity(0.1) : null,
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Text(
+                                                      registerAbleWifiValue[index].wifiName,
+                                                      style: TextStyle(
+                                                        fontSize: 13.0.sp,
+                                                        color: textColor,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                style: ButtonStyle(
-                                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                                    if (states.contains(MaterialState.disabled)) {
-                                                      return whiteColor;
-                                                    }
-                                                    else {
-                                                      return whiteColor;
-                                                    }
-                                                  }),
-                                                  elevation: MaterialStateProperty.all(
-                                                    0.0,
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                                      if (states.contains(MaterialState.disabled)) {
+                                                        return whiteColor;
+                                                      }
+                                                      else {
+                                                        return whiteColor;
+                                                      }
+                                                    }),
+                                                    elevation: MaterialStateProperty.all(
+                                                      0.0,
+                                                    ),
+                                                    padding: MaterialStateProperty.all(
+                                                      EdgeInsets.zero,
+                                                    ),
                                                   ),
-                                                  padding: MaterialStateProperty.all(
-                                                    EdgeInsets.zero,
-                                                  ),
-                                                ),
-                                                onPressed: value == false ? null : (){
-                                                  if(selectedIndexValue == (index - 1)){
-                                                    selectedIndex.value = 0;
-                                                  }
-                                                  else{
-                                                    selectedIndex.value = (index - 1);
-                                                  }
-                                                },
-                                              );
-                                            }
-                                        );
-                                      },
-                                    );
-                                  }
-                              ),
-                            ],
+                                                  onPressed: value == false ? null : (){
+                                                    if(selectedIndexValue == (index - 1)){
+                                                      selectedIndex.value = 0;
+                                                    }
+                                                    else{
+                                                      selectedIndex.value = (index - 1);
+                                                    }
+                                                  },
+                                                );
+                                              }
+                                          );
+                                        },
+                                      );
+                                    }
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
+                        ],
+                      );
+                    }
                 ),
               );
             },
@@ -359,47 +359,43 @@ class SettingWifiViewState extends State<SettingWifiView> {
         ],
       ),
       bottomSheet: ValueListenableBuilder(
-        valueListenable: selectedIndex,
-        builder: (BuildContext context, int value, Widget? child){
-          return value == 0 ? SizedBox() : BottomSheet(
-            elevation: 0.0,
-            onClosing: (){},
-            builder: (BuildContext context){
-              return Container(
-                child: Row(
-                  children: [
-                    bottomSheetButton(
-                      buttonName: "취소",
-                      buttonNameColor: textColor,
-                      buttonColor: Color(0xffF7F7F7),
-                      buttonAction: (){
-                        selectedIndex.value = 0;
-                      }
-                    ),
-                    bottomSheetButton(
-                      buttonName: selectedIndex.value > 0 ? "삭제" : "등록",
-                      buttonNameColor: whiteColor,
-                      buttonColor: Color(0xff2093F0),
-                      buttonAction: selectedIndex.value > 0 ? (){
-                        print("선택한 인덱스 : ${selectedIndex.value.toString()}");
-                        print(registeredWifiList.value[selectedIndex.value - 1].wifiName);
-                        registerAbleWifiList.value = List.from(registerAbleWifiList.value)..add(registeredWifiList.value[(selectedIndex.value - 1)]);
-                        registeredWifiList.value = List.from(registeredWifiList.value)..removeAt((selectedIndex.value - 1));
-                        selectedIndex.value = 0;
-                      } : (){
-                        print("선택한 인덱스 : ${selectedIndex.value.toString()}");
-                        print(registerAbleWifiList.value[selectedIndex.value + 1].wifiName);
-                        registeredWifiList.value = List.from(registeredWifiList.value)..add(registerAbleWifiList.value[(selectedIndex.value + 1)]);
-                        registerAbleWifiList.value = List.from(registerAbleWifiList.value)..removeAt((selectedIndex.value + 1));
-                        selectedIndex.value = 0;
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        }
+          valueListenable: selectedIndex,
+          builder: (BuildContext context, int value, Widget? child){
+            return value == 0 ? SizedBox() : BottomSheet(
+              elevation: 0.0,
+              onClosing: (){},
+              builder: (BuildContext context){
+                return Container(
+                  child: Row(
+                    children: [
+                      bottomSheetButton(
+                          buttonName: "취소",
+                          buttonNameColor: textColor,
+                          buttonColor: Color(0xffF7F7F7),
+                          buttonAction: (){
+                            selectedIndex.value = 0;
+                          }
+                      ),
+                      bottomSheetButton(
+                        buttonName: selectedIndex.value > 0 ? "삭제" : "등록",
+                        buttonNameColor: whiteColor,
+                        buttonColor: Color(0xff2093F0),
+                        buttonAction: selectedIndex.value > 0 ? (){
+                          registerAbleWifiList.value = List.from(registerAbleWifiList.value)..add(registeredWifiList.value[(selectedIndex.value - 1)]);
+                          registeredWifiList.value = List.from(registeredWifiList.value)..removeAt((selectedIndex.value - 1));
+                          selectedIndex.value = 0;
+                        } : (){
+                          registeredWifiList.value = List.from(registeredWifiList.value)..add(registerAbleWifiList.value[(selectedIndex.value + 1)]);
+                          registerAbleWifiList.value = List.from(registerAbleWifiList.value)..removeAt((selectedIndex.value + 1));
+                          selectedIndex.value = 0;
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
       ),
     );
   }

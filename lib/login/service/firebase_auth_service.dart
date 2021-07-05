@@ -107,12 +107,15 @@ class FirebaseAuthService {
     User? loginUser = firebaseAuth.currentUser;
     bool result = false;
 
+    print(loginUser);
+
     if(loginUser != null){
       await loginUser.updatePassword(password).whenComplete((){
         result = true;
       });
     }
 
+    print(result);
     return result;
   }
 }

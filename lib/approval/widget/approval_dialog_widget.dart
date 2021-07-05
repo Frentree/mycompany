@@ -7,20 +7,23 @@ import 'package:mycompany/login/function/form_validation_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/style/decoration_style.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 
-Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, required String buttonName, required EmployeeModel confirmUser, required List<TeamModel> teamList,/* required List<String> positionList*/}) {
+Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, required String buttonName, required EmployeeModel confirmUser, required List<TeamModel> teamList, required List<PositionModel> positionList}) {
   FormValidationFunction formValidationFunction = FormValidationFunction();
 
   GlobalKey<FormState> _companyEnterDateFormKey = GlobalKey<FormState>();
   TextEditingController _companyEnterDateTextController = MaskedTextController(mask: '0000.00.00');
   TextEditingController _teamTextController = TextEditingController();
+  TextEditingController _positionTextController = TextEditingController();
 
   ValueNotifier<List<bool>> isFormValid = ValueNotifier<List<bool>>([true, true, true]);
   ValueNotifier<String> errorMessage = ValueNotifier<String>("");
   ValueNotifier<String> teamName = ValueNotifier<String>("");
+  ValueNotifier<String> positionName = ValueNotifier<String>("");
 
   return showDialog(
     barrierDismissible: false,
@@ -169,7 +172,6 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
                                 _teamTextController.text = teamData.teamName;
                                 confirmUser.team = teamData.teamName;
                                 confirmUser.teamNum = teamData.teamNum;
-                                print(confirmUser.team);
                               },
                               itemBuilder: (BuildContext context){
                                 return teamList.map((teamData) => PopupMenuItem(
@@ -189,6 +191,54 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
                       }
                     )
                   ),
+                  Container(
+                      padding: EdgeInsets.only(
+                        top: 8.0.h,
+                        left: 16.0.w,
+                        right: 16.0.w,
+                      ),
+                      child: ValueListenableBuilder(
+                          valueListenable: positionName,
+                          builder: (BuildContext context, String value, Widget? child) {
+                            return TextFormField(
+                              controller: _positionTextController,
+                              readOnly: true,
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: textColor,
+                              ),
+                              decoration: loginTextFormRoundBorderDecoration(
+                                hintText: "직급",
+                                suffixIcon: PopupMenuButton<PositionModel>(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Color(0xff949494),
+                                  ),
+                                  onSelected: (PositionModel positionData){
+                                    positionName.value = positionData.position;
+                                    _positionTextController.text = positionData.position;
+                                    confirmUser.position = positionData.position;
+                                    confirmUser.positionNum = positionData.positionNum;
+                                  },
+                                  itemBuilder: (BuildContext context){
+                                    return positionList.map((positionData) => PopupMenuItem(
+                                      child: Text(
+                                        positionData.position,
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                      value: positionData,
+                                    )).toList();
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+                      )
+                  ),
                   ValueListenableBuilder(
                     valueListenable: isFormValid,
                     builder: (BuildContext context, List<bool> value, Widget? child){
@@ -196,7 +246,7 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
                         topPadding: 11.0.h,
                         buttonName: buttonName,
                         buttonAction: value.contains(false) ? null : () async {
-                          confirmUser.enteredDate = _companyEnterDateTextController.text;
+                          confirmUser.enteredDate = _companyEnterDateTextController.text.replaceAll(".", "");
                           backPage(context: context, returnValue: confirmUser);
                         },
                       );
