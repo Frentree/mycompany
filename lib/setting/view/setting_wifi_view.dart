@@ -8,6 +8,7 @@ import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
+import 'package:mycompany/setting/db/setting_firestore_repository.dart';
 import 'package:mycompany/setting/model/wifi_model.dart';
 import 'package:provider/provider.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -19,7 +20,7 @@ class SettingWifiView extends StatefulWidget {
 
 class SettingWifiViewState extends State<SettingWifiView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
-  LoginFirestoreRepository _loginFirestoreRepository = LoginFirestoreRepository();
+  SettingFirestoreRepository _settingFirestoreRepository = SettingFirestoreRepository();
 
   ValueNotifier<bool> isEdit = ValueNotifier<bool>(false);
   ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
@@ -78,7 +79,7 @@ class SettingWifiViewState extends State<SettingWifiView> {
                     width: 14.7.w,
                   ),
                   Text(
-                    "자동 출근 WIFI",
+                    "자동 출근 WIFI 설정",
                     style: TextStyle(
                       fontSize: 18.0.sp,
                       fontWeight: fontWeight['Medium'],
@@ -90,7 +91,7 @@ class SettingWifiViewState extends State<SettingWifiView> {
             ),
           ),
           FutureBuilder<List<WifiModel>>(
-            future: _loginFirestoreRepository.readWifiData(companyId: loginEmployeeData.companyCode),
+            future: _settingFirestoreRepository.readWifiData(companyId: loginEmployeeData.companyCode),
             builder: (context, snapshot) {
               if(snapshot.hasData == false || snapshot.data == null){
                 return Container();
@@ -129,7 +130,8 @@ class SettingWifiViewState extends State<SettingWifiView> {
                                   value == false ? Icons.mode_edit : Icons.check,
                                   color: Color(0xff2093F0),
                                 ),
-                                onPressed: () async {
+                                onPressed: value == false ? () async {
+                                  registerAbleWifiList.value = [];
                                   selectedIndex.value = 0;
                                   connectedWifiName = await NetworkInfo().getWifiName();
 
@@ -150,9 +152,24 @@ class SettingWifiViewState extends State<SettingWifiView> {
                                       registerAbleWifiList.value = List.from(registerAbleWifiList.value)..add(connectedWifiModel);
                                     }
                                   }
+                                  isEdit.value = !isEdit.value;
+                                } : (){
+                                  registeredWifiList.value.forEach((element){
+                                    print("등록된 와이파이 리스트 : ${element.documentId} : ${element.wifiName}");
+                                    if(element.documentId == "" || element.documentId == null){
+                                      _settingFirestoreRepository.createWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
+                                    }
+                                  });
+
+                                  registerAbleWifiList.value.forEach((element){
+                                    print("등록가능한 와이파이 리스트 : ${element.documentId} : ${element.wifiName}");
+                                    if(element.documentId != ""){
+                                      _settingFirestoreRepository.deleteWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
+                                    }
+                                  });
 
                                   isEdit.value = !isEdit.value;
-                                },
+                                }
                               ),
                             ],
                           ),
@@ -160,7 +177,6 @@ class SettingWifiViewState extends State<SettingWifiView> {
                         ValueListenableBuilder(
                           valueListenable: registeredWifiList,
                           builder: (BuildContext context, List<WifiModel> registeredWifiValue, Widget? child) {
-                            print(registeredWifiValue.length);
                             if(registeredWifiValue.length == 0){
                               return Container(
                                 alignment: Alignment.centerLeft,
@@ -255,7 +271,6 @@ class SettingWifiViewState extends State<SettingWifiView> {
                               ValueListenableBuilder(
                                   valueListenable: registerAbleWifiList,
                                   builder: (BuildContext context, List<WifiModel> registerAbleWifiValue, Widget? child) {
-                                    print(registerAbleWifiValue.length);
                                     if(registerAbleWifiValue.length == 0){
                                       return Container(
                                         alignment: Alignment.centerLeft,
@@ -363,13 +378,21 @@ class SettingWifiViewState extends State<SettingWifiView> {
                     ),
                     bottomSheetButton(
                       buttonName: selectedIndex.value > 0 ? "삭제" : "등록",
-                      buttonNameColor: textColor,
-                      buttonColor: Color(0xffF7F7F7),
+                      buttonNameColor: whiteColor,
+                      buttonColor: Color(0xff2093F0),
                       buttonAction: selectedIndex.value > 0 ? (){
-                        registerAbleWifiList.value = List.from(registeredWifiList.value)..add(registeredWifiList.value[selectedIndex.value]);
-                        registeredWifiList.value = List.from(registeredWifiList.value)..removeAt(selectedIndex.value);
+                        print("선택한 인덱스 : ${selectedIndex.value.toString()}");
+                        print(registeredWifiList.value[selectedIndex.value - 1].wifiName);
+                        registerAbleWifiList.value = List.from(registerAbleWifiList.value)..add(registeredWifiList.value[(selectedIndex.value - 1)]);
+                        registeredWifiList.value = List.from(registeredWifiList.value)..removeAt((selectedIndex.value - 1));
                         selectedIndex.value = 0;
-                      } : (){},
+                      } : (){
+                        print("선택한 인덱스 : ${selectedIndex.value.toString()}");
+                        print(registerAbleWifiList.value[selectedIndex.value + 1].wifiName);
+                        registeredWifiList.value = List.from(registeredWifiList.value)..add(registerAbleWifiList.value[(selectedIndex.value + 1)]);
+                        registerAbleWifiList.value = List.from(registerAbleWifiList.value)..removeAt((selectedIndex.value + 1));
+                        selectedIndex.value = 0;
+                      },
                     ),
                   ],
                 ),

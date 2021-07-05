@@ -77,16 +77,6 @@ class LoginFirestoreCrud {
     return teamData;
   }
 
-  Future<List<WifiModel>> readWifiData({required String companyId}) async {
-    List<WifiModel> wifiData = [];
-
-    QuerySnapshot<Map<String, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(WIFI).get();
-
-    wifiData = getData.docs.map((doc) => WifiModel.fromMap(mapData: doc.data(), documentId: doc.id)).toList();
-
-    return wifiData;
-  }
-
   //JoinCompanyApproval 관련
   Future<void> createJoinCompanyApprovalData({required String companyId, required JoinCompanyApprovalModel joinCompanyApprovalModel}) async {
     await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(JOINCOMPANYAPPROVAL).add(joinCompanyApprovalModel.toJson());

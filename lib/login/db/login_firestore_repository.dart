@@ -44,8 +44,6 @@ class LoginFirestoreRepository {
 
   Future<List<TeamModel>> readTeamData({required String companyId}) => _loginFirebaseCrud.readTeamData(companyId: companyId);
 
-  Future<List<WifiModel>> readWifiData({required String companyId}) => _loginFirebaseCrud.readWifiData(companyId: companyId);
-
   //JoinCompanyApproval 관련
   Future<void> createJoinCompanyApprovalData({
     required String companyId,

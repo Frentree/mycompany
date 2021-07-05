@@ -4,10 +4,10 @@ import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/setting/db/setting_firestore_repository.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) async {
-
   AttendanceFirestoreRepository attendanceFirestoreRepository = AttendanceFirestoreRepository();
   DateFormatCustom dateFormatCustom = DateFormatCustom();
   DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -26,7 +26,7 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
       createDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today),
     );
 
-    bool _isConnectWifi = await checkConnectWifi();
+    bool _isConnectWifi = await checkConnectWifi(companyId: employeeInfo.companyCode);
 
     //WIFI 연결 됨
     if(_isConnectWifi == true){
@@ -47,7 +47,7 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
   else{
     //출근전일 경우
     if(todayAttendanceData[0].status == 0){
-      bool _isConnectWifi = await checkConnectWifi();
+      bool _isConnectWifi = await checkConnectWifi(companyId: employeeInfo.companyCode);
 
       //WIFI 연결 됨
       if(_isConnectWifi == true){
@@ -61,16 +61,19 @@ Future<void> autoCheckOnWorkFunction({required EmployeeModel employeeInfo}) asyn
   }
 }
 
-Future<bool> checkConnectWifi() async {
+Future<bool> checkConnectWifi({required String companyId}) async {
+  SettingFirestoreRepository _settingFirestoreRepository = SettingFirestoreRepository();
   Connectivity connectivity = Connectivity();
   NetworkInfo networkInfo = NetworkInfo();
 
   String connectedWifiName = "";
-  List<String> wifiName = ["AndroidWifi", "Frentree5G"];
+  List<String> wifiName = await _settingFirestoreRepository.readWifiName(companyId: companyId);
 
   ConnectivityResult connectivityResult = await connectivity.checkConnectivity();
+
   if(connectivityResult == ConnectivityResult.wifi){
     connectedWifiName = (await networkInfo.getWifiName())!;
+
     if(wifiName.contains(connectedWifiName)){
       return true;
     }
