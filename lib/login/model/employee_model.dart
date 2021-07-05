@@ -43,7 +43,7 @@ class EmployeeModel {
   List<dynamic>? userSearch;
   String? employeeNum;
   int? status;
-  int? vacation;
+  num? vacation;
   DocumentReference? reference;
 
   EmployeeModel({
@@ -89,7 +89,7 @@ class EmployeeModel {
         userSearch = mapData["userSearch"] ?? [],
         employeeNum = mapData["employeeNum"] ?? "",
         status = mapData["status"] ?? 0,
-        vacation = mapData["vacation"] ?? 0;
+        vacation = mapData["vacation"] ?? 0.0;
 
   toJson(){
     return {
@@ -112,7 +112,7 @@ class EmployeeModel {
       "userSearch": name.split(""),
       "employeeNum": employeeNum,
       "status": status,
-      "vacation": vacation ?? 0,
+      "vacation": vacation ?? 0.0,
     };
   }
 }

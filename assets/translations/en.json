@@ -180,5 +180,23 @@
   "position_menu_1" : "직급명 변경",
   "position_menu_2" : "인원 추가",
   "position_menu_4" : "인원 삭제",
-  "position_menu_3" : "직급 삭제"
+  "position_menu_3" : "직급 삭제",
+
+  "vacation_content_1" : "Total Day",
+  "vacation_content_2" : "Use Day",
+  "vacation_content_3" : "Remaining Day",
+  "vacation_content_4" : "Add Day",
+  "vacation_dialog_1" : "Add Annual Update",
+  "vacation_dialog_2" : "EnteredDate Update",
+  "unassigned_teams" : "(Unassigned Team)",
+  "all_employee" : "All Employee",
+  "team_employee" : "Team Employee",
+  "grade_setting" : "Grade Setting",
+  "super_admin" : "Super Administrator",
+  "application_admin" : "Application Administrator",
+  "work_admin" : "Work Administrator",
+
+  "grade_dialog_1" : "Add Permission People",
+  "grade_dialog_2" : "Delete Permission People",
+  "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다."
 }

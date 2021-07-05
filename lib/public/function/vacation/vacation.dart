@@ -18,6 +18,11 @@ double UsedVacation(
   DateTime _present = DateTime.now();
 
   _enteredDate = _enteredDate?.replaceAll('.', '');
+
+  if(_enteredDate == ""){
+    return 0;
+  }
+
   DateTime _enterDate = DateTime.parse(_enteredDate!);
 
   /// 입사일 기준
@@ -103,6 +108,11 @@ double TotalVacation(String date, bool type, double addition) {
   DateTime _present = DateTime.now();
 
   _enteredDate = _enteredDate.replaceAll('.', '');
+
+  if(_enteredDate == ""){
+    return 0;
+  }
+
   DateTime _tmp = DateTime.parse(_enteredDate);
 
   /// 입사일 기준

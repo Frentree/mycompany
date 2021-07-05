@@ -1,12 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/function/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/setting/function/setting_function.dart';
 import 'package:mycompany/setting/view/setting_team_view.dart';
+import 'package:provider/provider.dart';
 
 class SettingView extends StatefulWidget {
   @override
@@ -20,6 +27,7 @@ class _SettingViewState extends State<SettingView> {
 
   @override
   Widget build(BuildContext context) {
+    UserModel loginUser = PublicFunction().getUserProviderListenSetting(context);
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return WillPopScope(
         onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
@@ -59,38 +67,52 @@ class _SettingViewState extends State<SettingView> {
                 ),
               ),
               Expanded(
-                child: GridView.custom(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: (1),
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                  ),
-                  childrenDelegate: SliverChildListDelegate(
-                    getSettingMenu(context: context).map((data) => GestureDetector(
-                            child: Container(
-                              padding: const EdgeInsets.all(0.5),
-                              color: calendarLineColor.withOpacity(0.1),
-                              child: Center(
-                                child: Container(
-                                  width: 180.0.w,
-                                  color: whiteColor,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      data.menuIcon,
-                                      SizedBox(height: 3.0.h,),
-                                      Text(data.munuName, style: getNotoSantMedium(fontSize: 12, color: blackColor))
-                                    ],
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: PublicFirebaseRepository().getLoginUser(loginUser: loginUser),
+                  builder: (context, snapshot) {
+                    if(!snapshot.hasData){
+                      return Container();
+                    }
+                    late EmployeeModel employeeModel;
+
+                    List<DocumentSnapshot> docs = snapshot.data!.docs;
+                    docs.map((doc) => employeeModel = EmployeeModel.fromMap(mapData: (doc.data() as dynamic))).toList();
+
+                    return GridView.custom(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: (1),
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 4,
+                      ),
+                      childrenDelegate: SliverChildListDelegate(
+                        getSettingMenu(context: context, employeeModel: employeeModel).map((data) =>
+                           GestureDetector(
+                              child: Container(
+                                padding: const EdgeInsets.all(0.5),
+                                color: calendarLineColor.withOpacity(0.1),
+                                child: Center(
+                                  child: Container(
+                                    width: 180.0.w,
+                                    color: whiteColor,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        data.menuIcon,
+                                        SizedBox(height: 3.0.h,),
+                                        Text(data.munuName, style: getNotoSantMedium(fontSize: 12, color: blackColor))
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!))
+                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!))
                           ),
                         ).toList(),
-                  ),
+                      ),
+                    );
+                  }
                 ),
               ),
             ]),

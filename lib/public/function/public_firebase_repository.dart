@@ -26,4 +26,11 @@ class PublicFirebaseRepository {
   Stream<QuerySnapshot> getCompanyUsers({required UserModel loginUser}) =>
       _methods.getCompanyUsers(loginUser);
 
+
+  Stream<QuerySnapshot> getCompanyTeamUsers({required UserModel loginUser,required String teamName}) =>
+      _methods.getCompanyTeamUsers(loginUser, teamName);
+
+  Stream<QuerySnapshot> getLoginUser({required UserModel loginUser}) =>
+      _methods.getLoginUser(loginUser);
+
 }

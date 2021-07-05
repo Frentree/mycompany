@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
+import 'package:mycompany/public/db/public_firestore_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/function/vacation/vacation.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
@@ -39,14 +42,29 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   late UserModel loginUser;
   late EmployeeModel loginEmployee;
 
+  // 반차(오후&연차)
+  ValueNotifier<bool> _isHalfway = ValueNotifier<bool>(false);
+
+  // 연차 갯수(총연차, 사용연차, 회사 연차 설정상태)
+  ValueNotifier<double> totalVacation = ValueNotifier<double>(0);
+  ValueNotifier<double> useVacation = ValueNotifier<double>(0);
+  ValueNotifier<bool> companyVacation = ValueNotifier<bool>(false);
+
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(loginUser: loginUser);
+    CompanyModel company = await PublicFirebaseReository().getVacation(loginUser.companyCode!);
+
+    companyVacation.value = company.vacation!;
+
+    totalVacation.value = TotalVacation(loginEmployee.enteredDate!, companyVacation.value, loginEmployee.vacation!.toDouble());
+    useVacation.value = await UsedVacation(loginUser.companyCode, loginUser.mail, loginEmployee.enteredDate!, companyVacation.value);
 
     setState(() {
       teamList = team;
       employeeList = employee;
+
     });
   }
 
@@ -61,8 +79,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   late DateTime endTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
   late ValueNotifier<DateTime> _startDateTime = ValueNotifier<DateTime>(startTime);
   late ValueNotifier<DateTime> _endDateTime = ValueNotifier<DateTime>(endTime);
+
   ValueNotifier<bool> _isAllDay = ValueNotifier<bool>(false);
-  ValueNotifier<bool> _isHalfway = ValueNotifier<bool>(false);
 
   EmployeeModel defaultEmpUser = EmployeeModel(mail: "", name: "", companyCode: "", userSearch: [], createDate: Timestamp.now());
 
@@ -319,6 +337,9 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                 workTeamChkList: workTeamChkList,
                                 approvalUser: approvalUser,
                                 companyCode: loginUser.companyCode!,
+                                companyVacation: companyVacation,
+                                totalVacation: totalVacation,
+                                useVacation: useVacation,
                               ),
                             ),
                           ),

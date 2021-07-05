@@ -29,6 +29,9 @@ class ScheduleInsertWidget extends StatefulWidget {
   final ValueNotifier<DateTime> endDateTime;
   final ValueNotifier<bool> isAllDay;
   final ValueNotifier<bool> isHalfway;
+  ValueNotifier<double>? totalVacation;
+  ValueNotifier<double>? useVacation;
+  ValueNotifier<bool>? companyVacation;
   final List<TeamModel> teamList;
   final List<EmployeeModel> employeeList;
   final List<EmployeeModel> workColleagueChkList;
@@ -45,6 +48,9 @@ class ScheduleInsertWidget extends StatefulWidget {
     required this.endDateTime,
     required this.isAllDay,
     required this.isHalfway,
+    this.totalVacation,
+    this.useVacation,
+    this.companyVacation,
     required this.teamList,
     required this.employeeList,
     required this.workColleagueChkList,
@@ -384,7 +390,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                     Row(
                       children: [
                         Text(
-                          "7.5",
+                          "${(widget.totalVacation!.value - widget.useVacation!.value)}",
                           style: getNotoSantMedium(fontSize: 12, color: textColor),
                         ),
                         Text(
@@ -392,28 +398,20 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           style: getNotoSantMedium(fontSize: 12, color: textColor),
                         ),
                         Text(
-                          "15",
+                          widget.totalVacation!.value.toString(),
                           style: getNotoSantMedium(fontSize: 12, color: textColor),
                         ),
                       ],
                     )
                   ],
                 ),
+
                 SizedBox(
                   height: 10.0.h,
                 ),
-                FutureBuilder<CompanyModel>(
-                  future: PublicFirebaseReository().getVacation(widget.companyCode),
-                  builder: (context, snapshot) {
-                    if(!snapshot.hasData){
-                      return Container();
-                    }
-
-                    return Text(
-                      snapshot.data!.vacation! == false ? "입사년도 기준" : "회계년도 기준",
-                      style: getNotoSantBold(fontSize: 13, color: textColor),
-                    );
-                  }
+                Text(
+                  widget.companyVacation!.value == false ? "입사년도 기준" : "회계년도 기준",
+                  style: getNotoSantBold(fontSize: 13, color: textColor),
                 ),
               ],
             ),

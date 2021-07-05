@@ -182,5 +182,29 @@
   "position_menu_1" : "직급명 변경",
   "position_menu_2" : "인원 추가",
   "position_menu_4" : "인원 삭제",
-  "position_menu_3" : "직급 삭제"
+  "position_menu_3" : "직급 삭제",
+
+  "vacation_content_1" : "총 일",
+  "vacation_content_2" : "사용 일",
+  "vacation_content_3" : "남은 일",
+  "vacation_content_4" : "추가 일",
+  "vacation_dialog_1" : "추가 연차일 변경",
+  "vacation_dialog_2" : "입사일 변경",
+  "vacation_setting_dialog_1" : "추가 연차일을 입력해주세요",
+  "vacation_setting_dialog_2" : "변경될 입사일을 입력해주세요",
+  "unassigned_teams" : "(미지정 팀)",
+  "all_employee" : "전체 직원",
+  "team_employee" : "팀별 직원",
+  "grade_setting" : "권한",
+  "super_admin" : "최고 관리자",
+  "application_admin" : "앱 관리자",
+  "work_admin" : "업무 관리자",
+
+  "grade_dialog_1" : "권한 인원 추가",
+  "grade_dialog_2" : "권한 인원 삭제",
+  "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다."
+
+
+
+
 }

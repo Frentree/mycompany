@@ -27,13 +27,17 @@ class PublicFunction {
 
   UserModel getUserProviderSetting(BuildContext context){
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
+
+    return userInfoProvider.getUserData()!;
+  }
+
+  UserModel getUserProviderListenSetting(BuildContext context){
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
 
     return userInfoProvider.getUserData()!;
   }
 
   EmployeeModel getEmployeeProviderSetting(BuildContext context){
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
     EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
 
     return employeeInfoProvider.getEmployeeData()!;

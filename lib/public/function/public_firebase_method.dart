@@ -160,4 +160,12 @@ class PublicFirebaseMethods {
   Stream<QuerySnapshot> getCompanyUsers(UserModel loginUser){
     return _firestore.collection(COMPANY).doc(loginUser.companyCode!).collection(USER).snapshots();
   }
+
+  Stream<QuerySnapshot> getCompanyTeamUsers(UserModel loginUser, String teamName){
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode!).collection(USER).where("team", isEqualTo: teamName).snapshots();
+  }
+
+  Stream<QuerySnapshot> getLoginUser(UserModel loginUser){
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode!).collection(USER).where("mail", isEqualTo: loginUser.mail).snapshots();
+  }
 }
