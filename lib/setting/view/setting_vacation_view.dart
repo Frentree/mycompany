@@ -8,6 +8,7 @@ import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/db/public_firestore_repository.dart';
+import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
@@ -29,6 +30,8 @@ class _SettingVacationViewState extends State<SettingVacationView> {
 
   late UserModel loginUser;
   bool companyVacation = false;
+
+  DateFormatCustom _format = DateFormatCustom();
 
   @override
   void initState() {
@@ -173,6 +176,15 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                                               style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
                                             ),
                                           ),
+                                          Container(
+                                            width: 100.0.w,
+                                            child: Text(
+                                              empModel.enteredDate! + " 입사",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       Row(
@@ -241,13 +253,13 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                                                   style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                                                 ),
                                               ),
-                                              PopupMenuItem(
+                                              /*PopupMenuItem(
                                                 value: 2,
                                                 child: Text(
                                                   "vacation_dialog_2".tr(),
                                                   style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                                                 ),
-                                              ),
+                                              ),*/
                                             ],
                                             onSelected: (value) async {
                                               if(value== 1){

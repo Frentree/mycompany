@@ -147,6 +147,15 @@ class _SettingTeamVacationViewState extends State<SettingTeamVacationView> {
                                         style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
                                       ),
                                     ),
+                                    Container(
+                                      width: 100.0.w,
+                                      child: Text(
+                                        empModel.enteredDate! + " 입사",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -215,13 +224,13 @@ class _SettingTeamVacationViewState extends State<SettingTeamVacationView> {
                                             style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                                           ),
                                         ),
-                                        PopupMenuItem(
+                                        /*PopupMenuItem(
                                           value: 2,
                                           child: Text(
                                             "vacation_dialog_2".tr(),
                                             style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                                           ),
-                                        ),
+                                        ),*/
                                       ],
                                       onSelected: (value) async {
                                         if(value== 1){

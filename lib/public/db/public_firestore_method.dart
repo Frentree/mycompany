@@ -34,4 +34,9 @@ class PublicFirebaseMethods {
     return model;
   }
 
+  Stream<DocumentSnapshot> getCompany(String companyCode) {
+
+    return _store.collection(COMPANY).doc(companyCode).snapshots();
+  }
+
 }

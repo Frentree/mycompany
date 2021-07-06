@@ -120,7 +120,6 @@ class _ScheduleViewState extends State<ScheduleView> {
 
     return WillPopScope(
       onWillPop: () async {
-
         var result = await loginDialogWidget(
             context: context,
             message: "앱을 종료하시겠습니까?",
@@ -326,18 +325,36 @@ class _ScheduleViewState extends State<ScheduleView> {
                               });
                             },
                           ),
-                          GestureDetector(
-                            child: SvgPicture.asset(
-                              'assets/icons/user_add.svg',
-                              width: 27.8.w,
-                              height: 23.76.h,
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _isColleague = !_isColleague;
-                                _isDatePopup = false;
-                              });
-                            },
+
+                          Row(
+                            children: [
+                              GestureDetector(
+                                child: SvgPicture.asset(
+                                  'assets/icons/refresh.svg',
+                                  width: 20.0.w,
+                                  height: 20.0.h,
+                                  color: workInsertColor,
+                                ),
+                                onTap: () {
+                                  _getDataSource();
+                                  setState(() {});
+                                },
+                              ),
+                              SizedBox(width: 20.0.w,),
+                              GestureDetector(
+                                child: SvgPicture.asset(
+                                  'assets/icons/user_add.svg',
+                                  width: 27.8.w,
+                                  height: 23.76.h,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _isColleague = !_isColleague;
+                                    _isDatePopup = false;
+                                  });
+                                },
+                              ),
+                            ],
                           ),
 
                         ],
@@ -383,8 +400,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                               onTap: (CalendarTapDetails details) => CalenderMethod().getScheduleDetail(details: details, context: context, employeeList: employeeList),
                             ),
                           ),
-                          _isDatePopup
-                              ? Container(
+                          _isDatePopup ? Container(
                             height: 200.0.h,
                             decoration: BoxDecoration(
                                 border: Border(
