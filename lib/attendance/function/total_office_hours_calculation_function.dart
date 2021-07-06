@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:flutter/material.dart ';
 
@@ -116,24 +117,31 @@ class TotalOfficeHoursCalculationFunction {
     return weekAttendanceData;
   }
 
-  /*Map<String, List<AttendanceModel>> getEmployeeWeekAttendanceData({required List<AttendanceModel> attendanceDataList, required DateTime startDate, required DateTime endDate}){
-    Map<String, List<AttendanceModel?>> employeeWeekAttendanceData = Map();
+  Map<String, List<AttendanceModel>> getEmployeeWeekAttendanceData({required List<AttendanceModel> attendanceDataList, required List<EmployeeModel> employeeData, required DateTime startDate, required DateTime endDate}){
+    Map<String, List<AttendanceModel>> employeeWeekAttendanceData = {};
 
+    employeeData.forEach((element) {
+      employeeWeekAttendanceData.putIfAbsent(element.mail, () => [
+        AttendanceModel(mail: element.mail, name: element.name),
+        AttendanceModel(mail: element.mail, name: element.name),
+        AttendanceModel(mail: element.mail, name: element.name),
+        AttendanceModel(mail: element.mail, name: element.name),
+        AttendanceModel(mail: element.mail, name: element.name),
+        AttendanceModel(mail: element.mail, name: element.name),
+        AttendanceModel(mail: element.mail, name: element.name),
+      ]);
+    });
     attendanceDataList.forEach((element) {
-      if(!employeeWeekAttendanceData.keys.contains(element.mail)){
-        employeeWeekAttendanceData.putIfAbsent(element.mail, () => []);
-      }
-      DateTime dataCreateDate = dateFormatCustom.changeTimestampToDateTime(timestamp: element.createDate!);
-      if((dataCreateDate.compareTo(startDate) >= 0) && (dataCreateDate.compareTo(endDate) <= 0)){
-        employeeWeekAttendanceData[element.mail]!.add(element);
+      if(employeeWeekAttendanceData.keys.contains(element.mail)){
+        DateTime dataCreateDate = dateFormatCustom.changeTimestampToDateTime(timestamp: element.createDate!);
+        if((dataCreateDate.compareTo(startDate) >= 0) && (dataCreateDate.compareTo(endDate) <= 0)){
+          employeeWeekAttendanceData[element.mail]![element.createDate!.toDate().weekday] = element;
+        }
       }
     });
 
-    employeeWeekAttendanceData.
-
-    return weekAttendanceData;
-  }*/
-
+    return employeeWeekAttendanceData;
+  }
 
   List<Duration> weekTotalOfficeHoursCalculation({required List<AttendanceModel> attendanceDataList}){
     List<Duration> weekTotal = [Duration(), Duration(), Duration()];
@@ -153,5 +161,31 @@ class TotalOfficeHoursCalculationFunction {
     weekTotal[2] = remainingTimeCalculation(totalOfficeHours: weekTotal[0]);
 
     return weekTotal;
+  }
+
+  Map<String, List<Duration>> employeeWeekTotalOfficeHoursCalculation({required Map<String, List<AttendanceModel>> employeeAttendanceDataList}){
+    Map<String, List<Duration>> employeeWeekTotal = {};
+
+    employeeAttendanceDataList.keys.forEach((element) {
+      employeeWeekTotal.putIfAbsent(element, () => [Duration(), Duration(), Duration()]);
+    });
+
+    employeeAttendanceDataList.forEach((key, value) {
+      value.forEach((element) {
+        if((element.attendTime != null) && (element.endTime != null)){
+          Timestamp tempAttendTime = dateFormatCustom.showTimestampUpToMinutes(timestamp: element.attendTime!);
+          Timestamp tempEndTime = dateFormatCustom.showTimestampUpToMinutes(timestamp: element.endTime!);
+
+          employeeWeekTotal[key]![0] += officeHoursCalculation(attendTime: tempAttendTime, endTime: tempEndTime);
+          if(element.overTime != 0){
+            employeeWeekTotal[key]![1] += overTimeCalculation(endTime: tempEndTime);
+          }
+        }
+      });
+
+      employeeWeekTotal[key]![2] = remainingTimeCalculation(totalOfficeHours: employeeWeekTotal[key]![0]);
+    });
+
+    return employeeWeekTotal;
   }
 }

@@ -23,6 +23,20 @@ class LoginFirestoreCrud {
     return EmployeeModel.fromMap(mapData: document.data());
   }
 
+  Future<List<EmployeeModel>> readAllEmployeeData({required String companyId}) async {
+    QuerySnapshot<Map<dynamic, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(USER).get();
+    List<EmployeeModel> allEmployeeDataList = getData.docs.map((doc) => EmployeeModel.fromMap(mapData: doc.data())).toList();
+
+    return allEmployeeDataList;
+  }
+
+  Future<List<EmployeeModel>> readMyTeamEmployeeData({required EmployeeModel employeeModel}) async {
+    QuerySnapshot<Map<dynamic, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).doc(employeeModel.companyCode).collection(USER).where("team", isEqualTo: employeeModel.team).get();
+    List<EmployeeModel> myTeamEmployeeDataList = getData.docs.map((doc) => EmployeeModel.fromMap(mapData: doc.data())).toList();
+
+    return myTeamEmployeeDataList;
+  }
+
   Future<void> updateEmployeeData({required EmployeeModel employeeModel}) async {
     employeeModel.lastModDate = Timestamp.now();
 

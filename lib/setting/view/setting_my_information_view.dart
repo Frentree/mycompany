@@ -227,8 +227,10 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                               color: textColor,
                                             ),
                                           ),
-                                          Text(
-                                            (loginEmployeeData.position == null ? "" : loginEmployeeData.position!) + "/" + (loginEmployeeData.team == null ? "" : loginEmployeeData.team!),
+                                          (loginEmployeeData.position == "" && loginEmployeeData.team == "") ? Text(
+                                            ""
+                                          ) : Text(
+                                            (loginEmployeeData.position != "" && loginEmployeeData.team != "") ?  "${loginEmployeeData.position}/${loginEmployeeData.team}" : "${loginEmployeeData.position}${loginEmployeeData.team}",
                                             style: TextStyle(
                                               fontSize: 13.0.sp,
                                               fontWeight: fontWeight['Medium'],

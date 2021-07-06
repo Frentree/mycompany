@@ -156,7 +156,6 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                     style: TextStyle(
                       fontSize: 18.0.sp,
                       fontWeight: fontWeight['Medium'],
-                      color: textColor,
                     ),
                   ),
                 ],
@@ -221,7 +220,7 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                   Text(
                     "사용자 선택",
                     style: TextStyle(
-                      fontSize: 18.0.sp,
+                      fontSize: 18.0.sp,a
                       fontWeight: fontWeight['Medium'],
                       color: textColor,
                     ),

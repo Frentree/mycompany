@@ -23,7 +23,6 @@ class AttendanceFirestoreCrud {
         .doc(employeeData.companyCode)
         .collection(ATTENDANCE)
         .where("mail", isEqualTo: employeeData.mail)
-        .where("createDate", isLessThanOrEqualTo: today)
         .get();
 
     querySnapshot.docs.forEach((doc) {
@@ -56,8 +55,6 @@ class AttendanceFirestoreCrud {
         .collection(COMPANY)
         .doc(employeeData.companyCode)
         .collection(ATTENDANCE)
-        .where("mail", isNotEqualTo: employeeData.mail)
-        .where("createDate", isLessThanOrEqualTo: today)
         .get();
 
     querySnapshot.docs.forEach((doc) {
