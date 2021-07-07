@@ -1482,7 +1482,7 @@ Future<dynamic> changePasswordDialog({required BuildContext context}) {
 }
 
 
-/* 추가 연차일 변경 */
+/* 입사일 변경 */
 Future<bool> enteredDateUpdateDialog(BuildContext context, EmployeeModel employeeModel) async {
   bool result = false;
   TextEditingController enteredDateController = MaskedTextController(mask: '0000.00.00');
@@ -1540,7 +1540,7 @@ Future<bool> enteredDateUpdateDialog(BuildContext context, EmployeeModel employe
   return result;
 }
 
-/* 입사일 변경 */
+/* 연차일 변경 */
 Future<bool> addAnnualUpdateDialog(BuildContext context, EmployeeModel employeeModel) async {
   bool result = false;
   TextEditingController annualController = TextEditingController();
@@ -1876,5 +1876,91 @@ Future<void> alarmGradeDialog(BuildContext context) async {
       ],
     )
   ]);
+}
+
+
+/* 사용자 변경 변경 */
+Future<bool> colleagueUpdateDialog(BuildContext context, EmployeeModel employeeModel) async {
+  bool result = false;
+  TextEditingController enteredDateController = MaskedTextController(mask: '0000.00.00');
+  enteredDateController.text = employeeModel.enteredDate ?? "";
+
+  await loginDialogWidget(
+    context: context,
+    message: "colleague_dialog_menu".tr(),
+    actions: [
+      Expanded(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 5.0.h,
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: 8.0.h,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "entered".tr(),
+                    style: TextStyle(
+                      fontSize: 13.0.sp,
+                      color: Color(0xff2093F0),
+                    ),
+                  ),
+                  Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 305.0.w,
+                          height: 50.0.h,
+                          child: TextFormField(
+                            controller: enteredDateController,
+                            maxLines: 1,
+                            decoration: colleagueTextFormRoundBorderDecoration(
+                              hintText: 'vacation_setting_dialog_2'.tr(),
+                            ),
+                            style: TextStyle(
+                              fontSize: 12.0.sp,
+                              color: textColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                confirmElevatedButton(
+                    topPadding: 50.0.h,
+                    buttonName: "dialogConfirm".tr(),
+                    buttonAction: () async {
+                      employeeModel.reference!.update({
+                        "enteredDate" : enteredDateController.text,
+                      });
+                      Navigator.pop(context, true);
+                    },
+                    customWidth: 70.0,
+                    customHeight: 40.0),
+                confirmElevatedButton(
+                    topPadding: 50.0.h,
+                    buttonName: "dialogCancel".tr(),
+                    buttonAction: () => Navigator.pop(context, false),
+                    customWidth: 70.0,
+                    customHeight: 40.0),
+              ],
+            )
+          ],
+        ),
+      )
+    ],
+  );
+  return result;
 }
 

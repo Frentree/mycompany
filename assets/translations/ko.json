@@ -205,7 +205,9 @@
   "grade_dialog_2" : "권한 인원 삭제",
   "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다.",
   "approver_choise" : "결재자 선택",
-  "photo_fail" : "사진 업로드 실패"
+  "photo_fail" : "사진 업로드 실패",
+  "colleague_dialog_menu" : "사용자 정보 수정",
+  "entered" : "입사일"
 
 
 

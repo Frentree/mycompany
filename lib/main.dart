@@ -25,7 +25,7 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '6LcchGkbAAAAADBFLdIS3DsYbfgLW7ifJUNMlY9v');
-
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
 
   bool isPermissionGranted = await checkPermissionFunction();
 

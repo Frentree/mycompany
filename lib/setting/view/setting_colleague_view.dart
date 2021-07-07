@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
@@ -19,18 +20,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
+import 'package:mycompany/setting/view/setting_team_colleague_view.dart';
 import 'package:mycompany/setting/view/setting_team_vacation_view.dart';
 import 'package:mycompany/setting/widget/setting_dialog.dart';
 
-class SettingVacationView extends StatefulWidget {
+class SettingColleagueView extends StatefulWidget {
   @override
-  _SettingVacationViewState createState() => _SettingVacationViewState();
+  _SettingColleagueViewState createState() => _SettingColleagueViewState();
 }
 
-class _SettingVacationViewState extends State<SettingVacationView> {
+class _SettingColleagueViewState extends State<SettingColleagueView> {
 
   late UserModel loginUser;
-  bool companyVacation = false;
 
   DateFormatCustom _format = DateFormatCustom();
 
@@ -43,8 +44,6 @@ class _SettingVacationViewState extends State<SettingVacationView> {
   }
 
   _getSetting() async {
-    CompanyModel company = await PublicFirebaseReository().getVacation(loginUser.companyCode!);
-    companyVacation = company.vacation!;
   }
 
   @override
@@ -90,7 +89,7 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                         width: 14.7.w,
                       ),
                       Text(
-                        "setting_menu_9".tr(),
+                        "setting_menu_2".tr(),
                         style: TextStyle(
                           fontSize: 18.0.sp,
                           fontWeight: fontWeight['Medium'],
@@ -140,9 +139,6 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                           itemCount: docs.length,
                           itemBuilder: (context, index) {
                             EmployeeModel empModel = EmployeeModel.fromMap(mapData: (docs[index].data() as dynamic), reference: docs[index].reference);
-                            double? userVacation = empModel.vacation?.toDouble();
-                            double? totalVacation = TotalVacation(empModel.enteredDate!, companyVacation, userVacation ?? 0);
-                            double? useVacation = UsedVacation(empModel.companyCode, empModel.mail, empModel.enteredDate!, companyVacation);
 
                             return Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 5.0.h),
@@ -185,46 +181,41 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                                       Row(
                                         children: [
                                           Container(
-                                            width: 110.0.w,
+                                            width: 170.0.w,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
-                                                  children: [
-                                                    Text("vacation_content_1".tr() +  " ",
-                                                      style: getNotoSantBold(fontSize: 11.0, color: textColor),
-                                                    ),
-                                                    Text("${totalVacation.toString()}",
-                                                      style: getNotoSantRegular(fontSize: 11.0, color: textColor),
-                                                    ),
-                                                  ]
-                                                ),
-                                                Row(
                                                     children: [
-                                                      Text("vacation_content_2".tr() +  " ",
+                                                      Text("phone".tr() +  " ",
                                                         style: getNotoSantBold(fontSize: 11.0, color: textColor),
                                                       ),
-                                                      Text("${useVacation.toString()}",
+                                                      Text("${empModel.phone}",
                                                         style: getNotoSantRegular(fontSize: 11.0, color: textColor),
                                                       ),
                                                     ]
                                                 ),
                                                 Row(
                                                     children: [
-                                                      Text("vacation_content_3".tr() +  " ",
+                                                      Text("email".tr() +  " ",
                                                         style: getNotoSantBold(fontSize: 11.0, color: textColor),
                                                       ),
-                                                      Text("${(totalVacation - useVacation)}",
-                                                        style: getNotoSantRegular(fontSize: 11.0, color: textColor),
+                                                      Container(
+                                                        width: 130.0.w,
+                                                        child: Text("${empModel.mail}",
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: getNotoSantRegular(fontSize: 11.0, color: textColor),
+                                                        ),
                                                       ),
                                                     ]
                                                 ),
                                                 Row(
                                                     children: [
-                                                      Text("vacation_content_4".tr() +  " ",
+                                                      Text("birthday".tr() +  " ",
                                                         style: getNotoSantBold(fontSize: 11.0, color: textColor),
                                                       ),
-                                                      Text("${(empModel.vacation)}",
+                                                      Text("${empModel.birthday}",
                                                         style: getNotoSantRegular(fontSize: 11.0, color: textColor),
                                                       ),
                                                     ]
@@ -244,26 +235,17 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                                               PopupMenuItem(
                                                 value: 1,
                                                 child: Text(
-                                                  "vacation_dialog_1".tr(),
+                                                  "colleague_dialog_menu".tr(),
                                                   style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                                                 ),
                                               ),
-                                              /*PopupMenuItem(
-                                                value: 2,
-                                                child: Text(
-                                                  "vacation_dialog_2".tr(),
-                                                  style: getNotoSantMedium(fontSize: 12.0, color: textColor),
-                                                ),
-                                              ),*/
                                             ],
                                             onSelected: (value) async {
                                               if(value== 1){
-                                                addAnnualUpdateDialog(context, empModel);
-                                              }else {
-                                                enteredDateUpdateDialog(context, empModel);
+                                                colleagueUpdateDialog(context, empModel);
                                               }
-                                              setState(() {
-                                              });
+
+                                              setState(() {});
                                             },
                                           ),
                                         ],
@@ -334,7 +316,7 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                                 ),
                               ),
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (cotext) => SettingTeamVacationView(teamName: teamModel.teamName, loginUser: loginUser)));
+                                Navigator.push(context, MaterialPageRoute(builder: (cotext) => SettingTeamColleagueView(teamName: teamModel.teamName, loginUser: loginUser)));
                               },
                             );
                           },

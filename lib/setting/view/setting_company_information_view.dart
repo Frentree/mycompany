@@ -544,7 +544,7 @@ class SettingCompanyInformationViewState extends State<SettingCompanyInformation
                               children: [
                                 CircularProgressIndicator(),
                                 SizedBox(height: 10.0.h,),
-                                Text("업로드 중",
+                                Text("변경 중",
                                   style: getRobotoMedium(fontSize: 13, color: whiteColor),
                                 )
                               ],
