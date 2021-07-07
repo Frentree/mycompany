@@ -47,7 +47,7 @@ dependencies:
   connectivity: ^3.0.6
   network_info_plus: ^1.0.2
   device_info_plus: ^2.0.1
-  firebase_storage:
+  firebase_storage: ^9.0.0
   image_picker: ^0.8.1+2
   cloud_functions:
   flutter_local_notifications:

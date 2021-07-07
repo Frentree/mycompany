@@ -201,5 +201,7 @@
   "grade_dialog_2" : "Delete Permission People",
   "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다.",
   "approver_choise" : "Select approver",
-  "photo_fail" : "Failed to upload photos"
+  "photo_fail" : "Failed to upload photos",
+  "colleague_dialog_menu" : "사용자 정보 수정",
+  "entered" : "Entered Date"
 }
