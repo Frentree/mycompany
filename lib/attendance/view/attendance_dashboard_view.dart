@@ -402,11 +402,13 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                                     borderRadius: BorderRadius.circular(14.0.r),
                                   ),
                                 ),
-                                child: Text(
-                                  "연장근무신청 +",
-                                  style: TextStyle(
-                                    fontSize: 13.0.sp,
-                                    color: Color(0xff2093F0),
+                                child: Center(
+                                  child: Text(
+                                    "연장근무신청 +",
+                                    style: TextStyle(
+                                      fontSize: 13.0.sp,
+                                      color: Color(0xff2093F0),
+                                    ),
                                   ),
                                 ),
                               ),
