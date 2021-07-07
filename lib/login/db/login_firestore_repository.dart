@@ -19,6 +19,10 @@ class LoginFirestoreRepository {
           {required String companyId, required String email}) =>
       _loginFirebaseCrud.readEmployeeData(companyId: companyId, email: email);
 
+  Future<List<EmployeeModel>> readAllEmployeeData({required String companyId}) => _loginFirebaseCrud.readAllEmployeeData(companyId: companyId);
+
+  Future<List<EmployeeModel>> readMyTeamEmployeeData({required EmployeeModel employeeModel}) => _loginFirebaseCrud.readMyTeamEmployeeData(employeeModel: employeeModel);
+
   Future<void> updateEmployeeData({required EmployeeModel employeeModel}) => _loginFirebaseCrud.updateEmployeeData(employeeModel: employeeModel);
 
   //User 관련

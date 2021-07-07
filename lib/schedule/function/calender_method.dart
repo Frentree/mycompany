@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
@@ -182,7 +183,7 @@ class CalenderMethod{
 
     if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
       if(approvalUser == null || approvalUser.mail == ""){
-        return await false;
+        return false;
       }
     }
 
@@ -221,9 +222,11 @@ class CalenderMethod{
         break;
       case "외근": case "요청":
         result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
+        sendFcmWithTokens(loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName} 결재를 요청 했습니다.", "");
         break;
       case "재택": case "외출": case "연차": case "반차":
         result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
+        sendFcmWithTokens(loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName} 결재를 요청 했습니다.", "");
         break;
     }
 

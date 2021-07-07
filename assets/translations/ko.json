@@ -172,6 +172,7 @@
   "setting_menu_7" : "도움말",
   "setting_menu_8" : "로그아웃",
   "setting_menu_9" : "연차설정",
+  "setting_menu_10" : "회사정보",
   "position_setting_dialog_1" : "직급을 생성하시겠습니까?",
   "position_setting_dialog_2" : "직급명을 입력해주세요",
   "position_setting_dialog_3" : "직급을 삭제하시겠습니까?",
@@ -182,5 +183,31 @@
   "position_menu_1" : "직급명 변경",
   "position_menu_2" : "인원 추가",
   "position_menu_4" : "인원 삭제",
-  "position_menu_3" : "직급 삭제"
+  "position_menu_3" : "직급 삭제",
+
+  "vacation_content_1" : "총 일",
+  "vacation_content_2" : "사용 일",
+  "vacation_content_3" : "남은 일",
+  "vacation_content_4" : "추가 일",
+  "vacation_dialog_1" : "추가 연차일 변경",
+  "vacation_dialog_2" : "입사일 변경",
+  "vacation_setting_dialog_1" : "추가 연차일을 입력해주세요",
+  "vacation_setting_dialog_2" : "변경될 입사일을 입력해주세요",
+  "unassigned_teams" : "(미지정 팀)",
+  "all_employee" : "전체 직원",
+  "team_employee" : "팀별 직원",
+  "grade_setting" : "권한",
+  "super_admin" : "최고 관리자",
+  "application_admin" : "앱 관리자",
+  "work_admin" : "업무 관리자",
+
+  "grade_dialog_1" : "권한 인원 추가",
+  "grade_dialog_2" : "권한 인원 삭제",
+  "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다.",
+  "approver_choise" : "결재자 선택",
+  "photo_fail" : "사진 업로드 실패"
+
+
+
+
 }

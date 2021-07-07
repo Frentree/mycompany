@@ -81,7 +81,7 @@ class _ScheduleApprovalViewState extends State<ScheduleApprovalView> {
                           onTap: () => Navigator.pop(context,true),
                         ),
                         Text(
-                            "결재자 선택",
+                            "approver_choise".tr(),
                             style: getNotoSantRegular(
                                 fontSize: 18.0,
                                 color: textColor
@@ -116,6 +116,10 @@ class _ScheduleApprovalViewState extends State<ScheduleApprovalView> {
                     List<EmployeeModel> list = [];
 
                     employeeList.map((data) {
+                      if(!data.level!.contains(6)){
+                        return;
+                      }
+
                       if(index != teamList.length){
                         if(data.team == teamList[index].teamName){
                           list.add(data);

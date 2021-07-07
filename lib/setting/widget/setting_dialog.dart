@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
@@ -19,6 +21,7 @@ import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/login/style/decoration_style.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
+import 'package:mycompany/setting/model/grade_model.dart';
 
 /* 조직도 관련 다이얼로그 시작 */
 Future<bool> addTeamDialog(BuildContext context, String companyCode, TextEditingController teamNameContoller) async {
@@ -394,10 +397,10 @@ Future<bool> deleteTeamDialog(BuildContext context, TeamModel model, List<Employ
 /* 조직도 관련 다이얼로그 끝 */
 
 /* 직급 관련 다이얼로그 시작 */
-Future<bool> addPositionDialog(BuildContext context, String companyCode, TextEditingController positionNameContoller) async {
+Future<bool> addPositionDialog(BuildContext context, String companyCode, TextEditingController positionNameController) async {
   PublicFirebaseReository _publicFirebaseReository = PublicFirebaseReository();
   bool result = false;
-  positionNameContoller.text = "";
+  positionNameController.text = "";
   await loginDialogWidget(
     context: context,
     message: "position_setting_dialog_1".tr(),
@@ -409,7 +412,7 @@ Future<bool> addPositionDialog(BuildContext context, String companyCode, TextEdi
               height: 5.0.h,
             ),
             TextFormField(
-                controller: positionNameContoller,
+                controller: positionNameController,
                 decoration: InputDecoration(
                   hintText: "position_setting_dialog_2".tr(),
                   hintStyle: getNotoSantRegular(
@@ -425,13 +428,13 @@ Future<bool> addPositionDialog(BuildContext context, String companyCode, TextEdi
                     topPadding: 50.0.h,
                     buttonName: "dialogConfirm".tr(),
                     buttonAction: () async {
-                      if (positionNameContoller.text.trim() == "") {
+                      if (positionNameController.text.trim() == "") {
                         return;
                       }
 
-                      PositionModel model = PositionModel(position: positionNameContoller.text);
+                      PositionModel model = PositionModel(position: positionNameController.text);
                       result = await _publicFirebaseReository.createPosition(companyCode: companyCode, position: model);
-                      positionNameContoller.text = "";
+                      positionNameController.text = "";
                       Navigator.pop(context, true);
                     },
                     customWidth: 70.0,
@@ -683,9 +686,9 @@ Future<bool> deletePositionUserDialog(BuildContext context, List<EmployeeModel> 
 }
 
 Future<bool> updatePositionNameDialog(
-    BuildContext context, PositionModel model, TextEditingController positionNameContoller, List<EmployeeModel> list) async {
+    BuildContext context, PositionModel model, TextEditingController positionNameController, List<EmployeeModel> list) async {
   bool result = false;
-  positionNameContoller.text = model.position;
+  positionNameController.text = model.position;
   await loginDialogWidget(context: context, message: "position_setting_dialog_5".tr(), actions: [
     Expanded(
       child: Column(
@@ -694,7 +697,7 @@ Future<bool> updatePositionNameDialog(
             height: 5.0.h,
           ),
           TextFormField(
-              controller: positionNameContoller,
+              controller: positionNameController,
               decoration: InputDecoration(
                 hintText: "position_setting_dialog_2".tr(),
                 hintStyle: getNotoSantRegular(
@@ -710,15 +713,15 @@ Future<bool> updatePositionNameDialog(
                   topPadding: 50.0.h,
                   buttonName: "dialogConfirm".tr(),
                   buttonAction: () async {
-                    if (positionNameContoller.text.trim() == "") {
+                    if (positionNameController.text.trim() == "") {
                       return;
                     }
                     for (var data in list) {
-                      data.reference!.update({"position": positionNameContoller.text});
+                      data.reference!.update({"position": positionNameController.text});
                     }
-                    model.reference!.update({"position": positionNameContoller.text});
+                    model.reference!.update({"position": positionNameController.text});
 
-                    positionNameContoller.text = "";
+                    positionNameController.text = "";
                     result = true;
                     Navigator.pop(context, true);
                   },
@@ -1476,5 +1479,402 @@ Future<dynamic> changePasswordDialog({required BuildContext context}) {
       );
     },
   );
+}
+
+
+/* 추가 연차일 변경 */
+Future<bool> enteredDateUpdateDialog(BuildContext context, EmployeeModel employeeModel) async {
+  bool result = false;
+  TextEditingController enteredDateController = MaskedTextController(mask: '0000.00.00');
+  enteredDateController.text = employeeModel.enteredDate ?? "";
+
+  await loginDialogWidget(
+    context: context,
+    message: "vacation_dialog_2".tr(),
+    actions: [
+      Expanded(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 5.0.h,
+            ),
+            TextFormField(
+                keyboardType: TextInputType.number,
+                controller: enteredDateController,
+                decoration: InputDecoration(
+                  hintText: "vacation_setting_dialog_2".tr(),
+                  hintStyle: getNotoSantRegular(
+                    fontSize: 12.0,
+                    color: hintTextColor,
+                  ),
+                ),
+                style: getNotoSantRegular(fontSize: 12.0, color: textColor)
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                confirmElevatedButton(
+                    topPadding: 50.0.h,
+                    buttonName: "dialogConfirm".tr(),
+                    buttonAction: () async {
+                      employeeModel.reference!.update({
+                        "enteredDate" : enteredDateController.text,
+                      });
+                      Navigator.pop(context, true);
+                    },
+                    customWidth: 70.0,
+                    customHeight: 40.0),
+                confirmElevatedButton(
+                    topPadding: 50.0.h,
+                    buttonName: "dialogCancel".tr(),
+                    buttonAction: () => Navigator.pop(context, false),
+                    customWidth: 70.0,
+                    customHeight: 40.0),
+              ],
+            )
+          ],
+        ),
+      )
+    ],
+  );
+  return result;
+}
+
+/* 입사일 변경 */
+Future<bool> addAnnualUpdateDialog(BuildContext context, EmployeeModel employeeModel) async {
+  bool result = false;
+  TextEditingController annualController = TextEditingController();
+  annualController.text = "0";
+  List<int> count = [-5, -3, -1, 1, 3, 5];
+
+  await loginDialogWidget(
+    context: context,
+    message: "vacation_dialog_1".tr(),
+    actions: [
+      Expanded(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 5.0.h,
+            ),
+            TextFormField(
+                keyboardType: TextInputType.number,
+                controller: annualController,
+                decoration: InputDecoration(
+                  hintText: "vacation_setting_dialog_1".tr(),
+                  hintStyle: getNotoSantRegular(
+                    fontSize: 12.0,
+                    color: hintTextColor,
+                  ),
+                ),
+                style: getNotoSantRegular(fontSize: 12.0, color: textColor)
+            ),
+            SizedBox(
+              height: 10.0.h,
+            ),
+            Row(
+              children: count.map((e) =>
+                  InkWell(
+                    child: Card(
+                      child: Container(
+                        width: 27.0.w,
+                        height: 25.0.h,
+                        child: Center(
+                          child: Text(e.toString(),
+                            style: getRobotoMedium(fontSize: 11, color: textColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      var annualCount = int.parse(annualController.text.toString()) + e;
+                      annualController.text = annualCount.toString();
+                    },
+                  ),
+              ).toList(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                confirmElevatedButton(
+                    topPadding: 50.0.h,
+                    buttonName: "dialogConfirm".tr(),
+                    buttonAction: () async {
+                      employeeModel.reference!.update({
+                        "vacation" : FieldValue.increment(int.parse(annualController.text.toString())),
+                      });
+                      Navigator.pop(context, true);
+                    },
+                    customWidth: 70.0,
+                    customHeight: 40.0),
+                confirmElevatedButton(
+                    topPadding: 50.0.h,
+                    buttonName: "dialogCancel".tr(),
+                    buttonAction: () => Navigator.pop(context, false),
+                    customWidth: 70.0,
+                    customHeight: 40.0),
+              ],
+            )
+          ],
+        ),
+      )
+    ],
+  );
+  return result;
+}
+
+Future<bool> addGradeUserDialog(BuildContext context, GradeModel model, List<EmployeeModel> employeeList, List<EmployeeModel> list) async {
+  bool result = false;
+  List<EmployeeModel> getUserList = List.from(employeeList);
+
+  List<EmployeeModel> userChkList = [];
+
+  list.map((data) => getUserList.remove(data)).toList();
+
+  await loginDialogWidget(context: context, message: "grade_dialog_1".tr(), actions: [
+    Expanded(
+      child: Column(
+        children: [
+          Container(
+            height: 230.0.h,
+            child: ListView.builder(
+              itemCount: getUserList.length,
+              itemBuilder: (context, index) {
+                ValueNotifier<bool> isChks = ValueNotifier<bool>(false);
+
+                return ValueListenableBuilder(
+                  valueListenable: isChks,
+                  builder: (context, bool value, child) {
+                    return InkWell(
+                      child: Container(
+                        width: 100.0.w,
+                        height: 50.0.h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                getProfileImage(
+                                  size: 36,
+                                  ImageUri: getUserList[index].profilePhoto.toString(),
+                                ),
+                                SizedBox(
+                                  width: 6.0.w,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      getUserList[index].name,
+                                      style: getNotoSantBold(fontSize: 14.0, color: textColor),
+                                    ),
+                                    Text(
+                                      getUserList[index].position! + " / " + getUserList[index].team!,
+                                      style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 18.0.w,
+                              height: 18.0.h,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: calendarLineColor.withOpacity(0.5)),
+                                shape: BoxShape.circle,
+                                color: value ? workInsertColor : whiteColor,
+                              ),
+                              child: Center(
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 16.0.w,
+                                    color: whiteColor,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        isChks.value = !value;
+                        if (isChks.value) {
+                          userChkList.add(getUserList[index]);
+                        } else {
+                          userChkList.remove(getUserList[index]);
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          SizedBox(
+            height: 5.0.h,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              confirmElevatedButton(
+                  topPadding: 50.0.h,
+                  buttonName: "dialogConfirm".tr(),
+                  buttonAction: () async {
+                    await userChkList.map((e) => e.reference!.update({"level": FieldValue.arrayUnion([model.gradeLevel])})).toList();
+                    result = true;
+                    Navigator.pop(context, true);
+                  },
+                  customWidth: 70.0,
+                  customHeight: 40.0),
+              confirmElevatedButton(
+                  topPadding: 50.0.h,
+                  buttonName: "dialogCancel".tr(),
+                  buttonAction: () => Navigator.pop(context, false),
+                  customWidth: 70.0,
+                  customHeight: 40.0),
+            ],
+          )
+        ],
+      ),
+    )
+  ]);
+  return result;
+}
+
+Future<bool> deleteGradeUserDialog(BuildContext context, List<EmployeeModel> list, GradeModel model) async {
+  bool result = false;
+  List<EmployeeModel> userChkList = [];
+
+  await loginDialogWidget(context: context, message: "grade_dialog_2".tr(), actions: [
+    Expanded(
+      child: Column(
+        children: [
+          Container(
+            height: 220.0.h,
+            child: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                ValueNotifier<bool> isChks = ValueNotifier<bool>(false);
+
+                return ValueListenableBuilder(
+                  valueListenable: isChks,
+                  builder: (context, bool value, child) {
+                    return InkWell(
+                      child: Container(
+                        width: 100.0.w,
+                        height: 50.0.h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                getProfileImage(
+                                  size: 36,
+                                  ImageUri: list[index].profilePhoto.toString(),
+                                ),
+                                SizedBox(
+                                  width: 6.0.w,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      list[index].name,
+                                      style: getNotoSantBold(fontSize: 14.0, color: textColor),
+                                    ),
+                                    Text(
+                                      list[index].position! + " / " + list[index].team!,
+                                      style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 18.0.w,
+                              height: 18.0.h,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: calendarLineColor.withOpacity(0.5)),
+                                shape: BoxShape.circle,
+                                color: value ? workInsertColor : whiteColor,
+                              ),
+                              child: Center(
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 16.0.w,
+                                    color: whiteColor,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        isChks.value = !value;
+                        if (isChks.value) {
+                          userChkList.add(list[index]);
+                        } else {
+                          userChkList.remove(list[index]);
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          SizedBox(
+            height: 5.0.h,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              confirmElevatedButton(
+                  topPadding: 50.0.h,
+                  buttonName: "dialogConfirm".tr(),
+                  buttonAction: () async {
+                    if(model.gradeLevel == 9){
+                      if(list.length == userChkList.length) {
+                        alarmGradeDialog(context);
+                        return;
+                      }
+                    }
+
+                    await userChkList.map((e) => e.reference!.update({"level": FieldValue.arrayRemove([model.gradeLevel])})).toList();
+                    result = true;
+                    Navigator.pop(context, true);
+                  },
+                  customWidth: 70.0,
+                  customHeight: 40.0),
+              confirmElevatedButton(
+                  topPadding: 50.0.h,
+                  buttonName: "dialogCancel".tr(),
+                  buttonAction: () => Navigator.pop(context, false),
+                  customWidth: 70.0,
+                  customHeight: 40.0),
+            ],
+          )
+        ],
+      ),
+    )
+  ]);
+  return result;
+}
+
+Future<void> alarmGradeDialog(BuildContext context) async {
+  await loginDialogWidget(context: context, message: "grade_dialog_3".tr(), actions: [
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        confirmElevatedButton(
+            topPadding: 50.0.h,
+            buttonName: "dialogConfirm".tr(),
+            buttonAction: () async {
+              Navigator.pop(context, true);
+            },
+            customWidth: 70.0,
+            customHeight: 40.0),
+      ],
+    )
+  ]);
 }
 

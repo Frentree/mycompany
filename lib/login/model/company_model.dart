@@ -22,6 +22,7 @@ class CompanyModel {
   String? companyWeb;
   bool? vacation;
   List<dynamic>? companySearch;
+  DocumentReference? reference;
 
   CompanyModel({
     required this.companyCode,
@@ -35,7 +36,7 @@ class CompanyModel {
     this.companySearch,
   });
 
-  CompanyModel.fromMap({required Map mapData})
+  CompanyModel.fromMap({required Map mapData, this.reference})
       : companyCode = mapData["companyCode"] ?? "",
         companyName = mapData["companyName"] ?? "",
         companyAddr = mapData["companyAddr"] ?? "",

@@ -327,7 +327,7 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
         return CircularMenu(
             key: key,
             alignment: Alignment.bottomRight,
-            radius: 170.0,
+            radius: 150.0.r,
             toggleButtonColor: workInsertColor,
             backgroundWidget: !value
                 ? Container(
@@ -348,25 +348,20 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
             },
             items: [
               CircularMenuItem(
-                  icon: Icons.home,
+                  icon: Icons.schedule,
                   boxShadow: [BoxShadow(color: Colors.black)],
                   color: workInsertColor,
                   onTap: () => _reprository.mainNavigator(context: context, navigator: AttendanceDashboardView(), isMove: false)),
               CircularMenuItem(
-                  icon: Icons.schedule,
+                  icon: Icons.event_note,
                   boxShadow: [BoxShadow(color: Colors.black)],
                   color: workInsertColor,
                   onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false)),
               CircularMenuItem(
-                  icon: Icons.youtube_searched_for,
+                  icon: Icons.apps_sharp,
                   boxShadow: [BoxShadow(color: Colors.black)],
                   color: workInsertColor,
                   onTap: () => _reprository.mainNavigator(context: context, navigator: InquiryView(), isMove: false)),
-              CircularMenuItem(
-                  icon: Icons.star,
-                  boxShadow: [BoxShadow(color: Colors.black)],
-                  color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleView(), isMove: false)),
               CircularMenuItem(
                   icon: Icons.settings,
                   boxShadow: [BoxShadow(color: Colors.black)],

@@ -1,17 +1,17 @@
-
 import 'package:flutter/cupertino.dart';
 
-class SettingModel{
+class SettingModel {
   String munuName;
-  int menuLavel;
+  List<int> menuLavel;
   Icon menuIcon;
   Widget? widget;
+  Function? function;
 
   SettingModel({
-   required this.munuName,
-   required this.menuLavel,
-   required this.menuIcon,
-   this.widget,
+    required this.munuName,
+    required this.menuLavel,
+    required this.menuIcon,
+    this.widget,
+    this.function,
   });
-
 }

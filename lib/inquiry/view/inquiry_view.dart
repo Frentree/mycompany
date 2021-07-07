@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/view/approval_join_company_view.dart';
 import 'package:mycompany/approval/view/approval_main_view.dart';
-import 'package:mycompany/inquiry/view/inquiry_my_information_view.dart';
+import 'package:mycompany/inquiry/view/inquiry_employee_attendance_data_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_view.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -21,7 +21,7 @@ class InquiryView extends StatefulWidget {
 class _InquiryViewState extends State<InquiryView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청",];
+  var typeList = ["approval".tr(), "notice".tr(), "회사가입 신청", "직원 근태 조회"];
 
   late int typeChkCount;
 
@@ -41,7 +41,7 @@ class _InquiryViewState extends State<InquiryView> {
       typeChkCount = 0;
     }
 
-    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView()];
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
   }
 
   @override

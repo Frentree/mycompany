@@ -9,6 +9,7 @@ import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -191,6 +192,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                     customHeight: 40.0),
                               ]);
                               if (result) {
+                                sendFcmWithTokens(loginUser, [widget.model.userMail], "[결재 승인]", "[${loginUser.name}] 님이 ${widget.model.approvalType} 결재를 반려 했습니다.", "");
                                 Navigator.pop(context, true);
                               }
                             },
@@ -234,6 +236,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                     customHeight: 40.0),
                               ]);
                               if (result) {
+                                sendFcmWithTokens(loginUser, [widget.model.userMail], "[결재 승인]", "[${loginUser.name}] 님이 ${widget.model.approvalType} 결재를 승인 했습니다.", "");
                                 Navigator.pop(context, true);
                               }
                             },

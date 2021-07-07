@@ -120,7 +120,6 @@ class _ScheduleViewState extends State<ScheduleView> {
 
     return WillPopScope(
       onWillPop: () async {
-
         var result = await loginDialogWidget(
             context: context,
             message: "앱을 종료하시겠습니까?",
@@ -151,14 +150,28 @@ class _ScheduleViewState extends State<ScheduleView> {
         key: _scaffoldKey,
         //floatingActionButton: getMainCircularMenu(context: context, navigator: 'home', isToggleChk: false),
         drawer: Drawer(
-          child: Center(
-            child: IconButton(
-              icon: Icon(
-                Icons.logout,
-              ),
-              onPressed: (){
-                SignOutFunction().signOutFunction(context: context);
-              },
+          child: Padding(
+            padding: EdgeInsets.only(top: statusBarHeight + 10.0.h, left: 16.0.w, right: 16.0.w),
+            child: Column(
+              children: [
+                /*Text(
+                  "현재 동료 근무 상태",
+                  style: getRobotoBold(
+                    fontSize: 21.0,
+                    color: checkColor
+                  ),
+                ),*/
+                Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.logout,
+                    ),
+                    onPressed: (){
+                      SignOutFunction().signOutFunction(context: context);
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -326,18 +339,36 @@ class _ScheduleViewState extends State<ScheduleView> {
                               });
                             },
                           ),
-                          GestureDetector(
-                            child: SvgPicture.asset(
-                              'assets/icons/user_add.svg',
-                              width: 27.8.w,
-                              height: 23.76.h,
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _isColleague = !_isColleague;
-                                _isDatePopup = false;
-                              });
-                            },
+
+                          Row(
+                            children: [
+                              GestureDetector(
+                                child: SvgPicture.asset(
+                                  'assets/icons/refresh.svg',
+                                  width: 20.0.w,
+                                  height: 20.0.h,
+                                  color: workInsertColor,
+                                ),
+                                onTap: () {
+                                  _getDataSource();
+                                  setState(() {});
+                                },
+                              ),
+                              SizedBox(width: 20.0.w,),
+                              GestureDetector(
+                                child: SvgPicture.asset(
+                                  'assets/icons/user_add.svg',
+                                  width: 27.8.w,
+                                  height: 23.76.h,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _isColleague = !_isColleague;
+                                    _isDatePopup = false;
+                                  });
+                                },
+                              ),
+                            ],
                           ),
 
                         ],
@@ -383,8 +414,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                               onTap: (CalendarTapDetails details) => CalenderMethod().getScheduleDetail(details: details, context: context, employeeList: employeeList),
                             ),
                           ),
-                          _isDatePopup
-                              ? Container(
+                          _isDatePopup ? Container(
                             height: 200.0.h,
                             decoration: BoxDecoration(
                                 border: Border(

@@ -35,4 +35,23 @@ class ProfileEditFunction {
 
     return imageUrl;
   }
+
+  Future<String?> uploadCompanyImageToStorage({
+    required BuildContext context,
+    required String pickImagePath, pickImage,
+  }) async {
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false,);
+    UserModel loginUserData = userInfoProvider.getUserData()!;
+
+    Reference profileReference = firebaseStorage.ref().child("company/${loginUserData.companyCode}");
+
+    UploadTask uploadTask = profileReference.putFile(File(pickImagePath));
+
+    String imageUrl = await (await uploadTask).ref.getDownloadURL();
+
+    return imageUrl;
+  }
 }

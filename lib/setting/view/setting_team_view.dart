@@ -18,6 +18,10 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:mycompany/setting/widget/setting_dialog.dart';
 
 class SettingTeamView extends StatefulWidget {
+  final List<dynamic> gradeLevel;
+
+  SettingTeamView({required this.gradeLevel});
+
   @override
   _SettingTeamViewState createState() => _SettingTeamViewState();
 }
@@ -55,10 +59,10 @@ class _SettingTeamViewState extends State<SettingTeamView> {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (widget.gradeLevel.contains(6) || widget.gradeLevel.contains(9)) ? FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => addTeamDialog(context, loginUser.companyCode!, teamNameContoller),
-      ),
+      ) : Container(),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -175,7 +179,7 @@ class _SettingTeamViewState extends State<SettingTeamView> {
                                     ],
                                   ),
                                   Visibility(
-                                    visible: "other_team".tr() != teamModel.teamName,
+                                    visible: "other_team".tr() != teamModel.teamName && widget.gradeLevel.contains(6) || widget.gradeLevel.contains(9),
                                     child: PopupMenuButton<int>(
                                       padding: EdgeInsets.all(0),
                                       icon: Icon(Icons.settings),
