@@ -27,9 +27,13 @@ class ApprovalFirebaseRepository {
   Future<bool> insertWorkApproval({required WorkModel workModel,required EmployeeModel approvalUser,required UserModel loginUser, String? docId}) =>
       _curd.insertWorkApproval(workModel, approvalUser, loginUser, docId);
 
+  Future<void> createApprovalData({required String companyId, required ApprovalModel approvalModelModel}) => _curd.createApprovalData(companyId: companyId, approvalModelModel: approvalModelModel);
+
   Future<bool> requestApprovalCencel({required ApprovalModel model,required String companyCode}) =>
       _curd.requestApprovalCencel(model, companyCode);
 
   Future<bool> updateWorkApproval({required ApprovalModel model,required String companyCode, required String approval, required String content}) =>
       _curd.updateWorkApproval(model, companyCode, approval, content);
+
+
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +12,7 @@ import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/attendance/view/attendance_data_view.dart';
 import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
 import 'package:mycompany/attendance/widget/attendance_dialog_widget.dart';
+import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
@@ -394,23 +396,41 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                             SizedBox(
                               width: 116.0.w,
                               height: 29.0.h,
-                              child: ElevatedButton(
-                                onPressed: () => applyOvertimeBottomSheet(context: context),
-                                style: ElevatedButton.styleFrom(
-                                  primary: whiteColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14.0.r),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "연장근무신청 +",
-                                    style: TextStyle(
-                                      fontSize: 13.0.sp,
-                                      color: Color(0xff2093F0),
+                              child: ValueListenableBuilder(
+                                valueListenable: attendanceStatus,
+                                builder: (BuildContext context, int value, Widget? child) {
+                                  print(attendanceStatus.value);
+                                  return ElevatedButton(
+                                    onPressed: (value != 0 && value != 5 && value != 6) ? () async {
+                                      int? overtimeValue = await applyOvertimeBottomSheet(context: context);
+
+                                      if(overtimeValue != null){
+                                        List<EmployeeModel> approvalList = await LoginFirestoreRepository().readAllEmployeeData(companyId: loginEmployeeData.companyCode);
+
+                                        bool? selectApprovalResult = await selectOvertimeApprovalBottomSheet(context: context, employeeModel: loginEmployeeData, approvalList: approvalList, overtime: overtimeValue);
+
+                                        /*if(selectApprovalResult == true){
+                                          Fluttertoast.showToast(msg: "연장근무 신청이 완료되었습니다.");
+                                        }*/
+                                      }
+                                    } : null,
+                                    style: ElevatedButton.styleFrom(
+                                      primary: whiteColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14.0.r),
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                    child: Center(
+                                      child: Text(
+                                        "연장근무신청 +",
+                                        style: TextStyle(
+                                          fontSize: 13.0.sp,
+                                          color: (value != 0 && value != 5 && value != 6) ? Color(0xff2093F0) : Color(0xff9C9C9C),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
                               ),
                             )
                           ],

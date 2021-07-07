@@ -79,6 +79,10 @@ class ApprovalFirebaseCurd {
     return isResult;
   }
 
+  Future<void> createApprovalData({required String companyId, required ApprovalModel approvalModelModel}) async {
+    await _store.collection(COMPANY).doc(companyId).collection(WORKAPPROVAL).add(approvalModelModel.toJson());
+  }
+
   /*
   *  결재 요청 취소
   *
@@ -131,6 +135,10 @@ class ApprovalFirebaseCurd {
         case "재택": case "외출": case "연차": case "반차":
         await _store.collection(COMPANY).doc(companyCode).collection(WORK).add(workModel.toJson());
         break;
+
+        case "연장":
+          await AttendanceFirestoreRepository().updateOvertime(companyId: companyCode, attendanceUserMail: model.userMail, attendanceDate: DateFormatCustom().updateAttendance(date: model.requestStartDate), overtime: model.overtime!);
+          break;
       }
       if(model.approvalType == "연차") {
         AttendanceFirestoreRepository().createAttendanceData(
@@ -157,6 +165,5 @@ class ApprovalFirebaseCurd {
         .onError((error, stackTrace) => {isResult = false}).whenComplete(() => {isResult = true});
 
     return isResult;
-
   }
 }

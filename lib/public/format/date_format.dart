@@ -161,7 +161,7 @@ class DateFormatCustom {
   // 연차 등록시 12시 변경
   Timestamp updateAttendance({required Timestamp date}){
     DateTime parseDate = date.toDate();
-    parseDate = DateTime(parseDate.year, parseDate.month, parseDate.day, 12, 00, 00);
+    parseDate = DateTime(parseDate.year, parseDate.month, parseDate.day);
 
     Timestamp dateTime = Timestamp.fromDate(parseDate);
     return dateTime;

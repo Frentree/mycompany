@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/word/database_name.dart';
 
 class AttendanceFirestoreCrud {
@@ -71,5 +71,24 @@ class AttendanceFirestoreCrud {
         .collection(ATTENDANCE)
         .doc(attendanceModel.documentId)
         .update(attendanceModel.toJson());
+  }
+
+  Future<void> updateOvertime({required String companyId, required String attendanceUserMail, required Timestamp attendanceDate, required int overtime}) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
+        .collection(COMPANY)
+        .doc(companyId)
+        .collection(ATTENDANCE)
+        .where("mail", isEqualTo: attendanceUserMail)
+        .where("createDate", isEqualTo: attendanceDate)
+        .get();
+
+    AttendanceModel attendanceData = AttendanceModel.fromMap(mapData: querySnapshot.docs.first.data(), documentId: querySnapshot.docs.first.id);
+
+    attendanceData.overTime = attendanceData.overTime! + overtime;
+
+    await updateAttendanceData(
+      companyId: companyId,
+      attendanceModel: attendanceData
+    );
   }
 }
