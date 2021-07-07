@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/attendance/function/total_office_hours_calculation_function.dart';
 import 'package:mycompany/attendance/model/attendance_model.dart';
-import 'package:mycompany/attendance/view/employee_attendance_data_view.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';

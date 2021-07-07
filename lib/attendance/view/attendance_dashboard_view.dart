@@ -13,7 +13,6 @@ import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
 import 'package:mycompany/attendance/widget/attendance_dialog_widget.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -403,11 +402,13 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                                     borderRadius: BorderRadius.circular(14.0.r),
                                   ),
                                 ),
-                                child: Text(
-                                  "연장근무신청 +",
-                                  style: TextStyle(
-                                    fontSize: 13.0.sp,
-                                    color: Color(0xff2093F0),
+                                child: Center(
+                                  child: Text(
+                                    "연장근무신청 +",
+                                    style: TextStyle(
+                                      fontSize: 13.0.sp,
+                                      color: Color(0xff2093F0),
+                                    ),
                                   ),
                                 ),
                               ),

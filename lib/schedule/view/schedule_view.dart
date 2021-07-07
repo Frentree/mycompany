@@ -150,14 +150,28 @@ class _ScheduleViewState extends State<ScheduleView> {
         key: _scaffoldKey,
         //floatingActionButton: getMainCircularMenu(context: context, navigator: 'home', isToggleChk: false),
         drawer: Drawer(
-          child: Center(
-            child: IconButton(
-              icon: Icon(
-                Icons.logout,
-              ),
-              onPressed: (){
-                SignOutFunction().signOutFunction(context: context);
-              },
+          child: Padding(
+            padding: EdgeInsets.only(top: statusBarHeight + 10.0.h, left: 16.0.w, right: 16.0.w),
+            child: Column(
+              children: [
+                /*Text(
+                  "현재 동료 근무 상태",
+                  style: getRobotoBold(
+                    fontSize: 21.0,
+                    color: checkColor
+                  ),
+                ),*/
+                Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.logout,
+                    ),
+                    onPressed: (){
+                      SignOutFunction().signOutFunction(context: context);
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
