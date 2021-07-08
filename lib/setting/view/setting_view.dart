@@ -3,17 +3,21 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/login/db/login_firestore_repository.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/login/service/login_service_repository.dart';
+import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/function/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/setting/function/setting_function.dart';
-import 'package:mycompany/setting/view/setting_team_view.dart';
 import 'package:provider/provider.dart';
 
 class SettingView extends StatefulWidget {
@@ -24,12 +28,11 @@ class SettingView extends StatefulWidget {
 class _SettingViewState extends State<SettingView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  List<String> gridList = ["내정보 수정", "팀 설정", "직급 설정"];
-
   @override
   Widget build(BuildContext context) {
-    UserModel loginUser = PublicFunction().getUserProviderListenSetting(context);
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+    UserModel loginUser = userInfoProvider.getUserData()!;
+
     return WillPopScope(
         onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
         child: Scaffold(
@@ -119,7 +122,11 @@ class _SettingViewState extends State<SettingView> {
                                   ),
                                 ),
                               ),
-                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!))
+                              onTap: () async {
+                                var result = false;
+                                if(data.widget != null) Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!));
+                                else await SignOutFunction().signOutFunction(context: context);
+                              }
                           ),
                         ).toList(),
                       ),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/setting/model/setting_model.dart';
@@ -82,9 +83,7 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
   */
 
   // 로그아웃
-  list.add(SettingModel(munuName: "setting_menu_8".tr(), menuLavel: [0], menuIcon: Icon(Icons.logout, color: workInsertColor, size: 30.0.h),
-      widget: SettingUnomplementedScreen()
-  ));
+  list.add(SettingModel(munuName: "setting_menu_8".tr(), menuLavel: [0], menuIcon: Icon(Icons.logout, color: workInsertColor, size: 30.0.h),));
 
   return list;
 }
