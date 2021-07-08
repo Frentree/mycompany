@@ -278,9 +278,9 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                       child: ListView.builder(
                                         padding: EdgeInsets.zero,
                                         itemCount: employeeListValue.values.length,
-                                        itemBuilder: (context, index1){
+                                        itemBuilder: (context, employeeIndex){
                                           ValueNotifier<bool> isDetail = ValueNotifier<bool>(true);
-                                          if(employeeListValue.values.elementAt(index1) == true){
+                                          if(employeeListValue.values.elementAt(employeeIndex) == true){
                                             return Column(
                                               children: [
                                                 Container(
@@ -296,17 +296,17 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                                       Row(
                                                         children: [
                                                           Text(
-                                                            employeeListValue.keys.elementAt(index1).name + " ",
+                                                            employeeListValue.keys.elementAt(employeeIndex).name + " ",
                                                             style: TextStyle(
                                                               fontWeight: fontWeight["Medium"],
                                                               fontSize: 13.0.sp,
                                                               color: textColor,
                                                             ),
                                                           ),
-                                                          (employeeListValue.keys.elementAt(index1).position == "" && employeeListValue.keys.elementAt(index1).team == "") ? Text(
+                                                          (employeeListValue.keys.elementAt(employeeIndex).position == "" && employeeListValue.keys.elementAt(employeeIndex).team == "") ? Text(
                                                             ""
                                                           ) : Text(
-                                                            (employeeListValue.keys.elementAt(index1).position != "" && employeeListValue.keys.elementAt(index1).team != "") ? "(${employeeListValue.keys.elementAt(index1).position}/${employeeListValue.keys.elementAt(index1).team})" : "(${employeeListValue.keys.elementAt(index1).position}${employeeListValue.keys.elementAt(index1).team})",
+                                                            (employeeListValue.keys.elementAt(employeeIndex).position != "" && employeeListValue.keys.elementAt(employeeIndex).team != "") ? "(${employeeListValue.keys.elementAt(employeeIndex).position}/${employeeListValue.keys.elementAt(employeeIndex).team})" : "(${employeeListValue.keys.elementAt(employeeIndex).position}${employeeListValue.keys.elementAt(employeeIndex).team})",
                                                             style: TextStyle(
                                                               fontWeight: fontWeight["Medium"],
                                                               fontSize: 13.0.sp,
@@ -352,8 +352,8 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                                               padding: EdgeInsets.zero,
                                                               physics: ScrollPhysics(),
                                                               itemCount: 7,
-                                                              itemBuilder: (context, index2){
-                                                                List<AttendanceModel> attendanceData = employeeWeekAttendanceDataValue[employeeListValue.keys.elementAt(index1).mail]!;
+                                                              itemBuilder: (context, attendanceIndex){
+                                                                List<AttendanceModel> attendanceData = employeeWeekAttendanceDataValue[employeeListValue.keys.elementAt(employeeIndex).mail]!;
                                                                 return Padding(
                                                                   padding: EdgeInsets.only(top: 20.0.h),
                                                                   child: Row(
@@ -362,10 +362,10 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                                                       Expanded(
                                                                         child: Center(
                                                                           child: Text(
-                                                                            dateFormatCustom.changeDateToString(date: queryStartDate.value.add(Duration(days: index2)), isIncludeWeekday: true),
+                                                                            dateFormatCustom.changeDateToString(date: queryStartDate.value.add(Duration(days: attendanceIndex)), isIncludeWeekday: true),
                                                                             style: TextStyle(
                                                                               fontSize: 13.0.sp,
-                                                                              color: index2 == 0 ? Colors.red : index2 == 6 ? Color(0xff2093F0) : textColor,
+                                                                              color: attendanceIndex == 0 ? Colors.red : attendanceIndex == 6 ? Color(0xff2093F0) : textColor,
                                                                             ),
                                                                           ),
                                                                         ),
@@ -373,18 +373,7 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                                                       Expanded(
                                                                         child: Center(
                                                                           child: Text(
-                                                                            attendanceData[index2].attendTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[index2].attendTime),
-                                                                            style: TextStyle(
-                                                                              fontSize: 13.0.sp,
-                                                                              color: Color(0xff9C9C9C),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                            attendanceData[index2].endTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[index2].endTime),
+                                                                            attendanceData[attendanceIndex].attendTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[attendanceIndex].attendTime),
                                                                             style: TextStyle(
                                                                               fontSize: 13.0.sp,
                                                                               color: Color(0xff9C9C9C),
@@ -395,7 +384,18 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                                                       Expanded(
                                                                         child: Center(
                                                                           child: Text(
-                                                                            _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: _totalOfficeHoursCalculationFunction.dayOfficeHoursCalculation(attendanceData: attendanceData[index2])),
+                                                                            attendanceData[attendanceIndex].endTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[attendanceIndex].endTime),
+                                                                            style: TextStyle(
+                                                                              fontSize: 13.0.sp,
+                                                                              color: Color(0xff9C9C9C),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: Center(
+                                                                          child: Text(
+                                                                            _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: _totalOfficeHoursCalculationFunction.dayOfficeHoursCalculation(attendanceData: attendanceData[attendanceIndex])),
                                                                             style: TextStyle(
                                                                               fontSize: 13.0.sp,
                                                                               color: Color(0xff9C9C9C),
@@ -421,7 +421,7 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                                               child: ValueListenableBuilder(
                                                                   valueListenable: employeeWeekTotalOfficeHours,
                                                                   builder: (BuildContext context, Map<String, List<Duration>> employeeWeekTotalOfficeHoursValue, Widget? child) {
-                                                                    List<Duration> weekTotalOfficeHoursData = employeeWeekTotalOfficeHoursValue[employeeListValue.keys.elementAt(index1).mail]!;
+                                                                    List<Duration> weekTotalOfficeHoursData = employeeWeekTotalOfficeHoursValue[employeeListValue.keys.elementAt(employeeIndex).mail]!;
                                                                     return Column(
                                                                       children: [
                                                                         Padding(

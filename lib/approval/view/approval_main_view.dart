@@ -32,9 +32,9 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   DateFormatCustom _format = DateFormatCustom();
   ApprovalFirebaseRepository _approvalFirebaseRepository = ApprovalFirebaseRepository();
 
-  var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent];
+  var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent, Colors.amber];
   int typeChoise = 1;
-  var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타"];
+  var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타", "연장"];
 
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
@@ -145,11 +145,10 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                 child: Row(
                   children: [
                     Container(
-                      alignment: Alignment.centerRight,
                       child: Container(
                         decoration: BoxDecoration(
                             color: _color[typeChoise],
-                            borderRadius: BorderRadius.all(Radius.circular(20.0))
+                            borderRadius: BorderRadius.all(Radius.circular(20.0.r))
                         ),
                         width: 34.0.w,
                         height: 19.0.h,

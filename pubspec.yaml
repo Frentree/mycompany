@@ -50,6 +50,7 @@ dependencies:
   device_info_plus: ^2.0.1
   firebase_storage: ^9.0.0
   image_picker: ^0.8.1+2
+  fluttertoast: ^8.0.7
   cloud_functions:
   flutter_local_notifications:
   location:

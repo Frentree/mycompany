@@ -17,6 +17,7 @@
   결재 요청자 : user
   결재 요청자 메일 : userMail
   같이할 동료 : attendees
+  연장근무 시간 : overtime
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,6 +43,7 @@ class ApprovalModel {
   String user;
   String userMail;
   List<dynamic>? colleagues;
+  int? overtime;
   DocumentReference? reference;
 
   ApprovalModel({
@@ -65,6 +67,7 @@ class ApprovalModel {
     required this.user,
     required this.userMail,
     this.colleagues,
+    this.overtime,
   });
 
   ApprovalModel.fromMap({required Map mapData, this.reference})
@@ -86,7 +89,8 @@ class ApprovalModel {
         totalCost = mapData["totalCost"] ?? 0,
         user = mapData["user"] ?? Timestamp.now(),
         userMail = mapData["userMail"] ?? Timestamp.now(),
-        colleagues = mapData["colleagues"] ?? [{mapData["userMail"] : mapData["user"]}];
+        colleagues = mapData["colleagues"] ?? [{mapData["userMail"] : mapData["user"]}],
+        overtime = mapData["overtime"] ??  null;
 
 
   toJson(){
@@ -111,6 +115,7 @@ class ApprovalModel {
       "user": user,
       "userMail": userMail,
       "colleagues" : colleagues,
+      "overtime": overtime,
     };
   }
 }
