@@ -168,4 +168,19 @@ class PublicFirebaseMethods {
   Stream<QuerySnapshot> getLoginUser(UserModel loginUser){
     return _firestore.collection(COMPANY).doc(loginUser.companyCode!).collection(USER).where("mail", isEqualTo: loginUser.mail).snapshots();
   }
+
+  Stream<QuerySnapshot> usedVacation(UserModel loginUser,DateTime time) {
+    Timestamp _start = _dateFormatCustom.changeDateTimeToTimestamp(
+        dateTime: DateTime(time.year, 1, 1, 00, 00, 01));
+    Timestamp _end = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime(time.year, 12, 31, 23, 59, 59));
+
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode!)
+        .collection(WORK)
+        .where("createUid", isEqualTo: loginUser.mail)
+        .where("startTime", isLessThanOrEqualTo: _end)
+        .where("startTime", isGreaterThanOrEqualTo: _start)
+        .where("type", whereIn: ['연차', '반차'])
+        .orderBy("startTime", descending: false)
+        .snapshots();
+  }
 }

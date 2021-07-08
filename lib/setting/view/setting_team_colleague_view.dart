@@ -42,7 +42,7 @@ class _SettingTeamColleagueViewState extends State<SettingTeamColleagueView> {
   }
 
   _getSetting() async {
-    CompanyModel company = await PublicFirebaseReository().getVacation(widget.loginUser.companyCode!);
+    CompanyModel company = await PublicFirebaseReository().getVacation(companyCode: widget.loginUser.companyCode!);
     companyVacation = company.vacation!;
   }
 
@@ -114,8 +114,6 @@ class _SettingTeamColleagueViewState extends State<SettingTeamColleagueView> {
                     itemBuilder: (context, index) {
                       EmployeeModel empModel = EmployeeModel.fromMap(mapData: (docs[index].data() as dynamic), reference: docs[index].reference);
                       double? userVacation = empModel.vacation?.toDouble();
-                      double? totalVacation = TotalVacation(empModel.enteredDate!, companyVacation, userVacation ?? 0);
-                      double? useVacation = UsedVacation(empModel.companyCode, empModel.mail, empModel.enteredDate!, companyVacation);
 
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 5.0.h),

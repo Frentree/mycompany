@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mycompany/login/model/company_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
@@ -37,6 +38,11 @@ class PublicFirebaseMethods {
   Stream<DocumentSnapshot> getCompany(String companyCode) {
 
     return _store.collection(COMPANY).doc(companyCode).snapshots();
+  }
+
+  Stream<DocumentSnapshot> getUserVacation(UserModel loginUser) {
+
+    return _store.collection(COMPANY).doc(loginUser.companyCode).collection(USER).doc(loginUser.mail).snapshots();
   }
 
 }

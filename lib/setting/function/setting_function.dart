@@ -9,6 +9,7 @@ import 'package:mycompany/setting/view/setting_colleague_view.dart';
 import 'package:mycompany/setting/view/setting_company_information_view.dart';
 import 'package:mycompany/setting/view/setting_grade_view.dart';
 import 'package:mycompany/setting/view/setting_my_information_view.dart';
+import 'package:mycompany/setting/view/setting_my_vacation_view.dart';
 import 'package:mycompany/setting/view/setting_position_view.dart';
 import 'package:mycompany/setting/view/setting_team_view.dart';
 import 'package:mycompany/setting/view/setting_unimplemented_screen.dart';
@@ -21,6 +22,10 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
 
   list.add(SettingModel(munuName: "setting_menu_1".tr(), menuLavel: [0], menuIcon: Icon(Icons.contact_mail, color: workInsertColor, size: 30.0.h),
     widget: SettingMyInformationView()
+  ));
+
+  list.add(SettingModel(munuName: "setting_menu_11".tr(), menuLavel: [0], menuIcon: Icon(Icons.airport_shuttle_rounded, color: workInsertColor, size: 30.0.h),
+      widget: SettingMyVacationView()
   ));
 
   list.add(SettingModel(munuName: "setting_menu_10".tr(), menuLavel: [0], menuIcon: Icon(Icons.home_work_outlined, color: workInsertColor, size: 30.0.h),
@@ -59,7 +64,7 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
         widget: SettingWifiView()
     ));
   }
-
+  /*
   // 앱버전
   list.add(SettingModel(munuName: "setting_menu_5".tr(), menuLavel: [0], menuIcon: Icon(Icons.perm_device_info, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()
@@ -74,6 +79,7 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
   list.add(SettingModel(munuName: "setting_menu_7".tr(), menuLavel: [0], menuIcon: Icon(Icons.wb_incandescent_outlined, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()
   ));
+  */
 
   // 로그아웃
   list.add(SettingModel(munuName: "setting_menu_8".tr(), menuLavel: [0], menuIcon: Icon(Icons.logout, color: workInsertColor, size: 30.0.h),

@@ -157,6 +157,11 @@ class DateFormatCustom {
 
     return date.year.toString() + "." +  twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + changeWeekDay(date: date) +")";
   }
+
+  String getMonthAndDay({required DateTime date}) {
+
+    return twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + changeWeekDay(date: date) +")";
+  }
   
   // 연차 등록시 12시 변경
   Timestamp updateAttendance({required Timestamp date}){

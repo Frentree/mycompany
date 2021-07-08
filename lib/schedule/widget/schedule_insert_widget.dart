@@ -14,6 +14,7 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/view/schedule_approval_view.dart';
+import 'package:mycompany/schedule/view/schedule_colleague_approval_view.dart';
 import 'package:mycompany/schedule/view/schedule_colleague_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
@@ -133,7 +134,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
           getDateTime(),
           getLocation(),
           getNote(),
-          getApproval()
+          getColleagueApproval()
         ],
       ),
     );
@@ -848,6 +849,91 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   onTap: () async {
                     var value = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                         ScheduleApprovalView(
+                          employeeList: widget.employeeList,
+                          teamList: widget.teamList,
+                          approvalUser: widget.approvalUser,
+                        ))
+                    );
+
+                    if(value){
+                      setState(() {});
+                    }
+
+                  }
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 31.0.h,
+        )
+      ],
+    );
+  }
+
+  Widget getColleagueApproval() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.only(right: 8.0.w),
+              child: SvgPicture.asset(
+                'assets/icons/icon_approval.svg',
+                width: 19.0.w,
+                height: 19.0.h,
+                color: workInsertColor,
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          child: widget.approvalUser.value.mail == "" ?
+                          Text(
+                            "approver".tr(),
+                            style: getNotoSantRegular(
+                              fontSize: 14.0,
+                              color: hintTextColor,
+                            ),
+                          ) :
+                          Row(
+                            children: [
+                              Container(
+                                child: Row(
+                                  children: [
+                                    getProfileImage(ImageUri: widget.approvalUser.value.profilePhoto,size: 14),
+                                    SizedBox(width: 5.0.w,),
+                                    Text(
+                                      widget.approvalUser.value.name.toString(),
+                                      style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 5.0.h),
+                        child: SvgPicture.asset(
+                          'assets/icons/arrow_right.svg',
+                          width: 6.59.w,
+                          height: 10.66.h,
+                          color: calendarLineColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () async {
+                    var value = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        ScheduleColleagueApprovalView(
                           employeeList: widget.employeeList,
                           teamList: widget.teamList,
                           approvalUser: widget.approvalUser,

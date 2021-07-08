@@ -36,6 +36,7 @@ class WorkModel {
   List<dynamic>? colleagues;
   int? level;
   int? timeSlot;
+  DocumentReference? reference;
 
 
   WorkModel({
@@ -56,7 +57,7 @@ class WorkModel {
     this.colleagues
   });
 
-  WorkModel.fromMap({required Map mapData})
+  WorkModel.fromMap({required Map mapData, this.reference})
       : alarmId = mapData["alarmId"] ?? 0,
         allDay = mapData["allDay"] ?? false,
         title = mapData["title"] ?? "",
@@ -67,7 +68,7 @@ class WorkModel {
         organizerId = mapData["organizerId"] ?? "",
         location = mapData["location"] ?? "",
         startTime = mapData["startTime"] ?? Timestamp.now(),
-        endTime = mapData["endTime"] ?? null,
+        endTime = mapData["endTime"] ?? mapData["startTime"],
         createDate = mapData["createDate"] ?? Timestamp.now(),
         lastModDate = mapData["lastModDate"] ?? Timestamp.now(),
         colleagues = mapData["colleagues"] ?? [];

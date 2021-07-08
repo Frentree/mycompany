@@ -54,7 +54,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(loginUser: loginUser);
-    CompanyModel company = await PublicFirebaseReository().getVacation(loginUser.companyCode!);
+    CompanyModel company = await PublicFirebaseReository().getVacation(companyCode: loginUser.companyCode!);
 
     companyVacation.value = company.vacation!;
 

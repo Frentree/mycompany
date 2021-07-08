@@ -33,4 +33,7 @@ class PublicFirebaseRepository {
   Stream<QuerySnapshot> getLoginUser({required UserModel loginUser}) =>
       _methods.getLoginUser(loginUser);
 
+  Stream<QuerySnapshot> usedVacation({required UserModel loginUser,required DateTime time}) =>
+      _methods.usedVacation(loginUser, time);
+
 }
