@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ import 'package:mycompany/run_app/function/permission_function.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
+  print('My Company Main has been initiated');
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.black.withOpacity(0),
     statusBarIconBrightness: Brightness.dark,
@@ -25,7 +27,13 @@ void main() async {
   await Firebase.initializeApp();
   // await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '6LcchGkbAAAAADBFLdIS3DsYbfgLW7ifJUNMlY9v');
 
-  bool isPermissionGranted = await checkPermissionFunction();
+  bool isPermissionGranted = false;
+  if (!kIsWeb) {
+    isPermissionGranted = await checkPermissionFunction();
+  } else {
+    print('This is Web Application started');
+    isPermissionGranted = true;
+  }
 
   runApp(
     EasyLocalization(
