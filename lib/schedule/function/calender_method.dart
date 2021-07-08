@@ -199,8 +199,10 @@ class CalenderMethod{
     if(workName == "연차" && allDay){
       workName = "반차";
       title = "반차";
-    } else {
+    } else if(workName == "연차" && !allDay) {
       title = "연차";
+    }else if(workName == "요청") {
+      workName = "업무";
     }
 
     WorkModel workModel = WorkModel(
