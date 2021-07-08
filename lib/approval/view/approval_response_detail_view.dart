@@ -192,7 +192,9 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                     customHeight: 40.0),
                               ]);
                               if (result) {
-                                sendFcmWithTokens(loginUser, [widget.model.userMail], "[결재 승인]", "[${loginUser.name}] 님이 ${widget.model.approvalType} 결재를 반려 했습니다.", "");
+                                sendFcmWithTokens(loginUser, [widget.model.userMail],
+                                    "[결재 반려]",
+                                    "[${loginUser.name}] 님이 ${widget.model.approvalType == "요청" ? "업무 요청" : widget.model.approvalType} 결재를 반려 했습니다.", "");
                                 Navigator.pop(context, true);
                               }
                             },
@@ -236,7 +238,9 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                     customHeight: 40.0),
                               ]);
                               if (result) {
-                                sendFcmWithTokens(loginUser, [widget.model.userMail], "[결재 승인]", "[${loginUser.name}] 님이 ${widget.model.approvalType} 결재를 승인 했습니다.", "");
+                                sendFcmWithTokens(loginUser, [widget.model.userMail],
+                                    "[결재 승인]",
+                                    "[${loginUser.name}] 님이 ${widget.model.approvalType == "요청" ? "업무 요청" : widget.model.approvalType} 결재를 승인 했습니다.", "");
                                 Navigator.pop(context, true);
                               }
                             },
