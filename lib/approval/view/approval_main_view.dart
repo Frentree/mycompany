@@ -19,14 +19,16 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 
 class ApprovalMainView extends StatefulWidget {
   final bool? approvalChk;
+  TabController tabController;
 
-  ApprovalMainView({this.approvalChk});
+  ApprovalMainView({this.approvalChk, required this.tabController});
 
   @override
   _ApprovalMainViewState createState() => _ApprovalMainViewState();
 }
 
-class _ApprovalMainViewState extends State<ApprovalMainView> {
+class _ApprovalMainViewState extends State<ApprovalMainView> with SingleTickerProviderStateMixin {
+
   DateFormatCustom _format = DateFormatCustom();
   ApprovalFirebaseRepository _approvalFirebaseRepository = ApprovalFirebaseRepository();
 
@@ -58,9 +60,9 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    widget.tabController = TabController(length: 2, vsync: this);
     loginUser = PublicFunction().getUserProviderSetting(context);
     getApprovalData();
-
 
     if(widget.approvalChk != null){
       approvalChk = 1;
@@ -68,6 +70,14 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
       approvalChk = 0;
     }
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    widget.tabController.dispose();
+  }
+
 
   getApprovalData() async {
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);
@@ -446,6 +456,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
               ),
               Expanded(
                 child: TabBarView(
+                  controller: widget.tabController,
                   children: [
                     StreamBuilder<QuerySnapshot>(
                       stream: _approvalFirebaseRepository.getRequestApprovalDataSnashot(loginUser: loginUser),
