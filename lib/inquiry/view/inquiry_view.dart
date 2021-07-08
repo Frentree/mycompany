@@ -29,8 +29,6 @@ class _InquiryViewState extends State<InquiryView> {
 
   late ScrollController _scrollController;
 
-  late TabController _tabController;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -44,7 +42,7 @@ class _InquiryViewState extends State<InquiryView> {
       typeChkCount = 0;
     }
 
-    pageList =[ApprovalMainView(approvalChk: widget.approvalChk, tabController: _tabController,), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
   }
 
   @override

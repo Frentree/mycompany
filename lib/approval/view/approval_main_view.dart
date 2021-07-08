@@ -19,9 +19,9 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 
 class ApprovalMainView extends StatefulWidget {
   final bool? approvalChk;
-  TabController tabController;
 
-  ApprovalMainView({this.approvalChk, required this.tabController});
+
+  ApprovalMainView({this.approvalChk,});
 
   @override
   _ApprovalMainViewState createState() => _ApprovalMainViewState();
@@ -35,6 +35,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> with SingleTickerPr
   var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent];
   int typeChoise = 1;
   var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타"];
+  late TabController tabController;
 
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
@@ -60,7 +61,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> with SingleTickerPr
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     loginUser = PublicFunction().getUserProviderSetting(context);
     getApprovalData();
 
@@ -75,7 +76,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> with SingleTickerPr
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    widget.tabController.dispose();
+    tabController.dispose();
   }
 
 
@@ -456,7 +457,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> with SingleTickerPr
               ),
               Expanded(
                 child: TabBarView(
-                  controller: widget.tabController,
+                  controller: tabController,
                   children: [
                     StreamBuilder<QuerySnapshot>(
                       stream: _approvalFirebaseRepository.getRequestApprovalDataSnashot(loginUser: loginUser),
