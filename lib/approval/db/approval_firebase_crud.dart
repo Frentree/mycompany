@@ -137,7 +137,7 @@ class ApprovalFirebaseCurd {
         break;
 
         case "연장":
-          await AttendanceFirestoreRepository().updateOvertime(companyId: companyCode, attendanceUserMail: model.userMail, attendanceDate: DateFormatCustom().updateAttendance(date: model.requestStartDate), overtime: model.overtime!);
+          await AttendanceFirestoreRepository().updateOvertime(companyId: companyCode, attendanceUserMail: model.userMail, attendanceDate: DateFormatCustom().updateAttendance(date: model.requestStartDate), overtime: model.overtime!, approvalResult: true);
           break;
       }
       if(model.approvalType == "연차") {
@@ -154,8 +154,12 @@ class ApprovalFirebaseCurd {
     } else if(approval == "반려") {
       switch(model.approvalType) {
         case "기타": case "외근": case "요청":
-        await _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(model.workIds).delete();
-        break;
+          await _store.collection(COMPANY).doc(companyCode).collection(WORK).doc(model.workIds).delete();
+          break;
+
+        case "연장":
+          await AttendanceFirestoreRepository().updateOvertime(companyId: companyCode, attendanceUserMail: model.userMail, attendanceDate: DateFormatCustom().updateAttendance(date: model.requestStartDate), overtime: model.overtime!, approvalResult: false);
+          break;
       }
     }
 

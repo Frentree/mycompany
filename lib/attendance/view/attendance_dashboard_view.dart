@@ -171,6 +171,7 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
 
                                       snapshot.data![0].status = changedWorkType;
                                       snapshot.data![0].endTime = null;
+                                      snapshot.data![0].autoOffWork = 0;
 
                                       _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![0]);
                                       if(timer == null || timer!.isActive == false){
@@ -282,6 +283,7 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
 
                                               snapshot.data![0].status = 6;
                                               snapshot.data![0].endTime = Timestamp.now();
+                                              snapshot.data![0].autoOffWork = 1;
 
                                               _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![0]);
 
@@ -399,7 +401,6 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                               child: ValueListenableBuilder(
                                 valueListenable: attendanceStatus,
                                 builder: (BuildContext context, int value, Widget? child) {
-                                  print(attendanceStatus.value);
                                   return ElevatedButton(
                                     onPressed: (value != 0 && value != 5 && value != 6) ? () async {
                                       int? overtimeValue = await applyOvertimeBottomSheet(context: context);

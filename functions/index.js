@@ -41,7 +41,45 @@ exports.sendFcmNew = functions.https.onCall(async (data, context) => {
     );
 });
 
+//출근 데이터 자동 생성
+exports.autoCreateAttendanceDb = functions.pubsub.schedule('42 18 * * 1-5').timeZone('Asia/Seoul').onRun(async (context) => {
+    var db = admin.firestore();
+    var today = new Date();
+    var utc = today.getTime() + (today.getTimezoneOffset() * 60 * 1000);
+    var KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+    var kr_today = new Date(utc + (KR_TIME_DIFF));
+    var year = kr_today.getFullYear(); // 년도
+    var month = kr_today.getMonth();  // 월
+    var date = kr_today.getDate() - 1;  // 날짜
+    var createDate = new Date(year, month, date, 00);
 
+    await db.collection("company").get().then(companySnapshot => {
+        companySnapshot.forEach(async companyDoc => {
+            await companyDoc.ref.collection("user").get().then(userSnapshot =>{
+                userSnapshot.forEach(async userDoc => {
+                    var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", createDate).get();
+                    if(result == null){
+                        console.log('result =====> ', result);
+                        await companyDoc.ref.collection("attendance").add(
+                            {
+                                mail: userDoc.data().mail,
+                                name: userDoc.data().name,
+                                createDate: createDate,
+                                overTime: 0,
+                                autoOffWork: 0,
+                                status: 0,
+                            }
+                        );
+                    }
+
+                });
+            });
+        });
+    });
+});
+
+
+//자동 퇴근 처리
 /* exports.sendFcm = functions.region("asia-northeast1").https.onCall(async (data, context) => {
     const _token = data["token"];
     const _team = data["team"];
