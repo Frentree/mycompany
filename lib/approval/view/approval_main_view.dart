@@ -19,8 +19,9 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 
 class ApprovalMainView extends StatefulWidget {
   final bool? approvalChk;
+  final BuildContext context;
 
-  ApprovalMainView({this.approvalChk});
+  ApprovalMainView({this.approvalChk, required this.context});
 
   @override
   _ApprovalMainViewState createState() => _ApprovalMainViewState();

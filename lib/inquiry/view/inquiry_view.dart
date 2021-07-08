@@ -41,7 +41,7 @@ class _InquiryViewState extends State<InquiryView> {
       typeChkCount = 0;
     }
 
-    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk, context: context,), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
   }
 
   @override
