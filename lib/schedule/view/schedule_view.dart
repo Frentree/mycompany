@@ -249,7 +249,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                                       WorkModel model = (snapshot.data! as dynamic);
 
                                       return Container(
-                                        child: Text((model.location == null || model.location == "") ? "외근지 미지정" : "외근지 > ${model.location!}",
+                                        child: Text((model.location == null || model.location == "") ? "외근지 미지정" : "${model.location!}",
                                           style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
                                         ),
                                       );
