@@ -72,9 +72,7 @@ class SettingWifiViewState extends State<SettingWifiView> {
                     ),
                     iconSize: 24.0.h,
                     splashRadius: 24.0.r,
-                    onPressed: () async {
-                      _publicFunctionRepository.onBackPressed(context: context);
-                    },
+                    onPressed: () => Navigator.pop(context),
                     padding: EdgeInsets.zero,
                     alignment: Alignment.centerLeft,
                     color: Color(0xff2093F0),

@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/setting/model/setting_model.dart';
+import 'package:mycompany/setting/view/setting_colleague_view.dart';
 import 'package:mycompany/setting/view/setting_company_information_view.dart';
 import 'package:mycompany/setting/view/setting_grade_view.dart';
 import 'package:mycompany/setting/view/setting_my_information_view.dart';
+import 'package:mycompany/setting/view/setting_my_vacation_view.dart';
 import 'package:mycompany/setting/view/setting_position_view.dart';
 import 'package:mycompany/setting/view/setting_team_view.dart';
 import 'package:mycompany/setting/view/setting_unimplemented_screen.dart';
@@ -22,6 +25,10 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
     widget: SettingMyInformationView()
   ));
 
+  list.add(SettingModel(munuName: "setting_menu_11".tr(), menuLavel: [0], menuIcon: Icon(Icons.airport_shuttle_rounded, color: workInsertColor, size: 30.0.h),
+      widget: SettingMyVacationView()
+  ));
+
   list.add(SettingModel(munuName: "setting_menu_10".tr(), menuLavel: [0], menuIcon: Icon(Icons.home_work_outlined, color: workInsertColor, size: 30.0.h),
     widget: SettingCompanyInformationView(gradeLevel: employeeModel.level!,)
   ));
@@ -31,14 +38,13 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
         widget: SettingVacationView()
     ));
   }
-  if(getGradeChk(employeeModel: employeeModel, level: [6,8,9])){
+
+  if(getGradeChk(employeeModel: employeeModel, level: [8,9])){
     list.add(SettingModel(munuName: "setting_menu_2".tr(), menuLavel: [0], menuIcon: Icon(Icons.supervised_user_circle_outlined, color: workInsertColor, size: 30.0.h),
-        widget: SettingUnomplementedScreen()
+        widget: SettingColleagueView()
     ));
   }
-  if(getGradeChk(employeeModel: employeeModel, level: [6,8,9])){
 
-  }
   list.add(SettingModel(munuName: "team_setting".tr(), menuLavel: [0], menuIcon: Icon(Icons.group, color: workInsertColor, size: 30.0.h),
       widget: SettingTeamView(gradeLevel: employeeModel.level!,)
   ));
@@ -59,7 +65,7 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
         widget: SettingWifiView()
     ));
   }
-
+  /*
   // 앱버전
   list.add(SettingModel(munuName: "setting_menu_5".tr(), menuLavel: [0], menuIcon: Icon(Icons.perm_device_info, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()
@@ -74,11 +80,10 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
   list.add(SettingModel(munuName: "setting_menu_7".tr(), menuLavel: [0], menuIcon: Icon(Icons.wb_incandescent_outlined, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()
   ));
+  */
 
   // 로그아웃
-  list.add(SettingModel(munuName: "setting_menu_8".tr(), menuLavel: [0], menuIcon: Icon(Icons.logout, color: workInsertColor, size: 30.0.h),
-      widget: SettingUnomplementedScreen()
-  ));
+  list.add(SettingModel(munuName: "setting_menu_8".tr(), menuLavel: [0], menuIcon: Icon(Icons.logout, color: workInsertColor, size: 30.0.h),));
 
   return list;
 }

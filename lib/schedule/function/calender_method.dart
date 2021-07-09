@@ -199,7 +199,7 @@ class CalenderMethod{
     if(workName == "연차" && allDay){
       workName = "반차";
       title = "반차";
-    } else {
+    } else if(workName == "연차" && !allDay) {
       title = "연차";
     }
 
@@ -220,9 +220,9 @@ class CalenderMethod{
       case "내근": case "미팅":
         result = await _repository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: loginUser.companyCode!);
         break;
-      case "외근": case "요청":
+      case "외근": case "요청": case "업무":
         result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
-        sendFcmWithTokens(loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName} 결재를 요청 했습니다.", "");
+        sendFcmWithTokens(loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName == "요청" ? "업무 요청" : workName} 결재를 요청 했습니다.", "");
         break;
       case "재택": case "외출": case "연차": case "반차":
         result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);

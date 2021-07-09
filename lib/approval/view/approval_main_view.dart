@@ -20,19 +20,21 @@ import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 class ApprovalMainView extends StatefulWidget {
   final bool? approvalChk;
 
-  ApprovalMainView({this.approvalChk});
+
+  ApprovalMainView({this.approvalChk,});
 
   @override
   _ApprovalMainViewState createState() => _ApprovalMainViewState();
 }
 
 class _ApprovalMainViewState extends State<ApprovalMainView> {
+
   DateFormatCustom _format = DateFormatCustom();
   ApprovalFirebaseRepository _approvalFirebaseRepository = ApprovalFirebaseRepository();
 
-  var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent, Colors.amber];
+  var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent, Colors.amber, Colors.purple];
   int typeChoise = 1;
-  var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타", "연장"];
+  var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타", "연장", "요청"];
 
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
@@ -61,13 +63,19 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
     loginUser = PublicFunction().getUserProviderSetting(context);
     getApprovalData();
 
-
     if(widget.approvalChk != null){
       approvalChk = 1;
     }else {
       approvalChk = 0;
     }
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
 
   getApprovalData() async {
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);

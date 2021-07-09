@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mycompany/inquiry/function/profile_edit_function.dart';
-import 'package:mycompany/login/db/login_firestore_repository.dart';
-import 'package:mycompany/login/function/form_validation_function.dart';
 import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/login/style/decoration_style.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/public/db/public_firestore_repository.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
@@ -115,7 +112,7 @@ class SettingCompanyInformationViewState extends State<SettingCompanyInformation
                         horizontal: 27.5.w,
                       ),
                       child: StreamBuilder<DocumentSnapshot>(
-                          stream: PublicFirebaseReository().getCompany(companyCode: loginUserData.companyCode!),
+                          stream: PublicFirebaseRepository().getCompany(companyCode: loginUserData.companyCode!),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Container();
@@ -544,7 +541,7 @@ class SettingCompanyInformationViewState extends State<SettingCompanyInformation
                               children: [
                                 CircularProgressIndicator(),
                                 SizedBox(height: 10.0.h,),
-                                Text("업로드 중",
+                                Text("변경 중",
                                   style: getRobotoMedium(fontSize: 13, color: whiteColor),
                                 )
                               ],

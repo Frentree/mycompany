@@ -33,6 +33,7 @@ class _InquiryViewState extends State<InquiryView> {
   void initState() {
     // TODO: implement initState
     _scrollController = ScrollController();
+
     super.initState();
 
     if(widget.approvalChk != null){
@@ -41,7 +42,7 @@ class _InquiryViewState extends State<InquiryView> {
       typeChkCount = 0;
     }
 
-    pageList =[ApprovalMainView(approvalChk: widget.approvalChk,), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
+    pageList =[ApprovalMainView(approvalChk: widget.approvalChk), InquiryNoticeView(), ApprovalJoinCompanyView(), EmployeeAttendanceDataView()];
   }
 
   @override
@@ -101,7 +102,7 @@ class _InquiryViewState extends State<InquiryView> {
                         padding: EdgeInsets.only(
                           left: 26.0.w,
                           right: 21.0.w,
-                          bottom: 10.0.h
+                          bottom: 15.0.h
                         ),
                         child: SizedBox(
                             height: 40.0.h,

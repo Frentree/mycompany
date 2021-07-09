@@ -59,14 +59,14 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
               top: 33.0.h,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: Color(0xff000000).withOpacity(0.16),
-                    blurRadius: 3.0.h,
-                    offset: Offset(0.0, 1.0)
-                )
-              ]
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Color(0xff000000).withOpacity(0.16),
+                      blurRadius: 3.0.h,
+                      offset: Offset(0.0, 1.0)
+                  )
+                ]
             ),
             child: SizedBox(
               height: 55.0.h,
@@ -402,34 +402,34 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                               width: 116.0.w,
                               height: 29.0.h,
                               child: ValueListenableBuilder(
-                                valueListenable: attendanceStatus,
-                                builder: (BuildContext context, int value, Widget? child) {
-                                  return ElevatedButton(
-                                    onPressed: (value != 0 && value != 5 && value != 6) ? () async {
-                                      int? overtimeValue = await applyOvertimeBottomSheet(context: context);
+                                  valueListenable: attendanceStatus,
+                                  builder: (BuildContext context, int value, Widget? child) {
+                                    return ElevatedButton(
+                                      onPressed: (value != 0 && value != 5 && value != 6) ? () async {
+                                        int? overtimeValue = await applyOvertimeBottomSheet(context: context);
 
-                                      if(overtimeValue != null){
-                                        List<EmployeeModel> approvalList = await LoginFirestoreRepository().readAllEmployeeData(companyId: loginEmployeeData.companyCode);
-                                        await selectOvertimeApprovalBottomSheet(context: context, employeeModel: loginEmployeeData, approvalList: approvalList, overtime: overtimeValue);
-                                      }
-                                    } : null,
-                                    style: ElevatedButton.styleFrom(
-                                      primary: whiteColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(14.0.r),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "연장근무신청 +",
-                                        style: TextStyle(
-                                          fontSize: 13.0.sp,
-                                          color: (value != 0 && value != 5 && value != 6) ? Color(0xff2093F0) : Color(0xff9C9C9C),
+                                        if(overtimeValue != null){
+                                          List<EmployeeModel> approvalList = await LoginFirestoreRepository().readAllEmployeeData(companyId: loginEmployeeData.companyCode);
+                                          await selectOvertimeApprovalBottomSheet(context: context, employeeModel: loginEmployeeData, approvalList: approvalList, overtime: overtimeValue);
+                                        }
+                                      } : null,
+                                      style: ElevatedButton.styleFrom(
+                                        primary: whiteColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(14.0.r),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }
+                                      child: Center(
+                                        child: Text(
+                                          "연장근무신청 +",
+                                          style: TextStyle(
+                                            fontSize: 13.0.sp,
+                                            color: (value != 0 && value != 5 && value != 6) ? Color(0xff2093F0) : Color(0xff9C9C9C),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
                               ),
                             )
                           ],

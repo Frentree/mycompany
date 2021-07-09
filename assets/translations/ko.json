@@ -163,7 +163,7 @@
   "team_menu_2" : "팀원 추가",
   "team_menu_4" : "팀원 삭제",
   "team_menu_3" : "팀 삭제",
-  "setting_menu_1" : "내정보",
+  "setting_menu_1" : "내 정보",
   "setting_menu_2" : "직원",
   "setting_menu_3" : "직급",
   "setting_menu_4" : "와이파이 설정",
@@ -173,6 +173,7 @@
   "setting_menu_8" : "로그아웃",
   "setting_menu_9" : "연차설정",
   "setting_menu_10" : "회사정보",
+  "setting_menu_11" : "내 연차",
   "position_setting_dialog_1" : "직급을 생성하시겠습니까?",
   "position_setting_dialog_2" : "직급명을 입력해주세요",
   "position_setting_dialog_3" : "직급을 삭제하시겠습니까?",
@@ -205,7 +206,9 @@
   "grade_dialog_2" : "권한 인원 삭제",
   "grade_dialog_3" : "최고관리자는 1명이상이여야 합니다.",
   "approver_choise" : "결재자 선택",
-  "photo_fail" : "사진 업로드 실패"
+  "photo_fail" : "사진 업로드 실패",
+  "colleague_dialog_menu" : "사용자 정보 수정",
+  "entered" : "입사일"
 
 
 

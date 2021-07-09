@@ -3,16 +3,21 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/login/db/login_firestore_repository.dart';
+import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/public/function/public_firebase_repository.dart';
+import 'package:mycompany/login/service/login_service_repository.dart';
+import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/setting/function/setting_function.dart';
-import 'package:mycompany/setting/view/setting_team_view.dart';
 import 'package:provider/provider.dart';
 
 class SettingView extends StatefulWidget {
@@ -23,12 +28,11 @@ class SettingView extends StatefulWidget {
 class _SettingViewState extends State<SettingView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
 
-  List<String> gridList = ["내정보 수정", "팀 설정", "직급 설정"];
-
   @override
   Widget build(BuildContext context) {
-    UserModel loginUser = PublicFunction().getUserProviderListenSetting(context);
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+    UserModel loginUser = userInfoProvider.getUserData()!;
+
     return WillPopScope(
         onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
         child: Scaffold(
@@ -37,35 +41,46 @@ class _SettingViewState extends State<SettingView> {
             color: whiteColor,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                height: 72.0.h + statusBarHeight,
-                width: double.infinity,
-                color: whiteColor,
-                padding: EdgeInsets.only(top: statusBarHeight, left: 26.0.w),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      child: Container(
-                        color: whiteColor,
-                        width: 20.0.w,
-                        height: 30.0.h,
+                height: 98.0.h,
+                padding: EdgeInsets.only(
+                  right: 27.5.w,
+                  left: 27.5.w,
+                  top: 33.0.h,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.white, boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
+                child: SizedBox(
+                  height: 55.0.h,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        constraints: BoxConstraints(),
+                        icon: Icon(
+                          Icons.arrow_back_ios_outlined,
+                        ),
+                        iconSize: 24.0.h,
+                        splashRadius: 24.0.r,
+                        onPressed: () =>  _publicFunctionRepository.onBackPressed(context: context),
+                        padding: EdgeInsets.zero,
                         alignment: Alignment.centerLeft,
-                        child: SizedBox(
-                          child: Container(
-                              width: 14.9.w,
-                              height: 14.9.h,
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: workInsertColor,
-                              )),
+                        color: Color(0xff2093F0),
+                      ),
+                      SizedBox(
+                        width: 14.7.w,
+                      ),
+                      Text(
+                        "setting".tr(),
+                        style: TextStyle(
+                          fontSize: 18.0.sp,
+                          fontWeight: fontWeight['Medium'],
+                          color: textColor,
                         ),
                       ),
-                      onTap: () => _publicFunctionRepository.onBackPressed(context: context),
-                    ),
-                    Text("setting".tr(), style: getNotoSantRegular(fontSize: 18.0, color: textColor)),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+              SizedBox(height: 10.0.h,),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: PublicFirebaseRepository().getLoginUser(loginUser: loginUser),
@@ -107,7 +122,11 @@ class _SettingViewState extends State<SettingView> {
                                   ),
                                 ),
                               ),
-                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!))
+                              onTap: () async {
+                                var result = false;
+                                if(data.widget != null) Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!));
+                                else await SignOutFunction().signOutFunction(context: context);
+                              }
                           ),
                         ).toList(),
                       ),

@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/fcm/alarmModel.dart';
+import 'package:mycompany/public/model/position_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/word/database_name.dart';
+import 'package:mycompany/schedule/model/work_model.dart';
 
 class PublicFirebaseMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -167,5 +171,93 @@ class PublicFirebaseMethods {
 
   Stream<QuerySnapshot> getLoginUser(UserModel loginUser){
     return _firestore.collection(COMPANY).doc(loginUser.companyCode!).collection(USER).where("mail", isEqualTo: loginUser.mail).snapshots();
+  }
+
+  Stream<QuerySnapshot> usedVacation(UserModel loginUser,DateTime time) {
+    Timestamp _start = _dateFormatCustom.changeDateTimeToTimestamp(
+        dateTime: DateTime(time.year, 1, 1, 00, 00, 01));
+    Timestamp _end = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime(time.year, 12, 31, 23, 59, 59));
+
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode!)
+        .collection(WORK)
+        .where("createUid", isEqualTo: loginUser.mail)
+        .where("startTime", isLessThanOrEqualTo: _end)
+        .where("startTime", isGreaterThanOrEqualTo: _start)
+        .where("type", whereIn: ['연차', '반차'])
+        .orderBy("startTime", descending: false)
+        .snapshots();
+  }
+
+
+  Future<bool> createTeam(String companyCode, TeamModel team) async {
+    bool result = false;
+
+    await _firestore.collection(COMPANY).doc(companyCode).collection(TEAM).add(team.toJson()).whenComplete(() => result = true);
+
+    return result;
+  }
+
+  Future<bool> createPosition(String companyCode, PositionModel position) async {
+    bool result = false;
+
+    await _firestore.collection(COMPANY).doc(companyCode).collection(POSITION).add(position.toJson()).whenComplete(() => result = true);
+
+    return result;
+  }
+
+  Future<CompanyModel> getVacation(String companyCode) async {
+    dynamic doc = await _firestore.collection(COMPANY).doc(companyCode).get();
+
+    CompanyModel model = CompanyModel.fromMap(mapData: doc.data());
+
+    return model;
+  }
+
+  Stream<DocumentSnapshot> getCompany(String companyCode) {
+
+    return _firestore.collection(COMPANY).doc(companyCode).snapshots();
+  }
+
+  Stream<DocumentSnapshot> getUserVacation(UserModel loginUser) {
+
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode).collection(USER).doc(loginUser.mail).snapshots();
+  }
+
+  Stream<QuerySnapshot> getColleagueAttendance(UserModel loginUser) {
+    DateTime now = DateTime.now();
+
+    Timestamp _start = _dateFormatCustom.changeDateTimeToTimestamp(
+        dateTime: DateTime(now.year, now.month, now.day, 00, 00, 00));
+    Timestamp _end = _dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime(now.year, now.month, now.day, 23, 59, 59));
+
+    return _firestore.collection(COMPANY).doc(loginUser.companyCode).collection(ATTENDANCE)
+        .where("createDate", isLessThanOrEqualTo: _end)
+        .where("createDate", isGreaterThanOrEqualTo: _start)
+        .snapshots();
+  }
+
+  Future<WorkModel> getOutWorkLocation(UserModel loginUser, String mail) async {
+    DateTime now = DateTime.now();
+    late WorkModel model;
+
+    Timestamp _now = _dateFormatCustom.changeDateTimeToTimestamp(
+        dateTime: now);
+
+    print("현재시간 : ${_now}");
+
+    await _firestore.collection(COMPANY)
+        .doc(loginUser.companyCode!)
+        .collection(WORK)
+        .where("createUid", isEqualTo: mail)
+        .where("endTime", isGreaterThanOrEqualTo: _now)
+        .get().then((value) => value.docs.map((e) {
+          WorkModel models = WorkModel.fromMap(mapData: e.data());
+          if(models.startTime.seconds <= _now.seconds){
+            model = WorkModel.fromMap(mapData: e.data());
+          }
+
+    }).toList());
+
+    return model;
   }
 }
