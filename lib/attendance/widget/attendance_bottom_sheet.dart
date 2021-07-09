@@ -8,10 +8,14 @@ import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/attendance/widget/attendance_button_widget.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:mycompany/login/model/user_model.dart';
 
 Future<dynamic> applyOvertimeBottomSheet({required BuildContext context}) {
   int? overtime = 1;
@@ -162,6 +166,9 @@ Future<dynamic> selectOvertimeApprovalBottomSheet({required BuildContext context
   ApprovalFirebaseRepository approvalFirebaseRepository = ApprovalFirebaseRepository();
   ValueNotifier<EmployeeModel?> selectApproval = ValueNotifier<EmployeeModel?>(null);
 
+  UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+  UserModel? loginUserData = userInfoProvider.getUserData();
+
   return showModalBottomSheet(
     isScrollControlled: true,
     shape: RoundedRectangleBorder(
@@ -245,9 +252,9 @@ Future<dynamic> selectOvertimeApprovalBottomSheet({required BuildContext context
                                                 child: SizedBox(
                                                   width: 36.0.w,
                                                   height: 36.0.h,
-                                                  child: approval.profilePhoto != '' ?
+                                                  child: approval.profilePhoto !=  "" ?
                                                   FadeInImage.assetNetwork(
-                                                    placeholder: 'assets/images/logo_blue.png',
+                                                    placeholder: 'assets/images/log_blue.png',
                                                     image: approval.profilePhoto.toString(),
                                                     height: 36.0.h,
                                                   ): SvgPicture.asset(
@@ -347,6 +354,7 @@ Future<dynamic> selectOvertimeApprovalBottomSheet({required BuildContext context
                             );
 
                             await approvalFirebaseRepository.createApprovalData(companyId: employeeModel.companyCode, approvalModelModel: overtimeApprovalData);
+                            sendFcmWithTokens(loginUserData, [value.mail], "[결재 요청]", "[${loginUserData!.name}]님이 연장근무 결재를 요청 했습니다.", "");
                             backPage(context: context, returnValue: true);
                           }
                         );

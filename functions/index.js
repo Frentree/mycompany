@@ -42,36 +42,33 @@ exports.sendFcmNew = functions.https.onCall(async (data, context) => {
 });
 
 //출근 데이터 자동 생성
-exports.autoCreateAttendanceDb = functions.pubsub.schedule('42 18 * * 1-5').timeZone('Asia/Seoul').onRun(async (context) => {
+exports.autoCreateAttendanceDb = functions.region('asia-northeast3').pubsub.schedule('0 4 * * 1-5').timeZone('Asia/Seoul').onRun(async (context) => {
     var db = admin.firestore();
-    var today = new Date();
-    var utc = today.getTime() + (today.getTimezoneOffset() * 60 * 1000);
-    var KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-    var kr_today = new Date(utc + (KR_TIME_DIFF));
-    var year = kr_today.getFullYear(); // 년도
-    var month = kr_today.getMonth();  // 월
-    var date = kr_today.getDate() - 1;  // 날짜
-    var createDate = new Date(year, month, date, 00);
+    var today = new Date()
+    today.setHours(today.getHours() + 9);
+    var year = today.getFullYear(); // 년도
+    var month = today.getMonth();  // 월
+    var date = today.getDate();  // 날짜
+    var createDate = new Date(year, month, date);
+    createDate.setHours(createDate.getHours() - 9);
 
     await db.collection("company").get().then(companySnapshot => {
         companySnapshot.forEach(async companyDoc => {
             await companyDoc.ref.collection("user").get().then(userSnapshot =>{
                 userSnapshot.forEach(async userDoc => {
-                    var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", createDate).get();
-                    if(result == null){
-                        console.log('result =====> ', result);
+                    var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", t).get();
+                    if(result.empty){
                         await companyDoc.ref.collection("attendance").add(
                             {
                                 mail: userDoc.data().mail,
                                 name: userDoc.data().name,
-                                createDate: createDate,
+                                createDate: t,
                                 overTime: 0,
                                 autoOffWork: 0,
                                 status: 0,
                             }
                         );
                     }
-
                 });
             });
         });
@@ -79,27 +76,97 @@ exports.autoCreateAttendanceDb = functions.pubsub.schedule('42 18 * * 1-5').time
 });
 
 
-//자동 퇴근 처리
-/* exports.sendFcm = functions.region("asia-northeast1").https.onCall(async (data, context) => {
-    const _token = data["token"];
-    const _team = data["team"];
-    const _name = data["name"];
-    const _position = data["position"];
-    const _collection = data["collection"];
-    const _alarmId = data["alarmId"];
+//자동 퇴근 처리(18:30)
+exports.autoOffWorkCheck1 = functions.region('asia-northeast3').pubsub.schedule('30 18 * * *').timeZone('Asia/Seoul').onRun(async (context) => {
+   var db = admin.firestore();
+   var today = new Date()
+   var year = today.getFullYear(); // 년도
+   var month = today.getMonth();  // 월
+   var date = today.getDate();  // 날짜
+   var createDate = new Date(year, month, date);
+   var offWorkTime = new Date(year, month, date, 9, 30);
+   var setOffWorkTime = new Date(year, month, date, 9);
 
-    const payload = {
-        data: {
-        title: "",
-        body: _collection,
-        alarmId: _alarmId,
-        clickAction: "FLUTTER_NOTIFICATION_CLICK",
-        }
-    };
+   createDate.setHours(createDate.getHours() - 9);
 
-    const options = {
-        priority: "high",
-    };
+   await db.collection("company").get().then(companySnapshot => {
+       companySnapshot.forEach(async companyDoc => {
+           await companyDoc.ref.collection("user").get().then(userSnapshot =>{
+               userSnapshot.forEach(async userDoc => {
+                   var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", createDate).get();
+                   if(!result.empty){
+                       result.forEach(async attendanceDoc => {
+                           if(attendanceDoc.data().attendTime != null){
+                                if(attendanceDoc.data().overTime == 0 || attendanceDoc.data().overTime == null){
+                                    if(attendanceDoc.data().endTime == null || attendanceDoc.data().endTime.toDate().getTime() > offWorkTime.getTime()) {
+                                        await attendanceDoc.ref.update({
+                                            endTime: setOffWorkTime,
+                                        })
+                                    }
+                               }
+                           }
+                       });
+                   }
+               });
+           });
+       });
+   });
+});
 
-    await admin.messaging().sendToDevice(_token, payload, options);
-});*/
+//자동 퇴근 처리(12:30)
+exports.autoOffWorkCheck2 = functions.region('asia-northeast3').pubsub.schedule('30 00 * * *').timeZone('Asia/Seoul').onRun(async (context) => {
+   var db = admin.firestore();
+   var today = new Date()
+   var year = today.getFullYear(); // 년도
+   var month = today.getMonth();  // 월
+   var date = today.getDate();  // 날짜
+   var createDate = new Date(year, month, date);
+   var offWorkTime = new Date(year, month, date, 9, 30);
+   var setOffWorkTime = new Date(year, month, date, 9);
+
+   createDate.setHours(createDate.getHours() - 9);
+
+   await db.collection("company").get().then(companySnapshot => {
+       companySnapshot.forEach(async companyDoc => {
+           await companyDoc.ref.collection("user").get().then(userSnapshot =>{
+               userSnapshot.forEach(async userDoc => {
+                   var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", createDate).get();
+                   if(!result.empty){
+                       result.forEach(async attendanceDoc => {
+                           if(attendanceDoc.data().attendTime != null){
+                                if(attendanceDoc.data().overTime == 0 || attendanceDoc.data().overTime == null){
+                                    if(attendanceDoc.data().endTime == null || attendanceDoc.data().endTime.toDate().getTime() > offWorkTime.getTime()) {
+                                        await attendanceDoc.ref.update({
+                                            endTime: setOffWorkTime,
+                                            autoOffWork: 2,
+                                        })
+                                    }
+                               }
+                               else{
+                                    let tempTime = new Date(year, month, date, 9, 30);
+                                    tempTime.setHours(tempTime.getHours() + attendanceDoc.data().overTime);
+                                    if(attendanceDoc.data().autoOffWork == 2){
+                                        tempTime.setMinutes(tempTime.getMinutes() - 30);
+                                        if(attendanceDoc.data().endTime.toDate().getTime() < tempTime.getTime()){
+                                            await attendanceDoc.ref.update({
+                                                endTime: tempTime,
+                                                autoOffWork: 2,
+                                            })
+                                        }
+                                    }
+                                    if(attendanceDoc.data().endTime == null || attendanceDoc.data().endTime.toDate().getTime() > tempTime.getTime()) {
+                                        tempTime.setMinutes(tempTime.getMinutes() - 30);
+                                        await attendanceDoc.ref.update({
+                                            endTime: tempTime,
+                                            autoOffWork: 2,
+                                        })
+                                    }
+                               }
+                           }
+                       });
+                   }
+               });
+           });
+       });
+   });
+});

@@ -14,9 +14,12 @@ import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
 import 'package:mycompany/attendance/widget/attendance_dialog_widget.dart';
 import 'package:mycompany/login/db/login_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:provider/provider.dart';
@@ -407,12 +410,7 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
 
                                       if(overtimeValue != null){
                                         List<EmployeeModel> approvalList = await LoginFirestoreRepository().readAllEmployeeData(companyId: loginEmployeeData.companyCode);
-
-                                        bool? selectApprovalResult = await selectOvertimeApprovalBottomSheet(context: context, employeeModel: loginEmployeeData, approvalList: approvalList, overtime: overtimeValue);
-
-                                        /*if(selectApprovalResult == true){
-                                          Fluttertoast.showToast(msg: "연장근무 신청이 완료되었습니다.");
-                                        }*/
+                                        await selectOvertimeApprovalBottomSheet(context: context, employeeModel: loginEmployeeData, approvalList: approvalList, overtime: overtimeValue);
                                       }
                                     } : null,
                                     style: ElevatedButton.styleFrom(
