@@ -6,6 +6,7 @@ import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,10 @@ class JoinCompanyFunction {
     );
 
     await loginFirestoreRepository.createJoinCompanyApprovalData(companyId: company.companyCode, joinCompanyApprovalModel: joinCompanyApprovalModel);
+
+    List<String> companyManagerMail = await loginFirestoreRepository.getCompanyManagerMail(companyId: company.companyCode);
+
+    sendFcmWithTokens(loginUserData, companyManagerMail, "[회사가입 요청]", "[${loginUserData.name}] 님이 회사가입을 요청했습니다.", "");
 
     //로그인 사용자 joinStatus 및 companyCode 업데이트
     loginUserData.state = 1;

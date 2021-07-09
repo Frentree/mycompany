@@ -5,9 +5,13 @@ import 'package:mycompany/approval/view/approval_join_company_view.dart';
 import 'package:mycompany/approval/view/approval_main_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_employee_attendance_data_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_notice_view.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
+import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
+import 'package:mycompany/setting/function/setting_function.dart';
+import 'package:provider/provider.dart';
 
 class InquiryView extends StatefulWidget {
   final bool? approvalChk;
@@ -55,6 +59,9 @@ class _InquiryViewState extends State<InquiryView> {
 
   @override
   Widget build(BuildContext context) {
+    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
+    EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
+
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return WillPopScope(
         onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
@@ -109,7 +116,7 @@ class _InquiryViewState extends State<InquiryView> {
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               controller: _scrollController,
-                              itemCount: typeList.length,
+                              itemCount: getGradeChk(employeeModel: loginEmployeeData!, level: [8,9]) ? typeList.length : 2,
                               itemBuilder: (context, index) {
                                 return Padding(
                                     padding: EdgeInsets.all(5.0),

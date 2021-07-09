@@ -37,6 +37,17 @@ class LoginFirestoreCrud {
     return myTeamEmployeeDataList;
   }
 
+  Future<List<String>> getCompanyManagerMail({required String companyId}) async {
+    QuerySnapshot<Map<dynamic, dynamic>> getData = await _firebaseFirestore.collection(COMPANY).doc(companyId).collection(USER).where("level", arrayContains: [8, 9]).get();
+    List<EmployeeModel> managerDataList = getData.docs.map((doc) => EmployeeModel.fromMap(mapData: doc.data())).toList();
+    List<String> companyManagerMail = [];
+    managerDataList.forEach((element) {
+      companyManagerMail.add(element.mail);
+    });
+
+    return companyManagerMail;
+  }
+
   Future<void> updateEmployeeData({required EmployeeModel employeeModel}) async {
     employeeModel.lastModDate = Timestamp.now();
 

@@ -294,7 +294,9 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                                                 weekTotalOfficeHours.value = _totalOfficeHoursCalculationFunction.weekTotalOfficeHoursCalculation(attendanceDataList: weekAttendanceData.value);
                                               }
 
-                                              timer!.cancel();
+                                              if(timer != null){
+                                                timer!.cancel();
+                                              }
                                             }
                                           } : null,
                                           color: Color(0xffECECEC),

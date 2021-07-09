@@ -10,13 +10,16 @@ import 'package:mycompany/login/model/join_company_approval_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
+import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:provider/provider.dart';
+import 'package:mycompany/login/model/user_model.dart';
 
 class ApprovalJoinCompanyView extends StatefulWidget {
   @override
@@ -31,6 +34,8 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
 
   @override
   Widget build(BuildContext context) {
+    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context);
+    UserModel loginUserData = userInfoProvider.getUserData()!;
     EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context);
     EmployeeModel loginEmployeeData = employeeInfoProvider.getEmployeeData()!;
 
@@ -223,6 +228,8 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                         loginFirestoreRepository.updateJoinCompanyApprovalData(companyId: loginEmployeeData.companyCode, joinCompanyApprovalModel: joinCompanyApprovalData[selectedIndex.value]);
                         loginFirestoreRepository.updateUserJoinCompanyState(userMail: joinCompanyApprovalData[selectedIndex.value].mail, state: 3);
 
+                        sendFcmWithTokens(loginUserData, [joinCompanyApprovalData[selectedIndex.value].mail], "[회사가입 반려]", "[${loginUserData.name}] 님이 회사가입을 반려 했습니다.", "");
+
                         selectedIndex.value = -1;
                       }
                     ),
@@ -288,6 +295,8 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                         loginFirestoreRepository.updateJoinCompanyApprovalData(companyId: loginEmployeeData.companyCode, joinCompanyApprovalModel: joinCompanyApprovalData[selectedIndex.value]);
                         loginFirestoreRepository.createEmployeeData(employeeModel: confirmUser);
                         loginFirestoreRepository.updateUserJoinCompanyState(userMail: confirmUser.mail, companyId: confirmUser.companyCode);
+
+                        sendFcmWithTokens(loginUserData, [joinCompanyApprovalData[selectedIndex.value].mail], "[회사가입 승인]", "[${loginUserData.name}] 님이 회사가입을 승인 했습니다.", "");
 
                         selectedIndex.value = -1;
                       }
