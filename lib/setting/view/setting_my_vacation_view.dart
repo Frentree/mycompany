@@ -138,8 +138,8 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
                   double useVacation = (snapshot.data as double);
 
                   List<ChartData> chartData = [
-                    ChartData('사용 연차일', useVacation),
-                    ChartData('남은 연차일', (totalVacation - useVacation)),
+                    ChartData('사용 연차일', useVacation, titleTextColor),
+                    ChartData('남은 연차일', (totalVacation - useVacation), Colors.teal),
                   ];
 
                   return Column(
@@ -171,11 +171,11 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
                           series: <CircularSeries>[
                             DoughnutSeries<ChartData, String>(
                                 dataSource: chartData,
-                                xValueMapper: (ChartData sales, _) => sales.x,
-                                yValueMapper: (ChartData sales, _) => sales.y,
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
+                                pointColorMapper:(ChartData data,  _) => data.color,
                                 dataLabelMapper: (ChartData data, _) => data.x.toString() + "\n" + data.y.toString(),
-
-                                radius: '100%',
+                                radius: '90%',
                                 enableTooltip: true,
                                 dataLabelSettings: DataLabelSettings(
                                   isVisible: true,
@@ -190,9 +190,6 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
             }
           ),
           Container(
-            padding: EdgeInsets.only(
-              top: 10.0.h,
-            ),
             child: Divider(
               color: Color(0xffECECEC),
               thickness: 1.0.h,
