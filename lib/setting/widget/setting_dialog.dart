@@ -5,27 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mycompany/login/model/employee_model.dart';
-import 'package:mycompany/login/widget/login_button_widget.dart';
-import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/public/db/public_firestore_repository.dart';
-import 'package:mycompany/public/model/position_model.dart';
-import 'package:mycompany/public/model/team_model.dart';
-import 'package:mycompany/public/style/color.dart';
-import 'package:mycompany/public/style/text_style.dart';
-import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:mycompany/attendance/widget/attendance_button_widget.dart';
 import 'package:mycompany/login/function/form_validation_function.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/login/style/decoration_style.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/login/widget/login_dialog_widget.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/page_route.dart';
+import 'package:mycompany/public/model/position_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
+import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
+import 'package:mycompany/public/style/text_style.dart';
+import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:mycompany/setting/model/grade_model.dart';
 
 /* 조직도 관련 다이얼로그 시작 */
 Future<bool> addTeamDialog(BuildContext context, String companyCode, TextEditingController teamNameContoller) async {
-  PublicFirebaseReository _publicFirebaseReository = PublicFirebaseReository();
+  PublicFirebaseRepository _publicFirebaseReository = PublicFirebaseRepository();
   bool result = false;
   teamNameContoller.text = "";
   await loginDialogWidget(
@@ -398,7 +398,7 @@ Future<bool> deleteTeamDialog(BuildContext context, TeamModel model, List<Employ
 
 /* 직급 관련 다이얼로그 시작 */
 Future<bool> addPositionDialog(BuildContext context, String companyCode, TextEditingController positionNameController) async {
-  PublicFirebaseReository _publicFirebaseReository = PublicFirebaseReository();
+  PublicFirebaseRepository _publicFirebaseReository = PublicFirebaseRepository();
   bool result = false;
   positionNameController.text = "";
   await loginDialogWidget(

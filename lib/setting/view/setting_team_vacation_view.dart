@@ -1,23 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/login/widget/login_button_widget.dart';
-import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/public/db/public_firestore_repository.dart';
-import 'package:mycompany/public/function/public_firebase_repository.dart';
-import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
-import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
-import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/setting/widget/setting_dialog.dart';
 
 class SettingTeamVacationView extends StatefulWidget {
@@ -42,7 +36,7 @@ class _SettingTeamVacationViewState extends State<SettingTeamVacationView> {
   }
 
   _getSetting() async {
-    CompanyModel company = await PublicFirebaseReository().getVacation(companyCode: widget.loginUser.companyCode!);
+    CompanyModel company = await PublicFirebaseRepository().getVacation(companyCode: widget.loginUser.companyCode!);
     companyVacation = company.vacation!;
   }
 

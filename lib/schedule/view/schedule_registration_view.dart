@@ -9,7 +9,7 @@ import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
-import 'package:mycompany/public/db/public_firestore_repository.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
@@ -54,7 +54,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(loginUser: loginUser);
-    CompanyModel company = await PublicFirebaseReository().getVacation(companyCode: loginUser.companyCode!);
+    CompanyModel company = await PublicFirebaseRepository().getVacation(companyCode: loginUser.companyCode!);
 
     companyVacation.value = company.vacation!;
 

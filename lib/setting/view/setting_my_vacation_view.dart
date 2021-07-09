@@ -5,9 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/public/db/public_firestore_repository.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/format/date_format.dart';
-import 'package:mycompany/public/function/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
@@ -43,7 +42,7 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
   }
 
   _getSetting() async {
-    CompanyModel company = await PublicFirebaseReository().getVacation(companyCode: loginUser.companyCode!);
+    CompanyModel company = await PublicFirebaseRepository().getVacation(companyCode: loginUser.companyCode!);
     companyVacation = company.vacation!;
     setState(() {
 
@@ -123,7 +122,7 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
             ),
           ),
           StreamBuilder<DocumentSnapshot>(
-            stream: PublicFirebaseReository().getUserVacation(loginUser: loginUser),
+            stream: PublicFirebaseRepository().getUserVacation(loginUser: loginUser),
             builder: (context, snapshot) {
               if(!snapshot.hasData){
                 return Container();

@@ -9,21 +9,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
+import 'package:mycompany/attendance/model/attendance_model.dart';
 import 'package:mycompany/inquiry/view/inquiry_view.dart';
 import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/public/widget/public_widget.dart';
+import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/schedule/model/schedule_model.dart';
+import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/cirecular_button_menu.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
@@ -31,6 +35,7 @@ import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_them
 import 'package:mycompany/schedule/widget/schedule_calender_widget.dart';
 import 'package:mycompany/schedule/widget/schedule_circular_menu.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:mycompany/schedule/widget/userProfileImage.dart';
 
 class ScheduleView extends StatefulWidget {
   @override
@@ -38,11 +43,14 @@ class ScheduleView extends StatefulWidget {
 }
 
 class _ScheduleViewState extends State<ScheduleView> {
+  PublicFirebaseRepository publicFirebaseRepository = PublicFirebaseRepository();
 
   List<Appointment> scheduleList = <Appointment>[];
   List<TeamModel> teamList = <TeamModel>[];
   List<EmployeeModel> employeeList = <EmployeeModel>[];
   List<CalendarResource> resource = <CalendarResource>[];
+  var attendanceList = ["출근전", "내근", "외근", "직출", "재택", "연차", "퇴근"];
+  var attendanceColorList = [Colors.amberAccent, checkColor, outWorkColor, Colors.cyanAccent, Colors.deepPurple, annualColor, Colors.green];
 
   ValueNotifier<bool> isMenu = ValueNotifier<bool>(true);
 
@@ -103,7 +111,7 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   _getDataSource() async {
     List<Appointment> schedules = await CalenderMethod().getSheduleData(companyCode: loginUser.companyCode.toString(), empList: employeeList);
-    // await ScheduleFirebaseReository().workColleaguesUpdate(companyCode: loginUser!.companyCode.toString());
+    //await ScheduleFirebaseReository().workColleaguesUpdate(companyCode: loginUser.companyCode.toString());
 
     setState(() {
       scheduleList = schedules;
@@ -146,29 +154,118 @@ class _ScheduleViewState extends State<ScheduleView> {
         key: _scaffoldKey,
         //floatingActionButton: getMainCircularMenu(context: context, navigator: 'home', isToggleChk: false),
         drawer: Drawer(
-          child: Padding(
-            padding: EdgeInsets.only(top: statusBarHeight + 10.0.h, left: 16.0.w, right: 16.0.w),
-            child: Column(
-              children: [
-                /*Text(
-                  "현재 동료 근무 상태",
-                  style: getRobotoBold(
-                    fontSize: 21.0,
-                    color: checkColor
-                  ),
-                ),*/
-                Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.logout,
+          child: StreamBuilder<QuerySnapshot>(
+            stream: publicFirebaseRepository.getColleagueAttendance(loginUser: loginUser),
+            builder: (context, snapshot) {
+              if(!snapshot.hasData){
+                return Container();
+              }
+              List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+              return Container(
+                padding: EdgeInsets.only(top: statusBarHeight + 10.0.h, left: 16.0.w, right: 16.0.w, bottom: 10.0.h),
+                color: whiteColor,
+                child: Column(
+                  children: [
+                    Container(
+                      child: Text(
+                        "현재 동료 근무 상태",
+                        style: getNotoSantBold(fontSize: 14, color: titleTextColor),
+                      ),
                     ),
-                    onPressed: (){
-                      SignOutFunction().signOutFunction(context: context);
-                    },
-                  ),
+                    SizedBox(height: 15.0.h,),
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.all(0),
+                        children: docs.map((doc) {
+                          AttendanceModel model = AttendanceModel.fromMap(mapData: (doc.data() as dynamic));
+                          EmployeeModel employeeModel = employeeList.where((element) => element.mail == model.mail).first;
+
+                          return Container(
+                            height: 67.0.h,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    getProfileImage(size: 40, ImageUri: employeeModel.profilePhoto),
+                                    SizedBox(width: 10.0.w,),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                employeeModel.name,
+                                                style: getNotoSantBold(fontSize: 12, color: textColor),
+                                              ),
+                                              SizedBox(width: 5.0.w,),
+                                              Text(
+                                                "${employeeModel.position}",
+                                                style: getNotoSantRegular(fontSize: 10, color: hintTextColor),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "${employeeModel.team}",
+                                                style: getNotoSantRegular(fontSize: 10, color: hintTextColor),
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: attendanceColorList[model.status!],
+                                                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                                ),
+                                                width: 34.0.w,
+                                                height: 19.0.h,
+                                                child: Center(
+                                                  child: Text(
+                                                    attendanceList[model.status!],
+                                                    style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                (model.status! == 2 || model.status! == 3) ?
+                                FutureBuilder(
+                                    future: publicFirebaseRepository.getOutWorkLocation(loginUser: loginUser, mail: model.mail),
+                                    builder: (context, snapshot) {
+                                      if(!snapshot.hasData){
+                                        return Container(
+                                          child: Text("외근지 미지정",
+                                            style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                                          ),
+                                        );
+                                      }
+                                      WorkModel model = (snapshot.data! as dynamic);
+
+                                      return Container(
+                                        child: Text((model.location == null || model.location == "") ? "외근지 미지정" : "외근지 > ${model.location!}",
+                                          style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                                        ),
+                                      );
+                                    }
+                                ):
+                                Container(),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            }
           ),
         ),
         body: RefreshIndicator(

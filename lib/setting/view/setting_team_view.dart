@@ -1,20 +1,18 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/public/db/public_firestore_repository.dart';
-import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
-import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:mycompany/setting/widget/setting_dialog.dart';
 
@@ -28,8 +26,6 @@ class SettingTeamView extends StatefulWidget {
 }
 
 class _SettingTeamViewState extends State<SettingTeamView> {
-  PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
-  PublicFirebaseReository _publicFirebaseReository = PublicFirebaseReository();
 
   late UserModel loginUser;
 

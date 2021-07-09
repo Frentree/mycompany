@@ -9,7 +9,7 @@ import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/service/login_service_repository.dart';
 import 'package:mycompany/public/function/page_route.dart';
-import 'package:mycompany/public/function/public_firebase_repository.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';

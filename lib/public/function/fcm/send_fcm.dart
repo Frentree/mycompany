@@ -1,6 +1,6 @@
 
 import 'package:mycompany/login/model/user_model.dart';
-import 'package:mycompany/public/function/public_firebase_repository.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 
 
 /// USAGE EXAMPLES

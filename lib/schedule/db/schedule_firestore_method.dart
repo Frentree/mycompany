@@ -103,14 +103,27 @@ class ScheduleFirebaseMethods {
   }
 
   Future<void> workColleaguesUpdate(String companyCode) async {
-     await _store.collection(COMPANY).doc(companyCode).collection(WORK).get().then((value) => value.docs.map((e) {
+     /*await _store.collection(COMPANY).doc(companyCode).collection(WORK).get().then((value) => value.docs.map((e) {
        final work = WorkModel.fromMap(mapData: e.data());
 
        if(work.colleagues!.length != 0) {
          List<Map<String,String>> map = [{work.createUid : work.name}];
          e.reference.update({"colleagues" : map});
        }
-     }).toList());
+     }).toList());*/
+
+    await _store.collection(COMPANY).doc(companyCode).collection(WORK).get().then((value) =>value.docs.map((e) {
+      final work = WorkModel.fromMap(mapData: e.data());
+      print(e.data().containsKey("endTime"));
+
+      if(work.colleagues!.length != 0) {
+        List<Map<String,String>> map = [{work.createUid : work.name}];
+        e.reference.update({"colleagues" : map});
+      }
+      if(!e.data().containsKey("endTime")){
+          e.reference.update({"endTime" : work.startTime});
+        }
+      }).toList());
 
   }
 

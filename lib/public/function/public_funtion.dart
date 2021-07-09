@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class PublicFunction {
 
   void mainNavigator(BuildContext context, Widget navigator, bool isMove){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => navigator), (route) => isMove);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => navigator));
   }
 
   Future<bool> onBackPressed(BuildContext context) async {

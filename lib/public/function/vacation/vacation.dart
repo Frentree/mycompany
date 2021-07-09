@@ -1,4 +1,4 @@
-import 'package:mycompany/public/function/public_firebase_repository.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 
 /// UsedVacation(
 /// 1. String 회사코드,
