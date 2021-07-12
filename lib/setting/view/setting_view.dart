@@ -28,106 +28,109 @@ class _SettingViewState extends State<SettingView> {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
     UserModel loginUser = userInfoProvider.getUserData()!;
 
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        color: whiteColor,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            height: 98.0.h,
-            padding: EdgeInsets.only(
-              right: 27.5.w,
-              left: 27.5.w,
-              top: 33.0.h,
-            ),
-            decoration: BoxDecoration(
-                color: Colors.white, boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
-            child: SizedBox(
-              height: 55.0.h,
-              child: Row(
-                children: [
-                  IconButton(
-                    constraints: BoxConstraints(),
-                    icon: Icon(
-                      Icons.arrow_back_ios_outlined,
-                    ),
-                    iconSize: 24.0.h,
-                    splashRadius: 24.0.r,
-                    onPressed: () =>  Navigator.pop(context),
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.centerLeft,
-                    color: Color(0xff2093F0),
+    return WillPopScope(
+        onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
+        child: Scaffold(
+          body: Container(
+            width: double.infinity,
+            color: whiteColor,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                height: 98.0.h,
+                padding: EdgeInsets.only(
+                  right: 27.5.w,
+                  left: 27.5.w,
+                  top: 33.0.h,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.white, boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
+                child: SizedBox(
+                  height: 55.0.h,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        constraints: BoxConstraints(),
+                        icon: Icon(
+                          Icons.arrow_back_ios_outlined,
+                        ),
+                        iconSize: 24.0.h,
+                        splashRadius: 24.0.r,
+                        onPressed: () =>  _publicFunctionRepository.onBackPressed(context: context),
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        color: Color(0xff2093F0),
+                      ),
+                      SizedBox(
+                        width: 14.7.w,
+                      ),
+                      Text(
+                        "setting".tr(),
+                        style: TextStyle(
+                          fontSize: 18.0.sp,
+                          fontWeight: fontWeight['Medium'],
+                          color: textColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 14.7.w,
-                  ),
-                  Text(
-                    "setting".tr(),
-                    style: TextStyle(
-                      fontSize: 18.0.sp,
-                      fontWeight: fontWeight['Medium'],
-                      color: textColor,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          SizedBox(height: 10.0.h,),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: PublicFirebaseRepository().getLoginUser(loginUser: loginUser),
-              builder: (context, snapshot) {
-                if(!snapshot.hasData){
-                  return Container();
-                }
-                late EmployeeModel employeeModel;
+              SizedBox(height: 10.0.h,),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: PublicFirebaseRepository().getLoginUser(loginUser: loginUser),
+                  builder: (context, snapshot) {
+                    if(!snapshot.hasData){
+                      return Container();
+                    }
+                    late EmployeeModel employeeModel;
 
-                List<DocumentSnapshot> docs = snapshot.data!.docs;
-                docs.map((doc) => employeeModel = EmployeeModel.fromMap(mapData: (doc.data() as dynamic))).toList();
+                    List<DocumentSnapshot> docs = snapshot.data!.docs;
+                    docs.map((doc) => employeeModel = EmployeeModel.fromMap(mapData: (doc.data() as dynamic))).toList();
 
-                return GridView.custom(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: (1),
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                  ),
-                  childrenDelegate: SliverChildListDelegate(
-                    getSettingMenu(context: context, employeeModel: employeeModel).map((data) =>
-                       GestureDetector(
-                          child: Container(
-                            padding: const EdgeInsets.all(0.5),
-                            color: calendarLineColor.withOpacity(0.1),
-                            child: Center(
+                    return GridView.custom(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: (1),
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 4,
+                      ),
+                      childrenDelegate: SliverChildListDelegate(
+                        getSettingMenu(context: context, employeeModel: employeeModel).map((data) =>
+                           GestureDetector(
                               child: Container(
-                                width: 180.0.w,
-                                color: whiteColor,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    data.menuIcon,
-                                    SizedBox(height: 3.0.h,),
-                                    Text(data.munuName, style: getNotoSantMedium(fontSize: 12, color: blackColor))
-                                  ],
+                                padding: const EdgeInsets.all(0.5),
+                                color: calendarLineColor.withOpacity(0.1),
+                                child: Center(
+                                  child: Container(
+                                    width: 180.0.w,
+                                    color: whiteColor,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        data.menuIcon,
+                                        SizedBox(height: 3.0.h,),
+                                        Text(data.munuName, style: getNotoSantMedium(fontSize: 12, color: blackColor))
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              onTap: () async {
+                                var result = false;
+                                if(data.widget != null) Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!));
+                                else await SignOutFunction().signOutFunction(context: context);
+                              }
                           ),
-                          onTap: () async {
-                            if(data.widget != null) Navigator.push(context, MaterialPageRoute(builder: (context) => data.widget!));
-                            else await SignOutFunction().signOutFunction(context: context);
-                          }
+                        ).toList(),
                       ),
-                    ).toList(),
-                  ),
-                );
-              }
-            ),
+                    );
+                  }
+                ),
+              ),
+            ]),
           ),
-        ]),
-      ),
-    );
+        ));
   }
 }
