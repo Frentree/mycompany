@@ -85,6 +85,7 @@ class _ScheduleViewState extends State<ScheduleView> {
       mailChkList.add(loginUser.mail);
     }
     _getInitSetting();
+
   }
 
 
@@ -107,6 +108,8 @@ class _ScheduleViewState extends State<ScheduleView> {
     scheduleList = schedules;
     employeeList = employee;
     teamList = team;
+
+    setState(() {});
   }
 
   _getDataSource() async {

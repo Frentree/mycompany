@@ -47,9 +47,8 @@ class _InquiryNoticeViewState extends State<InquiryNoticeView> {
 
     employeeList = employee;
     noticeList = notice;
-    /*setState(() {
-
-    });*/
+    setState(() {
+    });
   }
 
   getNoticeWidget({required BuildContext context, required List<NoticeModel> notice}) {

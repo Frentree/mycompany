@@ -72,6 +72,8 @@ class CalenderMethod{
               notes: notes,
               type: type,
               profile: mail.toString(),
+              userName: name,
+              userMail: mail,
               team: empModel.team,
               title: title,
               content: content,
@@ -79,8 +81,8 @@ class CalenderMethod{
               documentId: doc.id,
               position: empModel.position,
               location: location != null ? location : "",
-              resourceIds: <Object>[mail.hashCode],
-              organizerId: model.name
+              organizerId: model.createUid,
+              organizerName: model.name,
             ));
           }
       }

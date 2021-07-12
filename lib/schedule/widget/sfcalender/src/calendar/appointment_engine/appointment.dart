@@ -62,7 +62,10 @@ class Appointment with Diagnosticable {
     this.title,
     this.content,
     this.documentId,
+    this.userName,
+    this.userMail,
     this.organizerId,
+    this.organizerName,
     this.colleagues,
     this.location,
     this.resourceIds,
@@ -669,7 +672,10 @@ class Appointment with Diagnosticable {
   String? content;
   List<dynamic>? colleagues;
   String? documentId;
+  String? userName;
+  String? userMail;
   String? organizerId;
+  String? organizerName;
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
@@ -702,6 +708,9 @@ class Appointment with Diagnosticable {
         otherStyle.title == title &&
         otherStyle.content == content &&
         otherStyle.documentId == documentId &&
+        otherStyle.userName == userName &&
+        otherStyle.userMail == userMail &&
+        otherStyle.organizerName == organizerName &&
         otherStyle.organizerId == organizerId &&
         otherStyle.colleagues == colleagues &&
         otherStyle.recurrenceExceptionDates == recurrenceExceptionDates;
@@ -751,7 +760,10 @@ class Appointment with Diagnosticable {
     properties.add(StringProperty('title', title));
     properties.add(StringProperty('content', content));
     properties.add(StringProperty('documentId', documentId));
+    properties.add(StringProperty('userMail', userMail));
+    properties.add(StringProperty('userName', userName));
     properties.add(StringProperty('organizerId', organizerId));
+    properties.add(StringProperty('organizerName', organizerName));
     properties.add(IterableDiagnostics<dynamic>(colleagues)
         .toDiagnosticsNode(name: 'colleagues'));
     properties.add(DiagnosticsProperty<DateTime>('startTime', startTime));
