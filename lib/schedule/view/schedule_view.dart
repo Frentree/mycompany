@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,9 +82,10 @@ class _ScheduleViewState extends State<ScheduleView> {
     loginUser = PublicFunction().getUserProviderSetting(context);
     loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
 
-    if(loginUser != null){
+    if(loginUser != null && !mailChkList.contains(loginUser.mail)){
       mailChkList.add(loginUser.mail);
     }
+
     _getInitSetting();
 
   }

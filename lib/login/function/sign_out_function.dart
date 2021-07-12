@@ -25,66 +25,29 @@ class SignOutFunction {
     UserModel loginUserData = userInfoProvider.getUserData()!;
 
     await loginDialogWidget(
-      context: context,
-      message: "로그아웃 하시겠습니까?",
-      actions: [
-        loginDialogCancelButton(
-          buttonName: 'dialogCancel'.tr(),
-          buttonAction: () {
-            backPage(context: context);
-          },
-        ),
-        loginDialogConfirmButton(
-          buttonName: 'dialogConfirm'.tr(),
-          buttonAction: () async {
-            await loginServiceRepository.signOut();
-
-            loginUserData.deviceId = "";
-            await loginFirestoreRepository.updateUserData(userModel: loginUserData);
-
-            userInfoProvider.deleteUserDataToPhone();
-            employeeInfoProvider.deleteEmployeeDataToPhone();
-            pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
-          }
-        ),
-      ]
-    );
-  }
-
-  Future<bool> signOutFunction2({
-    required BuildContext context,
-  }) async {
-    LoginServiceRepository loginServiceRepository = LoginServiceRepository();
-    LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
-
-    bool result = false;
-
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
-
-    UserModel loginUserData = userInfoProvider.getUserData()!;
-
-    await loginDialogWidget(
         context: context,
         message: "로그아웃 하시겠습니까?",
         actions: [
           loginDialogCancelButton(
             buttonName: 'dialogCancel'.tr(),
             buttonAction: () {
-              result = false;
-              Navigator.pop(context);
+              backPage(context: context);
             },
           ),
           loginDialogConfirmButton(
               buttonName: 'dialogConfirm'.tr(),
               buttonAction: () async {
-                result = true;
-                Navigator.pop(context);
+                await loginServiceRepository.signOut();
+
+                loginUserData.deviceId = "";
+                await loginFirestoreRepository.updateUserData(userModel: loginUserData);
+
+                userInfoProvider.deleteUserDataToPhone();
+                employeeInfoProvider.deleteEmployeeDataToPhone();
+                pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
               }
           ),
         ]
     );
-    return result;
   }
-
 }
