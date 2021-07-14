@@ -45,9 +45,9 @@ class _InquiryNoticeViewState extends State<InquiryNoticeView> {
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployeeMy(companyCode: loginUser.companyCode);
     List<NoticeModel> notice = await InquiryFirebaseRepository().getNoticeData(companyCode: loginUser.companyCode);
 
+    employeeList = employee;
+    noticeList = notice;
     setState(() {
-      employeeList = employee;
-      noticeList = notice;
     });
   }
 

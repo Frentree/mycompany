@@ -26,6 +26,7 @@ class SignOutFunction {
     EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
 
     await loginDialogWidget(
+<<<<<<< HEAD
       context: context,
       message: "로그아웃 하시겠습니까?",
       actions: [
@@ -58,3 +59,31 @@ class SignOutFunction {
     );
   }
 }
+=======
+        context: context,
+        message: "로그아웃 하시겠습니까?",
+        actions: [
+          loginDialogCancelButton(
+            buttonName: 'dialogCancel'.tr(),
+            buttonAction: () {
+              backPage(context: context);
+            },
+          ),
+          loginDialogConfirmButton(
+              buttonName: 'dialogConfirm'.tr(),
+              buttonAction: () async {
+                await loginServiceRepository.signOut();
+
+                loginUserData.deviceId = "";
+                await loginFirestoreRepository.updateUserData(userModel: loginUserData);
+
+                userInfoProvider.deleteUserDataToPhone();
+                employeeInfoProvider.deleteEmployeeDataToPhone();
+                pageMoveAndRemoveBackPage(context: context, pageName: AuthView());
+              }
+          ),
+        ]
+    );
+  }
+}
+>>>>>>> f3a46a8d2fd1a92689ae42b63d6404497c5c20af

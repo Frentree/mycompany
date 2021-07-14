@@ -366,7 +366,7 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                   icon: Icons.settings,
                   boxShadow: [BoxShadow(color: Colors.black)],
                   color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: SettingView(), isMove: false)),
+                  onTap: () => _reprository.mainNavigator(context: context, navigator: SettingView(), isMove: true)),
             ]);
       });
 }

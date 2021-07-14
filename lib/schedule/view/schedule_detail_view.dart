@@ -138,7 +138,7 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                         var result = -1;
                         switch(value) {
                           case 1:   //수정
-                            if(widget.appointment.profile != widget.appointment.organizerId){
+                            if(widget.appointment.organizerId != widget.appointment.userMail){
                               loginDialogWidget(
                                   context: context,
                                   message: "schedule_detail_view_dialog_7".tr(),

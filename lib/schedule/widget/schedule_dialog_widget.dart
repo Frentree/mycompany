@@ -223,7 +223,7 @@ import 'package:easy_localization/easy_localization.dart';
                             ),
                             Visibility(
                               visible: app.type == "미팅",
-                              child: Text(app.organizerId.toString(), style: getNotoSantRegular(fontSize: 9.0, color: hintTextColor),)
+                              child: Text(app.organizerName.toString(), style: getNotoSantRegular(fontSize: 9.0, color: hintTextColor),)
                             )
                           ],
                         ),
