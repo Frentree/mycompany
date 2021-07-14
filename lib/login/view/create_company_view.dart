@@ -97,7 +97,7 @@ class CreateCompanyViewState extends State<CreateCompanyView> {
                         child: Text(
                           'createCompanyViewMainMessage'.tr(),
                           style: TextStyle(
-                            fontSize: 22.0.sp,
+                            fontSize: 21.0.sp,
                             fontWeight: FontWeight.w700,
                             color: textColor,
                           ),

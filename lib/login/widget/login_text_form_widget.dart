@@ -76,7 +76,7 @@ Container companyViewTextFormField({
       builder: (context, setState) {
         return SizedBox(
           width: 305.0.w,
-          height: 40.0.h,
+          height: 43.0.h,
           child: Form(
             onChanged: valueNotifier != null ? (){
               if(textEditingController.text == ""){

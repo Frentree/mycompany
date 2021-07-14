@@ -57,7 +57,7 @@ class CreateCompanySuccessViewState extends State<CreateCompanySuccessView> {
                   child: Text(
                     'createCompanySuccessViewMainMessage'.tr(),
                     style: TextStyle(
-                      fontSize: 22.0.sp,
+                      fontSize: 21.0.sp,
                       fontWeight: FontWeight.w700,
                       color: textColor,
                     ),

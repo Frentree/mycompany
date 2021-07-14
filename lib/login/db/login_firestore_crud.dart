@@ -75,6 +75,15 @@ class LoginFirestoreCrud {
     await _firebaseFirestore.collection(USER).doc(userMail).update({
       "lastModDate": Timestamp.now(),
       "companyCode": companyId,
+      "state": state == null ? 1 : state,
+    });
+  }
+
+  Future<void> updateUserSignOut({required String userMail,}) async {
+    await _firebaseFirestore.collection(USER).doc(userMail).update({
+      "lastModDate": Timestamp.now(),
+      "deviceId": "",
+      "token": "",
     });
   }
 

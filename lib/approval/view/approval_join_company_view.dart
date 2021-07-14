@@ -221,7 +221,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                       buttonNameColor: textColor,
                       buttonColor: Color(0xffF7F7F7),
                       buttonAction: (){
-                        joinCompanyApprovalData[selectedIndex.value].state = 1;
+                        joinCompanyApprovalData[selectedIndex.value].state = 2;
                         joinCompanyApprovalData[selectedIndex.value].signUpApprover = loginEmployeeData.mail;
                         joinCompanyApprovalData[selectedIndex.value].approvalDate = Timestamp.now();
 

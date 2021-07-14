@@ -38,6 +38,7 @@ class LoginFirestoreRepository {
       _loginFirebaseCrud.updateUserData(userModel: userModel);
 
   Future<void> updateUserJoinCompanyState({required String userMail, int? state, String? companyId,}) => _loginFirebaseCrud.updateUserJoinCompanyState(userMail: userMail, state: state, companyId: companyId);
+  Future<void> updateUserSignOut({required String userMail,}) => _loginFirebaseCrud.updateUserSignOut(userMail: userMail);
 
   //Company 관련
   Future<void> createCompanyData({required CompanyModel companyModel}) =>

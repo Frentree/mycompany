@@ -79,7 +79,7 @@ class JoinCompanyViewState extends State<JoinCompanyView> {
               child: Text(
                 'joinCompanyViewMainMessage'.tr(),
                 style: TextStyle(
-                  fontSize: 22.0.sp,
+                  fontSize: 21.0.sp,
                   fontWeight: FontWeight.w700,
                   color: textColor,
                 ),

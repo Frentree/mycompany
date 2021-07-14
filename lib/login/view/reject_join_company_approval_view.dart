@@ -53,7 +53,7 @@ class RejectJoinCompanyApprovalViewState extends State<RejectJoinCompanyApproval
                   child: Text(
                     'rejectJoinCompanyApprovalViewMainMessage'.tr(),
                     style: TextStyle(
-                      fontSize: 22.0.sp,
+                      fontSize: 21.0.sp,
                       fontWeight: FontWeight.w700,
                       color: textColor,
                     ),

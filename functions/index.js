@@ -56,13 +56,13 @@ exports.autoCreateAttendanceDb = functions.region('asia-northeast3').pubsub.sche
         companySnapshot.forEach(async companyDoc => {
             await companyDoc.ref.collection("user").get().then(userSnapshot =>{
                 userSnapshot.forEach(async userDoc => {
-                    var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", t).get();
+                    var result = await companyDoc.ref.collection("attendance").where("mail", "==", userDoc.data().mail).where("createDate", "==", createDate).get();
                     if(result.empty){
                         await companyDoc.ref.collection("attendance").add(
                             {
                                 mail: userDoc.data().mail,
                                 name: userDoc.data().name,
-                                createDate: t,
+                                createDate: createDate,
                                 overTime: 0,
                                 autoOffWork: 0,
                                 status: 0,

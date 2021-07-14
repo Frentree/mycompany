@@ -23,6 +23,7 @@ class SignOutFunction {
     EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
 
     UserModel loginUserData = userInfoProvider.getUserData()!;
+    EmployeeModel? loginEmployeeData = employeeInfoProvider.getEmployeeData();
 
     await loginDialogWidget(
       context: context,
@@ -40,7 +41,13 @@ class SignOutFunction {
             await loginServiceRepository.signOut();
 
             loginUserData.deviceId = "";
-            await loginFirestoreRepository.updateUserData(userModel: loginUserData);
+            loginUserData.token = "";
+            if(loginEmployeeData != null){
+              loginEmployeeData.token = "";
+              await loginFirestoreRepository.updateEmployeeData(employeeModel: loginEmployeeData);
+            }
+
+            await loginFirestoreRepository.updateUserSignOut(userMail: loginUserData.mail);
 
             userInfoProvider.deleteUserDataToPhone();
             employeeInfoProvider.deleteEmployeeDataToPhone();
@@ -50,41 +57,4 @@ class SignOutFunction {
       ]
     );
   }
-
-  Future<bool> signOutFunction2({
-    required BuildContext context,
-  }) async {
-    LoginServiceRepository loginServiceRepository = LoginServiceRepository();
-    LoginFirestoreRepository loginFirestoreRepository = LoginFirestoreRepository();
-
-    bool result = false;
-
-    UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
-    EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
-
-    UserModel loginUserData = userInfoProvider.getUserData()!;
-
-    await loginDialogWidget(
-        context: context,
-        message: "로그아웃 하시겠습니까?",
-        actions: [
-          loginDialogCancelButton(
-            buttonName: 'dialogCancel'.tr(),
-            buttonAction: () {
-              result = false;
-              Navigator.pop(context);
-            },
-          ),
-          loginDialogConfirmButton(
-              buttonName: 'dialogConfirm'.tr(),
-              buttonAction: () async {
-                result = true;
-                Navigator.pop(context);
-              }
-          ),
-        ]
-    );
-    return result;
-  }
-
 }

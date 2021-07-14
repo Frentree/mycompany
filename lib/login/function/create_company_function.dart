@@ -102,6 +102,7 @@ class CreateCompanyFunction {
       companyCode: companyId,
       createDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
       lastModDate: dateFormatCustom.changeDateTimeToTimestamp(dateTime: DateTime.now()),
+      level: [9],
     );
 
     employeeInfoProvider.saveEmployeeDataToPhoneWithoutNotifyListener(employeeModel: employeeModel);

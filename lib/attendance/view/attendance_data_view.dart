@@ -410,38 +410,6 @@ class AttendanceDataViewState extends State<AttendanceDataView> {
               }
             ),
           ),
-          Visibility(
-            child: Container(
-              padding: EdgeInsets.only(
-                right: 27.5.w,
-                left: 27.5.w,
-                top: 20.0.h,
-              ),
-              child: GestureDetector(
-                /*onTap: (){
-                  pageMove(context: context, pageName: EmployeeAttendanceDataView());
-                },*/
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "직원 출퇴근 기록 보기",
-                      style: TextStyle(
-                        fontSize: 12.0.sp,
-                        fontWeight: fontWeight["Medium"],
-                        color: Color(0xff2093F0),
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 10.0.h,
-                      color: Color(0xff2093F0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

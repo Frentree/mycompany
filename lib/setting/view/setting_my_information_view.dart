@@ -348,7 +348,11 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                                                     await loginServiceRepository.signOut();
 
                                                                     loginUserData.deviceId = "";
+                                                                    loginUserData.token = "";
+                                                                    loginEmployeeData.token = "";
+
                                                                     await loginFirestoreRepository.updateUserData(userModel: loginUserData);
+                                                                    await loginFirestoreRepository.updateEmployeeData(employeeModel: loginEmployeeData);
 
                                                                     userInfoProvider.deleteUserDataToPhone();
                                                                     employeeInfoProvider.deleteEmployeeDataToPhone();
