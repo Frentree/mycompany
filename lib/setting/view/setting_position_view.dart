@@ -175,7 +175,7 @@ class _SettingPositionViewState extends State<SettingPositionView> {
                                     ],
                                   ),
                                   Visibility(
-                                    visible: "other".tr() != positionModel.position && widget.gradeLevel.contains(6) || widget.gradeLevel.contains(9),
+                                    visible: "other".tr() != positionModel.position && widget.gradeLevel.contains(6) || "other".tr() != positionModel.position && widget.gradeLevel.contains(9),
                                     child: PopupMenuButton<int>(
                                       padding: EdgeInsets.all(0),
                                       icon: Icon(Icons.settings),

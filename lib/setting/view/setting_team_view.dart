@@ -172,7 +172,7 @@ class _SettingTeamViewState extends State<SettingTeamView> {
                                     ],
                                   ),
                                   Visibility(
-                                    visible: "other_team".tr() != teamModel.teamName && widget.gradeLevel.contains(6) || widget.gradeLevel.contains(9),
+                                    visible: "other_team".tr() != teamModel.teamName && widget.gradeLevel.contains(6) || "other_team".tr() != teamModel.teamName && widget.gradeLevel.contains(9),
                                     child: PopupMenuButton<int>(
                                       padding: EdgeInsets.all(0),
                                       icon: Icon(Icons.settings),
