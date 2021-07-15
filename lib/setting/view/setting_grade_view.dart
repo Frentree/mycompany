@@ -54,10 +54,6 @@ class _SettingGradeViewState extends State<SettingGradeView> {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => addTeamDialog(context, loginUser.companyCode!, teamNameContoller),
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
