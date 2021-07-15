@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/attendance/view/attendance_dashboard_view.dart';
@@ -31,7 +32,7 @@ getCommentsWidget(
     required ValueNotifier<CommentModel?> commentValue}) {
   var list = <Widget>[
     Container(
-      width: 16.w,
+      width: 16.0.w,
     )
   ];
 
@@ -63,10 +64,12 @@ getCommentsWidget(
                     children: [
                       Text(
                         user.name,
+                        overflow: TextOverflow.visible,
+                        maxLines: 1,
                         style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                       ),
                       Text(
-                        "${user.position} / ${user.team}",
+                        "${user.position != "" ? user.position : "기타"} / ${user.team != "" ? user.team : "기타팀"}",
                         overflow: TextOverflow.ellipsis,
                         style: getNotoSantMedium(fontSize: 8.0, color: hintTextColor),
                       ),
@@ -183,10 +186,12 @@ getCommentsWidget(
                     children: [
                       Text(
                         user.name,
+                        overflow: TextOverflow.visible,
+                        maxLines: 1,
                         style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                       ),
                       Text(
-                        "${user.position} / ${user.team}",
+                        "${user.position != "" ? user.position : "기타"} / ${user.team != "" ? user.team : "기타팀"}",
                         overflow: TextOverflow.ellipsis,
                         style: getNotoSantMedium(fontSize: 8.0, color: hintTextColor),
                       ),

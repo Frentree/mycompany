@@ -100,7 +100,7 @@ class _InquiryNoticeDetailViewState extends State<InquiryNoticeDetailView> {
                           style: getNotoSantBold(fontSize: 14.0, color: textColor),
                         ),
                         Text(
-                          widget.employee.position.toString() + " / " +  widget.employee.team.toString(),
+                          "${widget.employee.position == "" ? "직급(미지정)" : widget.employee.position} / ${widget.employee.team == "" ? "팀(미지정)" : widget.employee.team}",
                           style: getNotoSantMedium(fontSize: 10.0, color: textColor),
                         )
                       ],

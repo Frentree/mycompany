@@ -98,11 +98,11 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          widget.appointment.subject.toString(),
+                          widget.appointment.userName.toString(),
                           style: getNotoSantBold(fontSize: 14.0, color: textColor),
                         ),
                         Text(
-                          widget.appointment.position.toString() + " / " +  widget.appointment.team.toString(),
+                          "${widget.appointment.position == "" ? "직급(미지정)" : widget.appointment.position} / ${widget.appointment.team == "" ? "팀(미지정)" : widget.appointment.team}",
                           style: getNotoSantMedium(fontSize: 10.0, color: textColor),
                         )
                       ],

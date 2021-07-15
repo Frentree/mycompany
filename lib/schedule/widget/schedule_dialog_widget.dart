@@ -163,7 +163,9 @@ import 'package:easy_localization/easy_localization.dart';
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            app.subject,
+                            app.userName!,
+                            maxLines: 1,
+                            overflow: TextOverflow.visible,
                             style: getNotoSantBold(fontSize: 12.0, color: textColor)
                           ),
                           Text(

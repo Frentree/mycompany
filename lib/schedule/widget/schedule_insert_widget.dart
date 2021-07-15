@@ -692,9 +692,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                                             children: [
                                               getProfileImage(ImageUri: user.profilePhoto,size: 14),
                                               SizedBox(width: 5.0.w,),
-                                              Text(
-                                                user.name,
-                                                style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                              Container(
+                                                width: 57.0.w,
+                                                child: Text(
+                                                  user.name,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.visible,
+                                                  style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                                ),
                                               ),
                                             ],
                                           ),
