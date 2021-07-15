@@ -187,7 +187,7 @@ double TotalVacation(String date, bool type, double addition) {
         _present.day - _tmp.day);
     String _yearChecker = DateTime(_sub.year - 1).toString()[0];
     if (_yearChecker == '0') {
-      result =  MoreThanOneWithEnteredDate(_tmp, addition);
+      return MoreThanOneWithEnteredDate(_tmp, addition);
     }
     result = LessThanOneWithEnteredDate(_tmp, addition);
   }

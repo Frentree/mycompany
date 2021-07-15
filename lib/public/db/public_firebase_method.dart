@@ -152,7 +152,14 @@ class PublicFirebaseMethods {
           .get();
 
       _querySnapshots.docs.forEach((element) {
-        result += (element.data() as dynamic)['type'] == '연차'? 1 : 0.5;
+        WorkModel workModel = WorkModel.fromMap(mapData: element.data() as dynamic, reference: element.reference);
+        if(workModel.type == "연차"){
+          result += _dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.endTime!).add(Duration(hours: 9))
+              .difference(_dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.startTime)).inDays + 1;
+        } else {
+          result += 0.5;
+        }
+        /*result += (element.data() as dynamic)['type'] == '연차'? 1 : 0.5;*/
       });
     } catch (e) {
       print(e.toString());

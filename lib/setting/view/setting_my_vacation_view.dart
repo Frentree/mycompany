@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/login/model/company_model.dart';
@@ -48,6 +49,61 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
 
     });
   }
+  
+  getAnnualData({required BuildContext context, required List<DocumentSnapshot> docs}) {
+    List list = <Widget>[];
+    
+    docs.map((doc) {
+      WorkModel workModel = WorkModel.fromMap(mapData: (doc.data() as dynamic), reference: doc.reference);
+      list.add(
+          Container(
+            width: double.infinity,
+            height: 42.0.h,
+            padding: EdgeInsets.only(
+              right: 27.5.w,
+              left: 27.5.w,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dateFormatCustom.getMonthAndDay(date: dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.startTime)),
+                          style: getRobotoRegular(fontSize: 12, color: titleTextColor),
+                        ),
+                        Text(
+                          "~ ${dateFormatCustom.getMonthAndDay(date: dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.endTime!))}",
+                          style: getRobotoRegular(fontSize: 12, color: outWorkColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(child: Center(
+                  child: Text(
+                    "${workModel.type}",
+                    style: getRobotoRegular(fontSize: 12, color: textColor),
+                  ),
+                )),
+                Expanded(child: Center(
+                  child: Text(
+                    workModel.type == "연차" ? "${dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.endTime!).add(Duration(hours: 9)).difference(dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.startTime)).inDays + 1}"
+                        : "0.5",
+                    style: getRobotoRegular(fontSize: 12, color: textColor),
+                  ),
+                )),
+              ],
+            ),
+          )
+      );
+    }).toList();
+    
+    return list;
+  }
 
 
   @override
@@ -57,332 +113,301 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 98.0.h,
-            padding: EdgeInsets.only(
-              right: 27.5.w,
-              left: 27.5.w,
-              top: 33.0.h,
-            ),
-            decoration: BoxDecoration(
-                color: Colors.white, boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
-            child: SizedBox(
-              height: 55.0.h,
-              child: Row(
-                children: [
-                  IconButton(
-                    constraints: BoxConstraints(),
-                    icon: Icon(
-                      Icons.arrow_back_ios_outlined,
-                    ),
-                    iconSize: 24.0.h,
-                    splashRadius: 24.0.r,
-                    onPressed: () => Navigator.pop(context),
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.centerLeft,
-                    color: Color(0xff2093F0),
-                  ),
-                  SizedBox(
-                    width: 14.7.w,
-                  ),
-                  Text(
-                    "setting_menu_11".tr(),
-                    style: TextStyle(
-                      fontSize: 18.0.sp,
-                      fontWeight: fontWeight['Medium'],
-                      color: textColor,
-                    ),
-                  ),
-                ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 98.0.h,
+              padding: EdgeInsets.only(
+                right: 27.5.w,
+                left: 27.5.w,
+                top: 33.0.h,
               ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              right: 27.5.w,
-              left: 27.5.w,
-              top: 29.0.h,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${now.year}년 연차 내역",
-                  style: TextStyle(
-                    fontSize: 15.0.sp,
-                    color: Color(0xff2093F0),
-                    fontWeight: fontWeight['Bold'],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          StreamBuilder<DocumentSnapshot>(
-            stream: PublicFirebaseRepository().getUserVacation(loginUser: loginUser),
-            builder: (context, snapshot) {
-              if(!snapshot.hasData){
-                return Container();
-              }
-              EmployeeModel employeeUser = EmployeeModel.fromMap(mapData: (snapshot.data!.data() as dynamic), reference: snapshot.data!.reference);
-              double totalVacation = TotalVacation(employeeUser.enteredDate!, companyVacation, employeeUser.vacation!.toDouble());
-              return FutureBuilder(
-                future: UsedVacation(loginUser.companyCode, loginUser.mail, employeeUser.enteredDate!, companyVacation),
-                builder: (context, snapshot) {
-                  if(!snapshot.hasData){
-                    return Container();
-                  }
-                  double useVacation = (snapshot.data as double);
-
-                  List<ChartData> chartData = [
-                    ChartData('사용 연차일', useVacation, titleTextColor),
-                    ChartData('남은 연차일', (totalVacation - useVacation), Colors.teal),
-                  ];
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                          right: 27.5.w,
-                          left: 27.5.w,
-                        ),
-                        child: SfCircularChart(
-                          annotations: <CircularChartAnnotation>[
-                            CircularChartAnnotation(
-                            widget: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('총 연차일',
-                                      style: getRobotoBold(fontSize: 12, color: textColor),
-                                    ),
-                                    Text('$totalVacation',
-                                      style: getRobotoRegular(fontSize: 12, color: textColor),
-                                    ),
-                                  ],
-                                )
-                              ),
-                            )
-                          ],
-                          series: <CircularSeries>[
-                            DoughnutSeries<ChartData, String>(
-                                dataSource: chartData,
-                                xValueMapper: (ChartData data, _) => data.x,
-                                yValueMapper: (ChartData data, _) => data.y,
-                                pointColorMapper:(ChartData data,  _) => data.color,
-                                dataLabelMapper: (ChartData data, _) => data.x.toString() + "\n" + data.y.toString(),
-                                radius: '90%',
-                                enableTooltip: true,
-                                dataLabelSettings: DataLabelSettings(
-                                  isVisible: true,
-                                )),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              );
-            }
-          ),
-          Container(
-            child: Divider(
-              color: Color(0xffECECEC),
-              thickness: 1.0.h,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              top: 20.0.h,
-            ),
-            child: Center(
-              child: Text(
-                "연간 연차 사용 내역",
-                style: TextStyle(
-                  fontSize: 15.0.sp,
-                  fontWeight: fontWeight['Medium'],
-                  color: textColor,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ValueListenableBuilder(
-                valueListenable: choiseDate,
-                builder: (BuildContext context, DateTime value, Widget? child) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              decoration: BoxDecoration(
+                  color: Colors.white, boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
+              child: SizedBox(
+                height: 55.0.h,
+                child: Row(
                   children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                        top: 21.0.h,
+                    IconButton(
+                      constraints: BoxConstraints(),
+                      icon: Icon(
+                        Icons.arrow_back_ios_outlined,
                       ),
-                      child: Center(
-                        child: SizedBox(
-                          width: 194.0.w,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                constraints: BoxConstraints(),
-                                icon: Icon(
-                                  Icons.arrow_back_ios_outlined,
-                                ),
-                                iconSize: 24.0.h,
-                                splashRadius: 24.0.r,
-                                onPressed: () {
-                                  choiseDate.value = DateTime(choiseDate.value.year - 1);
-                                },
-                                padding: EdgeInsets.zero,
-                                alignment: Alignment.centerLeft,
-                                color: Color(0xff2093F0),
-                                disabledColor: Color(0xff2093F0).withOpacity(0.2),
-                              ),
-                              Text(
-                                "${choiseDate.value.year} 년",
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 14.0.sp,
-                                  fontWeight: fontWeight['Medium'],
-                                  color: Color(0xff2093F0),
-                                ),
-                              ),
-                              IconButton(
-                                constraints: BoxConstraints(),
-                                icon: Icon(
-                                  Icons.arrow_forward_ios_outlined,
-                                ),
-                                iconSize: 24.0.h,
-                                splashRadius: 24.0.r,
-                                onPressed: () {
-                                  choiseDate.value = DateTime(choiseDate.value.year + 1);
-                                },
-                                padding: EdgeInsets.zero,
-                                alignment: Alignment.centerLeft,
-                                color: Color(0xff2093F0),
-                                disabledColor: Color(0xff2093F0).withOpacity(0.2),
-                              )
-                            ],
-                          ),
-                        ),
+                      iconSize: 24.0.h,
+                      splashRadius: 24.0.r,
+                      onPressed: () => Navigator.pop(context),
+                      padding: EdgeInsets.zero,
+                      alignment: Alignment.centerLeft,
+                      color: Color(0xff2093F0),
+                    ),
+                    SizedBox(
+                      width: 14.7.w,
+                    ),
+                    Text(
+                      "setting_menu_11".tr(),
+                      style: TextStyle(
+                        fontSize: 18.0.sp,
+                        fontWeight: fontWeight['Medium'],
+                        color: textColor,
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
                     Container(
                       padding: EdgeInsets.only(
                         right: 27.5.w,
                         left: 27.5.w,
-                        top: 20.0.h,
+                        top: 29.0.h,
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "일자",
-                                style: TextStyle(
-                                  fontSize: 13.0.sp,
-                                  color: Color(0xff9C9C9C),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "타입",
-                                style: TextStyle(
-                                  fontSize: 13.0.sp,
-                                  color: Color(0xff9C9C9C),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "차감일",
-                                style: TextStyle(
-                                  fontSize: 13.0.sp,
-                                  color: Color(0xff9C9C9C),
-                                ),
-                              ),
+                          Text(
+                            "${now.year}년 연차 내역",
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                              color: Color(0xff2093F0),
+                              fontWeight: fontWeight['Bold'],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: StreamBuilder<QuerySnapshot>(
-                          stream: PublicFirebaseRepository().usedVacation(loginUser: loginUser, time: choiseDate.value),
-                          builder: (context, snapshot) {
-                            if(!snapshot.hasData){
-                              return Container();
-                            }
-                            List<DocumentSnapshot> docs = snapshot.data!.docs;
+                    StreamBuilder<DocumentSnapshot>(
+                        stream: PublicFirebaseRepository().getUserVacation(loginUser: loginUser),
+                        builder: (context, snapshot) {
+                          if(!snapshot.hasData){
+                            return Container();
+                          }
+                          EmployeeModel employeeUser = EmployeeModel.fromMap(mapData: (snapshot.data!.data() as dynamic), reference: snapshot.data!.reference);
+                          double totalVacation = TotalVacation(employeeUser.enteredDate!, companyVacation, employeeUser.vacation!.toDouble());
+                          return FutureBuilder(
+                              future: UsedVacation(loginUser.companyCode, loginUser.mail, employeeUser.enteredDate!, companyVacation),
+                              builder: (context, snapshot) {
+                                if(!snapshot.hasData){
+                                  return Container();
+                                }
+                                double useVacation = (snapshot.data as double);
 
-                            return ListView(
-                              padding: EdgeInsets.all(0),
-                              children: docs.map((doc) {
-                                WorkModel workModel = WorkModel.fromMap(mapData: (doc.data() as dynamic), reference: doc.reference);
+                                List<ChartData> chartData = [
+                                  ChartData('사용 연차일', useVacation, titleTextColor),
+                                  ChartData('남은 연차일', (totalVacation - useVacation), Colors.teal),
+                                ];
 
-                                return Container(
-                                  width: double.infinity,
-                                  height: 42.0.h,
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                        right: 27.5.w,
+                                        left: 27.5.w,
+                                      ),
+                                      child: (totalVacation != 0) ? SfCircularChart(
+                                        annotations: <CircularChartAnnotation>[
+                                          CircularChartAnnotation(
+                                            widget: Container(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text('총 연차일',
+                                                      style: getRobotoBold(fontSize: 12, color: textColor),
+                                                    ),
+                                                    Text('$totalVacation',
+                                                      style: getRobotoRegular(fontSize: 12, color: textColor),
+                                                    ),
+                                                  ],
+                                                )
+                                            ),
+                                          )
+                                        ],
+                                        series: <CircularSeries>[
+                                          DoughnutSeries<ChartData, String>(
+                                              dataSource: chartData,
+                                              xValueMapper: (ChartData data, _) => data.x,
+                                              yValueMapper: (ChartData data, _) => data.y,
+                                              pointColorMapper:(ChartData data,  _) => data.color,
+                                              dataLabelMapper: (ChartData data, _) => data.x.toString() + "\n" + data.y.toString(),
+                                              radius: '90%',
+                                              enableTooltip: true,
+                                              dataLabelSettings: DataLabelSettings(
+                                                isVisible: true,
+                                              )),
+                                        ],
+                                      ): Container(
+                                          padding: const EdgeInsets.all(14.0),
+                                          child: Text("입사일이 설정되어있지 않습니다.",
+                                            style: getNotoSantMedium(fontSize: 12, color: textColor),
+                                          )
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                          );
+                        }
+                    ),
+                    Container(
+                      child: Divider(
+                        color: Color(0xffECECEC),
+                        thickness: 1.0.h,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 20.0.h,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "연간 연차 사용 내역",
+                          style: TextStyle(
+                            fontSize: 15.0.sp,
+                            fontWeight: fontWeight['Medium'],
+                            color: textColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: ValueListenableBuilder(
+                          valueListenable: choiseDate,
+                          builder: (BuildContext context, DateTime value, Widget? child) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    top: 21.0.h,
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 194.0.w,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          IconButton(
+                                            constraints: BoxConstraints(),
+                                            icon: Icon(
+                                              Icons.arrow_back_ios_outlined,
+                                            ),
+                                            iconSize: 24.0.h,
+                                            splashRadius: 24.0.r,
+                                            onPressed: () {
+                                              choiseDate.value = DateTime(choiseDate.value.year - 1);
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            alignment: Alignment.centerLeft,
+                                            color: Color(0xff2093F0),
+                                            disabledColor: Color(0xff2093F0).withOpacity(0.2),
+                                          ),
+                                          Text(
+                                            "${choiseDate.value.year} 년",
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 14.0.sp,
+                                              fontWeight: fontWeight['Medium'],
+                                              color: Color(0xff2093F0),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            constraints: BoxConstraints(),
+                                            icon: Icon(
+                                              Icons.arrow_forward_ios_outlined,
+                                            ),
+                                            iconSize: 24.0.h,
+                                            splashRadius: 24.0.r,
+                                            onPressed: () {
+                                              choiseDate.value = DateTime(choiseDate.value.year + 1);
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            alignment: Alignment.centerLeft,
+                                            color: Color(0xff2093F0),
+                                            disabledColor: Color(0xff2093F0).withOpacity(0.2),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
                                   padding: EdgeInsets.only(
                                     right: 27.5.w,
                                     left: 27.5.w,
+                                    top: 20.0.h,
                                   ),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                dateFormatCustom.getMonthAndDay(date: dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.startTime)),
-                                                style: getRobotoRegular(fontSize: 12, color: titleTextColor),
-                                              ),
-                                              Text(
-                                                "~ ${dateFormatCustom.getMonthAndDay(date: dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.endTime!))}",
-                                                style: getRobotoRegular(fontSize: 12, color: outWorkColor),
-                                              ),
-                                            ],
+                                          child: Text(
+                                            "일자",
+                                            style: TextStyle(
+                                              fontSize: 13.0.sp,
+                                              color: Color(0xff9C9C9C),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                      Expanded(child: Center(
-                                        child: Text(
-                                          "${workModel.type}",
-                                          style: getRobotoRegular(fontSize: 12, color: textColor),
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            "타입",
+                                            style: TextStyle(
+                                              fontSize: 13.0.sp,
+                                              color: Color(0xff9C9C9C),
+                                            ),
+                                          ),
                                         ),
-                                      )),
-                                      Expanded(child: Center(
-                                        child: Text(
-                                          workModel.type == "연차" ? "${dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.endTime!).add(Duration(hours: 9)).difference(dateFormatCustom.changeTimestampToDateTime(timestamp: workModel.startTime)).inDays + 1}"
-                                          : "0.5",
-                                          style: getRobotoRegular(fontSize: 12, color: textColor),
+                                      ),
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            "차감일",
+                                            style: TextStyle(
+                                              fontSize: 13.0.sp,
+                                              color: Color(0xff9C9C9C),
+                                            ),
+                                          ),
                                         ),
-                                      )),
+                                      ),
                                     ],
                                   ),
-                                );
-                              }).toList(),
+                                ),
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: PublicFirebaseRepository().usedVacation(loginUser: loginUser, time: choiseDate.value),
+                                    builder: (context, snapshot) {
+                                      if(!snapshot.hasData){
+                                        return Container();
+                                      }
+                                      List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+                                      return Column(
+                                        children: getAnnualData(context: context, docs: docs)
+                                      );
+                                    }
+                                ),
+                              ],
                             );
                           }
                       ),
-                    )],
-                );
-              }
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
