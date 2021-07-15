@@ -589,6 +589,7 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                                               bankName.value = await selectBankDialog(context: context);
                                                               if(bankName.value != null){
                                                                 if(bankName.value == "선택안함"){
+                                                                  bankName.value = null;
                                                                   _bankNameTextController.clear();
                                                                   _accountTextController.clear();
                                                                 }
@@ -608,6 +609,7 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                                           child: TextFormField(
                                                             controller: _accountTextController,
                                                             readOnly: (value == false || bankName.value == null) ? true : false,
+                                                            keyboardType: TextInputType.number,
                                                             style: TextStyle(
                                                               fontSize: 14.0.sp,
                                                               color: textColor,

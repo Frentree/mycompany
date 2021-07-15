@@ -12,6 +12,7 @@ import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
 
@@ -56,39 +57,54 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 72.0.h + statusBarHeight,
-                width: double.infinity,
-                color: whiteColor,
-                padding: EdgeInsets.only(top: statusBarHeight, left: 26.0.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          child: Container(
-                            color: whiteColor,
-                            width: 20.0.w,
-                            height: 30.0.h,
-                            alignment: Alignment.centerLeft,
-                            child: SizedBox(
-                              child: Container(
-                                  width: 14.9.w,
-                                  height: 14.9.h,
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    color: workInsertColor,
-                                  )),
-                            ),
-                          ),
-                          onTap: () => Navigator.pop(context, true),
+                height: 98.0.h,
+                padding: EdgeInsets.only(
+                  right: 27.5.w,
+                  left: 27.5.w,
+                  top: 33.0.h,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color(0xff000000).withOpacity(0.16),
+                          blurRadius: 3.0.h,
+                          offset: Offset(0.0, 1.0)
+                      )
+                    ]
+                ),
+                child: SizedBox(
+                  height: 55.0.h,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        constraints: BoxConstraints(),
+                        icon: Icon(
+                          Icons.arrow_back_ios_outlined,
                         ),
-                        Text("approval_detail".tr(), style: getNotoSantRegular(fontSize: 18.0, color: textColor)),
-                      ],
-                    ),
-                  ],
+                        iconSize: 24.0.h,
+                        splashRadius: 24.0.r,
+                        onPressed: () => Navigator.pop(context, true),
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        color: Color(0xff2093F0),
+                      ),
+                      SizedBox(
+                        width: 14.7.w,
+                      ),
+                      Text(
+                        "approval_detail".tr(),
+                        style: TextStyle(
+                          fontSize: 18.0.sp,
+                          fontWeight: fontWeight['Medium'],
+                          color: textColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              SizedBox(height: 10.0.h,),
               Expanded(
                   child: ListView(
                     padding: EdgeInsets.only(top: 0),

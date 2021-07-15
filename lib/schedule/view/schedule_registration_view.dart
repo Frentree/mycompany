@@ -14,6 +14,7 @@ import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
@@ -135,6 +136,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
+
     return WillPopScope(
       onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
       child: Scaffold(
@@ -149,98 +151,106 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 72.0.h + statusBarHeight,
-                  width: double.infinity,
-                  color: workInsertColor,
+                  height: 98.0.h,
                   padding: EdgeInsets.only(
-                    top: statusBarHeight,
-                    left: 26.0.w
+                    left: 27.5.w,
+                    top: 33.0.h,
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0xff000000).withOpacity(0.16),
+                            blurRadius: 3.0.h,
+                            offset: Offset(0.0, 1.0)
+                        )
+                      ]
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            child: Container(
-                              color: workInsertColor,
-                              width: 20.0.w,
-                              height: 30.0.h,
+                      SizedBox(
+                        height: 55.0.h,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              constraints: BoxConstraints(),
+                              icon: Icon(
+                                Icons.arrow_back_ios_outlined,
+                              ),
+                              iconSize: 24.0.h,
+                              splashRadius: 24.0.r,
+                              onPressed: () => _publicFunctionReprository.onBackPressed(context: context),
+                              padding: EdgeInsets.zero,
                               alignment: Alignment.centerLeft,
-                              child: SizedBox(
-                                child: Container(
-                                    width: 14.9.w,
-                                    height: 14.9.h,
-                                    child: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: whiteColor,
-                                    )
-                                ),
+                              color: Color(0xff2093F0),
+                            ),
+                            SizedBox(
+                              width: 14.7.w,
+                            ),
+                            Text(
+                              "registering_a_schedule".tr(),
+                              style: TextStyle(
+                                fontSize: 18.0.sp,
+                                fontWeight: fontWeight['Medium'],
+                                color: textColor,
                               ),
                             ),
-                            onTap: () => _publicFunctionReprository.onBackPressed(context: context),
-                          ),
-                          Text(
-                              "registering_a_schedule".tr(),
-                              style: getNotoSantRegular(
-                                  fontSize: 18.0,
-                                  color: whiteColor
-                              )
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       GestureDetector(
-                        child: Container(
-                          width: 50.0.w,
-                          height: 20.0.h,
-                          alignment: Alignment.centerRight,
-                          color: whiteColor.withOpacity(0),
-                          padding: EdgeInsets.only(right: 27.0.w),
-                          child: SvgPicture.asset(
-                            'assets/icons/check.svg',
-                            width: 16.51.w,
-                            height: 11.37.h,
-                            color: whiteColor,
+                          child: Container(
+                            width: 50.0.w,
+                            height: 20.0.h,
+                            alignment: Alignment.centerRight,
+                            color: whiteColor.withOpacity(0),
+                            padding: EdgeInsets.only(right: 27.0.w),
+                            child: SvgPicture.asset(
+                              'assets/icons/check.svg',
+                              width: 23.51.w,
+                              height: 13.37.h,
+                              color: Color(0xff2093F0),
+                            ),
                           ),
-                        ),
-                        onTap: () async {
-                          var result = await CalenderMethod().insertSchedule(
-                              allDay: _isAllDay.value,
-                              workName: works[workChkCount],
-                              title: titleController.text,
-                              content: noteController.text,
-                              startTime: _startDateTime.value,
-                              endTime: _endDateTime.value,
-                              workColleagueChkList: workColleagueChkList,
-                              isAllDay: _isAllDay.value,
-                              location: locationController.text,
-                            approvalUser: approvalUser.value,
-                            loginUser: loginUser
-                          );
-
-                          if(result){
-                            _publicFunctionReprository.onBackPressed(context: context);
-                          } else {
-                            loginDialogWidget(
-                                context: context,
-                                message: "결재자를 선택해주세요.",
-                                actions: [
-                                  confirmElevatedButton(
-                                      topPadding: 81.0.h,
-                                      buttonName: "dialogConfirm".tr(),
-                                      buttonAction: () => Navigator.pop(context),
-                                      customWidth: 200.0,
-                                      customHeight: 40.0.h
-                                  ),
-                                ]
+                          onTap: () async {
+                            var result = await CalenderMethod().insertSchedule(
+                                allDay: _isAllDay.value,
+                                workName: works[workChkCount],
+                                title: titleController.text,
+                                content: noteController.text,
+                                startTime: _startDateTime.value,
+                                endTime: _endDateTime.value,
+                                workColleagueChkList: workColleagueChkList,
+                                isAllDay: _isAllDay.value,
+                                location: locationController.text,
+                                approvalUser: approvalUser.value,
+                                loginUser: loginUser
                             );
-                          }
-                        }
 
+                            if(result){
+                              _publicFunctionReprository.onBackPressed(context: context);
+                            } else {
+                              loginDialogWidget(
+                                  context: context,
+                                  message: "결재자를 선택해주세요.",
+                                  actions: [
+                                    confirmElevatedButton(
+                                        topPadding: 81.0.h,
+                                        buttonName: "dialogConfirm".tr(),
+                                        buttonAction: () => Navigator.pop(context),
+                                        customWidth: 200.0,
+                                        customHeight: 40.0.h
+                                    ),
+                                  ]
+                              );
+                            }
+                          }
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 10.0.h,),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(
