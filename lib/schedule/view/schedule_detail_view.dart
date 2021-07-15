@@ -54,8 +54,8 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _commentTextController.dispose();
+    super.dispose();
   }
 
   @override

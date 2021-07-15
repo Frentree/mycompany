@@ -6,6 +6,7 @@ import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleCalenderWidget {
@@ -32,9 +33,10 @@ class ScheduleCalenderWidget {
             child: Center(
               child: Text(
                 meeting.subject,
-                style: TextStyle(
-                  fontSize: 10.0.sp,
-                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.visible,
+                style: getNotoSantRegular(fontSize: 9, color: textColor),
               ),
             ),
           ),

@@ -85,8 +85,7 @@ import 'package:easy_localization/easy_localization.dart';
                     ],
                   ),
                 ),
-                Container(
-                  height: 540.0.h,
+                Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -101,7 +100,6 @@ import 'package:easy_localization/easy_localization.dart';
                         )
                       ]
                     ),
-
                   ),
                 ),
               ],

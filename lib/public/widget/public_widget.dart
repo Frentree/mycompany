@@ -346,6 +346,7 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
             toggleChk: (val) {
               isMenu.value = val;
             },
+            animationDuration: Duration(milliseconds: 800),
             items: [
               CircularMenuItem(
                   icon: Icons.schedule,

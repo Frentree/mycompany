@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -437,22 +438,28 @@ class _ScheduleViewState extends State<ScheduleView> {
                               });
                             },
                           ),
-
                           Row(
                             children: [
-                              GestureDetector(
-                                child: SvgPicture.asset(
-                                  'assets/icons/refresh.svg',
-                                  width: 20.0.w,
-                                  height: 20.0.h,
-                                  color: workInsertColor,
-                                ),
-                                onTap: () {
+                              AnimatedIconButton(
+                                padding: const EdgeInsets.all(0),
+                                alignment: Alignment.centerLeft,
+                                constraints: BoxConstraints(),
+                                icons: [
+                                    AnimatedIconItem(
+                                      icon: Icon(
+                                        Icons.refresh,
+                                        color: workInsertColor,
+                                      ),
+                                    ),
+                                ],
+                                onPressed: () {
                                   _getDataSource();
                                   setState(() {});
                                 },
+                                size: 28.0.h,
+                                splashRadius: 28.0.r,
+                                disabledColor: Color(0xff2093F0).withOpacity(0.2),
                               ),
-                              SizedBox(width: 20.0.w,),
                               GestureDetector(
                                 child: SvgPicture.asset(
                                   'assets/icons/user_add.svg',
