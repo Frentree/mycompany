@@ -29,8 +29,6 @@ class _SettingVacationViewState extends State<SettingVacationView> {
   late UserModel loginUser;
   bool companyVacation = false;
 
-  DateFormatCustom _format = DateFormatCustom();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -46,7 +44,6 @@ class _SettingVacationViewState extends State<SettingVacationView> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return DefaultTabController(
       length: 2,
@@ -139,7 +136,6 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                             EmployeeModel empModel = EmployeeModel.fromMap(mapData: (docs[index].data() as dynamic), reference: docs[index].reference);
                             double? userVacation = empModel.vacation?.toDouble();
                             double? totalVacation = TotalVacation(empModel.enteredDate!, companyVacation, userVacation ?? 0);
-
 
                             return FutureBuilder(
                                 future: UsedVacation(empModel.companyCode, empModel.mail, empModel.enteredDate!, companyVacation),

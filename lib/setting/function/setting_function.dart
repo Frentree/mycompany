@@ -33,8 +33,8 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
     widget: SettingCompanyInformationView(gradeLevel: employeeModel.level!,)
   ));
 
-  if(getGradeChk(employeeModel: employeeModel, level: [6,8,9])){
-    list.add(SettingModel(munuName: "setting_menu_9".tr(), menuLavel: [6,8,9], menuIcon: Icon(Icons.airplanemode_on_sharp, color: workInsertColor, size: 30.0.h),
+  if(getGradeChk(employeeModel: employeeModel, level: [8,9])){
+    list.add(SettingModel(munuName: "setting_menu_9".tr(), menuLavel: [8,9], menuIcon: Icon(Icons.airplanemode_on_sharp, color: workInsertColor, size: 30.0.h),
         widget: SettingVacationView()
     ));
   }
