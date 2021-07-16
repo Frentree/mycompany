@@ -329,50 +329,61 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
   return ValueListenableBuilder(
       valueListenable: isMenu,
       builder: (context, bool value, child) {
-        return CircularMenu(
-            key: key,
-            alignment: Alignment.bottomRight,
-            radius: 150.0.r,
-            toggleButtonColor: workInsertColor,
-            backgroundWidget: !value
-                ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    color: blackColor.withOpacity(0.7),
-                    child: InkWell(
-                      onTap: () {
-                        isMenu.value = true;
-                        key.currentState!.reverseAnimation();
-                      },
-                    ),
-                  )
+        return Stack(
+          children: [
+            !value ? Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: blackColor.withOpacity(0.7),
+              child: InkWell(
+                onTap: () {
+                  isMenu.value = true;
+                  key.currentState!.reverseAnimation();
+                },
+              ),
+            )
                 : Container(),
-            toggleButtonBoxShadow: [BoxShadow(color: Colors.black)],
-            toggleChk: (val) {
-              isMenu.value = val;
-            },
-            animationDuration: Duration(milliseconds: 800),
-            items: [
-              CircularMenuItem(
-                  icon: Icons.schedule,
-                  boxShadow: [BoxShadow(color: Colors.black)],
-                  color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: AttendanceDashboardView(), isMove: false)),
-              CircularMenuItem(
-                  icon: Icons.event_note,
-                  boxShadow: [BoxShadow(color: Colors.black)],
-                  color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false)),
-              CircularMenuItem(
-                  icon: Icons.apps_sharp,
-                  boxShadow: [BoxShadow(color: Colors.black)],
-                  color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: InquiryView(), isMove: false)),
-              CircularMenuItem(
-                  icon: Icons.settings,
-                  boxShadow: [BoxShadow(color: Colors.black)],
-                  color: workInsertColor,
-                  onTap: () => _reprository.mainNavigator(context: context, navigator: SettingView(), isMove: true)),
-            ]);
+            Container(
+              padding: EdgeInsets.only(bottom: 10.0.h, right: 10.0.w),
+              child: CircularMenu(
+                  key: key,
+                  alignment: Alignment.bottomRight,
+                  toggleButtonAnimatedIconData: AnimatedIcons.menu_home,
+                  radius: 150.0.r,
+                  toggleButtonColor: Color(0xff686868),
+                  toggleButtonBoxShadow: [BoxShadow(color: Colors.black)],
+                  toggleChk: (val) {
+                    isMenu.value = val;
+                  },
+                  animationDuration: Duration(milliseconds: 800),
+                  items: [
+                    CircularMenuItem(
+                        icon: Icons.power_settings_new,
+                        boxShadow: [BoxShadow(color: Colors.black)],
+                        color: Color(0xff6B70FC),
+                        badgeLabel: "근무 상태",
+                        onTap: () => _reprository.mainNavigator(context: context, navigator: AttendanceDashboardView(), isMove: false)),
+                    CircularMenuItem(
+                        icon: Icons.create,
+                        boxShadow: [BoxShadow(color: Colors.black)],
+                        color: workInsertColor,
+                        badgeLabel: "일정 등록",
+                        onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false)),
+                    CircularMenuItem(
+                        icon: Icons.apps_sharp,
+                        boxShadow: [BoxShadow(color: Colors.black)],
+                        color: Color(0xff20F06C),
+                        badgeLabel: "조회",
+                        onTap: () => _reprository.mainNavigator(context: context, navigator: InquiryView(), isMove: false)),
+                    CircularMenuItem(
+                        icon: Icons.settings,
+                        boxShadow: [BoxShadow(color: Colors.black)],
+                        color: Color(0xffF23662),
+                        badgeLabel: "설정",
+                        onTap: () => _reprository.mainNavigator(context: context, navigator: SettingView(), isMove: true)),
+                  ]),
+            ),
+          ],
+        );
       });
 }
