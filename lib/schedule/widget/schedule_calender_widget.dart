@@ -32,7 +32,8 @@ class ScheduleCalenderWidget {
             color: meeting.color.withOpacity(0.12),
             child: Center(
               child: Text(
-                meeting.subject,
+                meeting.profile == loginUser.mail
+                    ? meeting.title! : meeting.subject,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.visible,

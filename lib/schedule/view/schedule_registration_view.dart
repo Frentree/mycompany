@@ -27,6 +27,7 @@ class ScheduleRegisrationView extends StatefulWidget {
 }
 
 class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
+
   PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
 
   // 전체 팀
@@ -129,20 +130,30 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   @override
   void dispose() {
     // TODO: implement dispose
+    _isHalfway.dispose();
+    _isAllDay.dispose();
+    totalVacation.dispose();
+    useVacation.dispose();
+    companyVacation.dispose();
+
     _scrollController.dispose();
+    titleController.dispose();
+    noteController.dispose();
+    locationController.dispose();
+    _startDateTime.dispose();
+    _endDateTime.dispose();
+    approvalUser.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-
     return WillPopScope(
       onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
       child: Scaffold(
         //floatingActionButton: getMainCircularMenu(context: context, navigator: 'schedule'),
-        body: RefreshIndicator(
-          onRefresh: () => _getPersonalDataSource(),
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
             width: double.infinity,
             height: double.infinity,

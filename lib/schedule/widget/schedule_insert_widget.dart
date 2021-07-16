@@ -237,7 +237,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 5.0.h, right: 12.0.w),
+              padding: EdgeInsets.only(top: 5.0.h, right: 5.0.w),
               child: SvgPicture.asset(
                 'assets/icons/time.svg',
                 width: 18.0.w,
@@ -272,10 +272,16 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 ),
                 onTap: () async {
                   widget.startDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: widget.startDateTime.value);
+                  if(widget.startDateTime.value.difference(widget.endDateTime.value).inDays >= 0
+                    && widget.startDateTime.value.difference(widget.endDateTime.value).inHours >= 0
+                      && widget.startDateTime.value.difference(widget.endDateTime.value).inMinutes >= 0
+                  ) {
+                    widget.endDateTime.value =  widget.startDateTime.value.add(Duration(hours: 1));
+                  }
                   widget.isAllDay.value = false;
                 }),
             Container(
-              padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 20.2.w),
+              padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 18.2.w),
               child: SvgPicture.asset(
                 'assets/icons/arrow_right.svg',
                 width: 11.55.w,
@@ -310,6 +316,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 ),
                 onTap: () async {
                   widget.endDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: widget.endDateTime.value);
+
+                  if(widget.endDateTime.value.difference(widget.startDateTime.value).inDays <= 0
+                      && widget.endDateTime.value.difference(widget.startDateTime.value).inHours <= 0
+                      && widget.endDateTime.value.difference(widget.startDateTime.value).inMinutes <= 0
+                  ) {
+                    widget.startDateTime.value =  widget.endDateTime.value.add(Duration(hours: -1));
+                  }
+
                   widget.isAllDay.value = false;
                 }),
           ],
