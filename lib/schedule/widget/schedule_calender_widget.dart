@@ -26,18 +26,38 @@ class ScheduleCalenderWidget {
               ? Container(
             width: 2.0.w,
             color: meeting.color,
-          )
-              : Container(),
+          ) : Container(),
           Container(
             color: meeting.color.withOpacity(0.12),
-            child: Center(
+            child:(meeting.profile != loginUser.mail) ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  meeting.type!.substring(0,1),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.visible,
+                  style: getNotoSantBold(fontSize: 8, color: textColor),
+                ),
+                Container(
+                  width: 29.0.w,
+                  child: Text(
+                    meeting.profile == loginUser.mail
+                        ? meeting.title! : meeting.subject,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.visible,
+                    style: getNotoSantRegular(fontSize: 8, color: textColor),
+                  ),
+                ),
+              ],
+            ) : Center(
               child: Text(
-                meeting.profile == loginUser.mail
-                    ? meeting.title! : meeting.subject,
+                meeting.title!,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.visible,
-                style: getNotoSantRegular(fontSize: 9, color: textColor),
+                style: getNotoSantRegular(fontSize: 8, color: textColor),
               ),
             ),
           ),

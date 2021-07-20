@@ -43,6 +43,7 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
   TextEditingController _phoneTextController = MaskedTextController(mask: '000-0000-0000');
   TextEditingController _bankNameTextController = TextEditingController();
   TextEditingController _accountTextController = TextEditingController();
+  TextEditingController _enterDateTextController = TextEditingController();
 
   ValueNotifier<bool> isEdit = ValueNotifier<bool>(false);
   ValueNotifier<List<bool>> isNoError = ValueNotifier<List<bool>>([true, true, true,]);
@@ -61,6 +62,7 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
     _phoneTextController.dispose();
     _accountTextController.dispose();
     _bankNameTextController.dispose();
+    _enterDateTextController.dispose();
 
     isEdit.dispose();
     isNoError.dispose();
@@ -79,7 +81,8 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
     EmployeeInfoProvider employeeInfoProvider = Provider.of<EmployeeInfoProvider>(context, listen: false);
 
     UserModel loginUserData = userInfoProvider.getUserData()!;
-    EmployeeModel loginEmployeeData = employeeInfoProvider.getEmployeeData()!;
+    EmployeeModel loginEmployeeData = Provider.of<EmployeeModel>(context);
+    _enterDateTextController.text = loginEmployeeData.enteredDate!;
 
     _birthdayTextController.text = loginEmployeeData.birthday == "" ? "" : loginEmployeeData.birthday!;
     _phoneTextController.text = loginEmployeeData.phone == "" ? "" : loginEmployeeData.phone!;
@@ -677,9 +680,9 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                                   width: 305.0.w,
                                                   height: 40.0.h,
                                                   child: TextFormField(
+                                                    controller: _enterDateTextController,
                                                     decoration: loginTextFormRoundBorderDecoration(),
                                                     readOnly: true,
-                                                    initialValue: loginEmployeeData.enteredDate,
                                                     style: TextStyle(
                                                       fontSize: 14.0.sp,
                                                       color: textColor,

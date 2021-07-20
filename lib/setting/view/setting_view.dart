@@ -86,7 +86,7 @@ class _SettingViewState extends State<SettingView> {
                     late EmployeeModel employeeModel;
 
                     List<DocumentSnapshot> docs = snapshot.data!.docs;
-                    docs.map((doc) => employeeModel = EmployeeModel.fromMap(mapData: (doc.data() as dynamic))).toList();
+                    docs.map((doc) => employeeModel = EmployeeModel.fromMap(mapData: (doc.data() as dynamic), reference: doc.reference)).toList();
 
                     return GridView.custom(
                       padding: EdgeInsets.symmetric(horizontal: 8.0.w),
@@ -97,7 +97,7 @@ class _SettingViewState extends State<SettingView> {
                         mainAxisSpacing: 4,
                       ),
                       childrenDelegate: SliverChildListDelegate(
-                        getSettingMenu(context: context, employeeModel: employeeModel).map((data) =>
+                        getSettingMenu(context: context, employeeModel: employeeModel, loginUser: loginUser).map((data) =>
                            GestureDetector(
                               child: Container(
                                 padding: const EdgeInsets.all(0.5),

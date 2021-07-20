@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/login/model/company_model.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/fcm/alarmModel.dart';
@@ -230,6 +232,25 @@ class PublicFirebaseMethods {
     return _firestore.collection(COMPANY).doc(loginUser.companyCode).collection(USER).doc(loginUser.mail).snapshots();
   }
 
+  Stream<EmployeeModel> getEmployeeUser(UserModel loginUser) {
+    return _firestore.collection(COMPANY)
+        .doc(loginUser.companyCode)
+        .collection(USER)
+        .doc(loginUser.mail)
+        .snapshots()
+        .map((snapshot) => EmployeeModel.fromMap(mapData: snapshot.data() as dynamic, reference: snapshot.reference));
+  }
+
+  Stream<List<EmployeeModel>> getEmployeeUsers(UserModel loginUser) {
+    return _firestore.collection(COMPANY)
+        .doc(loginUser.companyCode)
+        .collection(USER)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((document) => EmployeeModel.fromMap(mapData: document.data() as dynamic, reference: document.reference))
+        .toList());
+  }
+
   Stream<QuerySnapshot> getColleagueAttendance(UserModel loginUser) {
     DateTime now = DateTime.now();
 
@@ -267,4 +288,17 @@ class PublicFirebaseMethods {
 
     return model;
   }
+
+  Stream<List<ExpenseModel>> getExpense(UserModel loginUser) {
+    return _firestore.collection(COMPANY)
+        .doc(loginUser.companyCode)
+        .collection(USER)
+        .doc(loginUser.mail)
+        .collection(EXPENSE)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((document) => ExpenseModel.fromMap(mapData: document.data() as dynamic, reference: document.reference))
+        .toList());
+  }
+
 }

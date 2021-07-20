@@ -519,51 +519,65 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         SizedBox(
           height: 10.0.h,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        Column(
           children: [
-            ValueListenableBuilder(
-              valueListenable: widget.isAllDay,
-              builder: (context, bool value, child) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      value? "halfway".tr() : "annual".tr(),
-                      style: getNotoSantRegular(
-                          fontSize: 14.0,
-                          color: widget.isAllDay.value ? workInsertColor : hintTextColor
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5.0.w,
-                    ),
-                    FlutterSwitch(
-                      width: 30.0.w,
-                      height: 15.0.h,
-                      toggleSize: 16.0.w,
-                      padding: 0,
-                      value: value,
-                      onToggle: (values){
-                        widget.isAllDay.value = values;
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ValueListenableBuilder(
+                  valueListenable: widget.isAllDay,
+                  builder: (context, bool value, child) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "annual".tr(),
+                          style: getNotoSantRegular(
+                              fontSize: 14.0,
+                              color: !widget.isAllDay.value ? workInsertColor : hintTextColor
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.w,
+                        ),
+                        FlutterSwitch(
+                          width: 30.0.w,
+                          height: 15.0.h,
+                          toggleSize: 16.0.w,
+                          padding: 0,
+                          value: value,
+                          onToggle: (values){
+                            widget.isAllDay.value = values;
 
-                        if(!values){
-                          widget.isHalfway.value = false;
+                            if(!values){
+                              widget.isHalfway.value = false;
 
-                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
-                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
-                        } else {
-                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
-                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      width: 10.0.w,
-                    ),
-                  ],
-                );
-              },
+                              widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                              widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
+                            } else {
+                              widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                              widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 10.0.w,
+                        ),
+                        Text(
+                          "halfway".tr(),
+                          style: getNotoSantRegular(
+                              fontSize: 14.0,
+                              color: widget.isAllDay.value ? workInsertColor : hintTextColor
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.0.h,
             ),
             ValueListenableBuilder(
               valueListenable: widget.isHalfway,
@@ -572,14 +586,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      value ? "pm".tr() : "am".tr(),
+                      "am".tr(),
                       style: getNotoSantRegular(
                           fontSize: 14.0,
-                          color: value ? workInsertColor : hintTextColor
+                          color: !value ? workInsertColor : hintTextColor
                       ),
                     ),
                     SizedBox(
-                      width: 5.0.w,
+                      width: 10.0.w,
                     ),
                     FlutterSwitch(
                       width: 30.0.w,
@@ -601,6 +615,16 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
                         }
                       },
+                    ),
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    Text(
+                      "pm".tr(),
+                      style: getNotoSantRegular(
+                          fontSize: 14.0,
+                          color: value ? workInsertColor : hintTextColor
+                      ),
                     ),
                   ],
                 );

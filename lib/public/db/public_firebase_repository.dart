@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/login/model/company_model.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/db/public_firebase_method.dart';
 import 'package:mycompany/public/model/position_model.dart';
@@ -56,10 +58,16 @@ class PublicFirebaseRepository {
   Stream<DocumentSnapshot> getUserVacation({required UserModel loginUser}) =>
       _methods.getUserVacation(loginUser);
 
+  Stream<EmployeeModel> getEmployeeUser({required UserModel loginUser}) =>
+      _methods.getEmployeeUser(loginUser);
+
   Stream<QuerySnapshot> getColleagueAttendance({required UserModel loginUser}) =>
       _methods.getColleagueAttendance(loginUser);
 
   Future<WorkModel> getOutWorkLocation({required UserModel loginUser, required String mail}) =>
       _methods.getOutWorkLocation(loginUser, mail);
+
+  Stream<List<ExpenseModel>> getExpense({required UserModel loginUser}) =>
+      _methods.getExpense(loginUser);
 
 }

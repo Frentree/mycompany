@@ -110,7 +110,8 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
   Widget build(BuildContext context) {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
     UserModel loginUser = userInfoProvider.getUserData()!;
-
+    EmployeeModel employeeUser = Provider.of<EmployeeModel>(context);
+    double totalVacation = TotalVacation(employeeUser.enteredDate!, companyVacation, employeeUser.vacation!.toDouble());
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -184,78 +185,68 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
                         ],
                       ),
                     ),
-                    StreamBuilder<DocumentSnapshot>(
-                        stream: PublicFirebaseRepository().getUserVacation(loginUser: loginUser),
-                        builder: (context, snapshot) {
-                          if(!snapshot.hasData){
-                            return Container();
-                          }
-                          EmployeeModel employeeUser = EmployeeModel.fromMap(mapData: (snapshot.data!.data() as dynamic), reference: snapshot.data!.reference);
-                          double totalVacation = TotalVacation(employeeUser.enteredDate!, companyVacation, employeeUser.vacation!.toDouble());
-                          return FutureBuilder(
-                              future: UsedVacation(loginUser.companyCode, loginUser.mail, employeeUser.enteredDate!, companyVacation),
-                              builder: (context, snapshot) {
-                                if(!snapshot.hasData){
-                                  return Container();
-                                }
-                                double useVacation = (snapshot.data as double);
-
-                                List<ChartData> chartData = [
-                                  ChartData('사용 연차일', useVacation, titleTextColor),
-                                  ChartData('남은 연차일', (totalVacation - useVacation), Colors.teal),
-                                ];
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                        right: 27.5.w,
-                                        left: 27.5.w,
-                                      ),
-                                      child: (totalVacation != 0) ? SfCircularChart(
-                                        annotations: <CircularChartAnnotation>[
-                                          CircularChartAnnotation(
-                                            widget: Container(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text('총 연차일',
-                                                      style: getRobotoBold(fontSize: 12, color: textColor),
-                                                    ),
-                                                    Text('$totalVacation',
-                                                      style: getRobotoRegular(fontSize: 12, color: textColor),
-                                                    ),
-                                                  ],
-                                                )
-                                            ),
-                                          )
-                                        ],
-                                        series: <CircularSeries>[
-                                          DoughnutSeries<ChartData, String>(
-                                              dataSource: chartData,
-                                              xValueMapper: (ChartData data, _) => data.x,
-                                              yValueMapper: (ChartData data, _) => data.y,
-                                              pointColorMapper:(ChartData data,  _) => data.color,
-                                              dataLabelMapper: (ChartData data, _) => data.x.toString() + "\n" + data.y.toString(),
-                                              radius: '90%',
-                                              enableTooltip: true,
-                                              dataLabelSettings: DataLabelSettings(
-                                                isVisible: true,
-                                              )),
-                                        ],
-                                      ): Container(
-                                          padding: const EdgeInsets.all(14.0),
-                                          child: Text("입사일이 설정되어있지 않습니다.",
-                                            style: getNotoSantMedium(fontSize: 12, color: textColor),
-                                          )
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }
-                          );
+                    FutureBuilder(
+                      future: UsedVacation(loginUser.companyCode, loginUser.mail, employeeUser.enteredDate!, companyVacation),
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData){
+                          return Container();
                         }
+                        double useVacation = (snapshot.data as double);
+
+                        List<ChartData> chartData = [
+                          ChartData('사용 연차일', useVacation, titleTextColor),
+                          ChartData('남은 연차일', (totalVacation - useVacation), Colors.teal),
+                        ];
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                right: 27.5.w,
+                                left: 27.5.w,
+                              ),
+                              child: (totalVacation != 0) ? SfCircularChart(
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    widget: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text('총 연차일',
+                                              style: getRobotoBold(fontSize: 12, color: textColor),
+                                            ),
+                                            Text('$totalVacation',
+                                              style: getRobotoRegular(fontSize: 12, color: textColor),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                  )
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<ChartData, String>(
+                                      dataSource: chartData,
+                                      xValueMapper: (ChartData data, _) => data.x,
+                                      yValueMapper: (ChartData data, _) => data.y,
+                                      pointColorMapper:(ChartData data,  _) => data.color,
+                                      dataLabelMapper: (ChartData data, _) => data.x.toString() + "\n" + data.y.toString(),
+                                      radius: '90%',
+                                      enableTooltip: true,
+                                      dataLabelSettings: DataLabelSettings(
+                                        isVisible: true,
+                                      )),
+                                ],
+                              ): Container(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Text("입사일이 설정되어있지 않습니다.",
+                                    style: getNotoSantMedium(fontSize: 12, color: textColor),
+                                  )
+                              ),
+                            ),
+                          ],
+                        );
+                      }
                     ),
                     Container(
                       child: Divider(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/setting/model/setting_model.dart';
 import 'package:mycompany/setting/view/setting_colleague_view.dart';
@@ -17,16 +19,23 @@ import 'package:mycompany/setting/view/setting_unimplemented_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mycompany/setting/view/setting_vacation_view.dart';
 import 'package:mycompany/setting/view/setting_wifi_view.dart';
+import 'package:provider/provider.dart';
 
-List<SettingModel> getSettingMenu({required BuildContext context, required EmployeeModel employeeModel}) {
+List<SettingModel> getSettingMenu({required BuildContext context, required EmployeeModel employeeModel, required UserModel loginUser}) {
   List<SettingModel> list = [];
 
   list.add(SettingModel(munuName: "setting_menu_1".tr(), menuLavel: [0], menuIcon: Icon(Icons.contact_mail, color: workInsertColor, size: 30.0.h),
-    widget: SettingMyInformationView()
+    widget: StreamProvider<EmployeeModel>(
+        create: (BuildContext context) => PublicFirebaseRepository().getEmployeeUser(loginUser: loginUser),
+        initialData: employeeModel,
+        child: SettingMyInformationView())
   ));
 
   list.add(SettingModel(munuName: "setting_menu_11".tr(), menuLavel: [0], menuIcon: Icon(Icons.airport_shuttle_rounded, color: workInsertColor, size: 30.0.h),
-      widget: SettingMyVacationView()
+      widget: StreamProvider<EmployeeModel>(
+          create: (BuildContext context) => PublicFirebaseRepository().getEmployeeUser(loginUser: loginUser),
+          initialData: employeeModel,
+          child: SettingMyVacationView())
   ));
 
   list.add(SettingModel(munuName: "setting_menu_10".tr(), menuLavel: [0], menuIcon: Icon(Icons.home_work_outlined, color: workInsertColor, size: 30.0.h),

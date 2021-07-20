@@ -100,7 +100,7 @@
 
   "approval" : "결재",
   "request_cencel" : "요청취소",
-  "consent" : "승낙",
+  "consent" : "승인",
   "return" : "반려",
   "approval_detail" : "결재 상세보기",
   "content" : "내용",
@@ -115,7 +115,7 @@
   "approval_completion_date" : "결재 완료일",
   "cancel_the_approval_request" : "결재 요청을 취소하시겠습니까?",
   "return_the_approval_request" : "결재 요청을 반려하시겠습니까?",
-  "consent_the_approval_request" : "결재 요청을 승낙하시겠습니까?",
+  "consent_the_approval_request" : "결재 요청을 승인하시겠습니까?",
   "approval_request" : "승인 요청",
   "approval_consent" : "승인 완료",
   "approval_return" : "승인 반려",

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/attendance/view/attendance_dashboard_view.dart';
+import 'package:mycompany/expense/view/expense_view.dart';
 import 'package:mycompany/inquiry/view/inquiry_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
@@ -375,6 +376,12 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                         color: Color(0xff20F06C),
                         badgeLabel: "조회",
                         onTap: () => _reprository.mainNavigator(context: context, navigator: InquiryView(), isMove: false)),
+                    /*CircularMenuItem(
+                        icon: Icons.money_outlined,
+                        boxShadow: [BoxShadow(color: Colors.black)],
+                        color: Color(0xff996666),
+                        badgeLabel: "경비",
+                        onTap: () => _reprository.mainNavigator(context: context, navigator: ExpenseView(), isMove: false)),*/
                     CircularMenuItem(
                         icon: Icons.settings,
                         boxShadow: [BoxShadow(color: Colors.black)],
