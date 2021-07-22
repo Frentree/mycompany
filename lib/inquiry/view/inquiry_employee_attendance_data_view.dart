@@ -45,10 +45,9 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
 
     DateTime lastDate = DateTime(now.year, now.month, now.day + (6 - now.weekday));
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: Column(
+    return Container(
+      color: whiteColor,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ValueListenableBuilder(
@@ -87,18 +86,18 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                   }
 
                   ValueNotifier<Map<String, List<AttendanceModel>>> employeeWeekAttendanceData = ValueNotifier<Map<String, List<AttendanceModel>>>(
-                    _totalOfficeHoursCalculationFunction.getEmployeeWeekAttendanceData(
-                      attendanceDataList: attendanceSnapshot.data!,
-                      employeeData: employeeList.value.keys.toList(),
-                      startDate: queryStartDate.value,
-                      endDate: queryEndDate.value,
-                    )
+                      _totalOfficeHoursCalculationFunction.getEmployeeWeekAttendanceData(
+                        attendanceDataList: attendanceSnapshot.data!,
+                        employeeData: employeeList.value.keys.toList(),
+                        startDate: queryStartDate.value,
+                        endDate: queryEndDate.value,
+                      )
                   );
 
                   ValueNotifier<Map<String, List<Duration>>> employeeWeekTotalOfficeHours = ValueNotifier<Map<String, List<Duration>>>(
-                    _totalOfficeHoursCalculationFunction.employeeWeekTotalOfficeHoursCalculation(
-                      employeeAttendanceDataList: employeeWeekAttendanceData.value,
-                    )
+                      _totalOfficeHoursCalculationFunction.employeeWeekTotalOfficeHoursCalculation(
+                        employeeAttendanceDataList: employeeWeekAttendanceData.value,
+                      )
                   );
 
                   return Expanded(
@@ -272,272 +271,272 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                                   employeeAttendanceDataList: employeeWeekAttendanceData.value,
                                 );
                                 return ValueListenableBuilder(
-                                  valueListenable: employeeWeekAttendanceData,
-                                  builder: (BuildContext context, Map<String, List<AttendanceModel>> employeeWeekAttendanceDataValue, Widget? child) {
-                                    return Expanded(
-                                      child: ListView.builder(
-                                        padding: EdgeInsets.zero,
-                                        itemCount: employeeListValue.values.length,
-                                        itemBuilder: (context, employeeIndex){
-                                          ValueNotifier<bool> isDetail = ValueNotifier<bool>(true);
-                                          if(employeeListValue.values.elementAt(employeeIndex) == true){
-                                            return Column(
-                                              children: [
-                                                Container(
-                                                  height: 35.0.h,
-                                                  color: calendarLineColor.withOpacity(0.1),
-                                                  padding: EdgeInsets.only(
-                                                    left: 23.0.w,
-                                                    right: 20.0.w,
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            employeeListValue.keys.elementAt(employeeIndex).name + " ",
-                                                            style: TextStyle(
-                                                              fontWeight: fontWeight["Medium"],
-                                                              fontSize: 13.0.sp,
-                                                              color: textColor,
-                                                            ),
-                                                          ),
-                                                          (employeeListValue.keys.elementAt(employeeIndex).position == "" && employeeListValue.keys.elementAt(employeeIndex).team == "") ? Text(
-                                                            ""
-                                                          ) : Text(
-                                                            (employeeListValue.keys.elementAt(employeeIndex).position != "" && employeeListValue.keys.elementAt(employeeIndex).team != "") ? "(${employeeListValue.keys.elementAt(employeeIndex).position}/${employeeListValue.keys.elementAt(employeeIndex).team})" : "(${employeeListValue.keys.elementAt(employeeIndex).position}${employeeListValue.keys.elementAt(employeeIndex).team})",
-                                                            style: TextStyle(
-                                                              fontWeight: fontWeight["Medium"],
-                                                              fontSize: 13.0.sp,
-                                                              color: textColor,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      ValueListenableBuilder(
-                                                        valueListenable: isDetail,
-                                                        builder: (BuildContext context, bool isDetailValue, Widget? child) {
-                                                          return IconButton(
-                                                            padding: EdgeInsets.zero,
-                                                            constraints: BoxConstraints(),
-                                                            icon: Icon(
-                                                              isDetail.value == true ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                                                              size: 20.0.w,
-                                                            ),
-                                                            onPressed: (){
-                                                              isDetail.value = !isDetail.value;
-                                                            },
-                                                          );
-                                                        }
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                    left: 27.5.w,
-                                                    right: 27.5.w,
-                                                    bottom: 20.0.h,
-                                                  ),
-                                                  child: ValueListenableBuilder(
-                                                    valueListenable: isDetail,
-                                                    builder: (BuildContext context, bool isDetailValue, Widget? child){
-                                                      return Visibility(
-                                                        visible: isDetailValue,
-                                                        child: Column(
+                                    valueListenable: employeeWeekAttendanceData,
+                                    builder: (BuildContext context, Map<String, List<AttendanceModel>> employeeWeekAttendanceDataValue, Widget? child) {
+                                      return Expanded(
+                                        child: ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          itemCount: employeeListValue.values.length,
+                                          itemBuilder: (context, employeeIndex){
+                                            ValueNotifier<bool> isDetail = ValueNotifier<bool>(true);
+                                            if(employeeListValue.values.elementAt(employeeIndex) == true){
+                                              return Column(
+                                                children: [
+                                                  Container(
+                                                    height: 35.0.h,
+                                                    color: calendarLineColor.withOpacity(0.1),
+                                                    padding: EdgeInsets.only(
+                                                      left: 23.0.w,
+                                                      right: 20.0.w,
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Row(
                                                           children: [
-                                                            ListView.builder(
-                                                              shrinkWrap: true,
-                                                              padding: EdgeInsets.zero,
-                                                              physics: ScrollPhysics(),
-                                                              itemCount: 7,
-                                                              itemBuilder: (context, attendanceIndex){
-                                                                List<AttendanceModel> attendanceData = employeeWeekAttendanceDataValue[employeeListValue.keys.elementAt(employeeIndex).mail]!;
-                                                                return Padding(
-                                                                  padding: EdgeInsets.only(top: 20.0.h),
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                            dateFormatCustom.changeDateToString(date: queryStartDate.value.add(Duration(days: attendanceIndex)), isIncludeWeekday: true),
-                                                                            style: TextStyle(
-                                                                              fontSize: 13.0.sp,
-                                                                              color: attendanceIndex == 0 ? Colors.red : attendanceIndex == 6 ? Color(0xff2093F0) : textColor,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                            attendanceData[attendanceIndex].attendTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[attendanceIndex].attendTime),
-                                                                            style: TextStyle(
-                                                                              fontSize: 13.0.sp,
-                                                                              color: Color(0xff9C9C9C),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                            attendanceData[attendanceIndex].endTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[attendanceIndex].endTime),
-                                                                            style: TextStyle(
-                                                                              fontSize: 13.0.sp,
-                                                                              color: Color(0xff9C9C9C),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                            _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: _totalOfficeHoursCalculationFunction.dayOfficeHoursCalculation(attendanceData: attendanceData[attendanceIndex])),
-                                                                            style: TextStyle(
-                                                                              fontSize: 13.0.sp,
-                                                                              color: Color(0xff9C9C9C),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                            Container(
-                                                              child: Divider(
-                                                                color: Color(0xffECECEC),
-                                                                thickness: 1.0.h,
+                                                            Text(
+                                                              employeeListValue.keys.elementAt(employeeIndex).name + " ",
+                                                              style: TextStyle(
+                                                                fontWeight: fontWeight["Medium"],
+                                                                fontSize: 13.0.sp,
+                                                                color: textColor,
                                                               ),
                                                             ),
-                                                            Container(
-                                                              padding: EdgeInsets.only(
-                                                                top: 20.0.h,
+                                                            (employeeListValue.keys.elementAt(employeeIndex).position == "" && employeeListValue.keys.elementAt(employeeIndex).team == "") ? Text(
+                                                                ""
+                                                            ) : Text(
+                                                              (employeeListValue.keys.elementAt(employeeIndex).position != "" && employeeListValue.keys.elementAt(employeeIndex).team != "") ? "(${employeeListValue.keys.elementAt(employeeIndex).position}/${employeeListValue.keys.elementAt(employeeIndex).team})" : "(${employeeListValue.keys.elementAt(employeeIndex).position}${employeeListValue.keys.elementAt(employeeIndex).team})",
+                                                              style: TextStyle(
+                                                                fontWeight: fontWeight["Medium"],
+                                                                fontSize: 13.0.sp,
+                                                                color: textColor,
                                                               ),
-                                                              child: ValueListenableBuilder(
-                                                                  valueListenable: employeeWeekTotalOfficeHours,
-                                                                  builder: (BuildContext context, Map<String, List<Duration>> employeeWeekTotalOfficeHoursValue, Widget? child) {
-                                                                    List<Duration> weekTotalOfficeHoursData = employeeWeekTotalOfficeHoursValue[employeeListValue.keys.elementAt(employeeIndex).mail]!;
-                                                                    return Column(
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        ValueListenableBuilder(
+                                                            valueListenable: isDetail,
+                                                            builder: (BuildContext context, bool isDetailValue, Widget? child) {
+                                                              return IconButton(
+                                                                padding: EdgeInsets.zero,
+                                                                constraints: BoxConstraints(),
+                                                                icon: Icon(
+                                                                  isDetail.value == true ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                                                  size: 20.0.w,
+                                                                ),
+                                                                onPressed: (){
+                                                                  isDetail.value = !isDetail.value;
+                                                                },
+                                                              );
+                                                            }
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                      left: 27.5.w,
+                                                      right: 27.5.w,
+                                                      bottom: 20.0.h,
+                                                    ),
+                                                    child: ValueListenableBuilder(
+                                                      valueListenable: isDetail,
+                                                      builder: (BuildContext context, bool isDetailValue, Widget? child){
+                                                        return Visibility(
+                                                          visible: isDetailValue,
+                                                          child: Column(
+                                                            children: [
+                                                              ListView.builder(
+                                                                shrinkWrap: true,
+                                                                padding: EdgeInsets.zero,
+                                                                physics: ScrollPhysics(),
+                                                                itemCount: 7,
+                                                                itemBuilder: (context, attendanceIndex){
+                                                                  List<AttendanceModel> attendanceData = employeeWeekAttendanceDataValue[employeeListValue.keys.elementAt(employeeIndex).mail]!;
+                                                                  return Padding(
+                                                                    padding: EdgeInsets.only(top: 20.0.h),
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                       children: [
-                                                                        Padding(
-                                                                          padding: EdgeInsets.only(bottom: 6.0.h),
-                                                                          child: Row(
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(
-                                                                                "주간 총 근무시간",
-                                                                                style: TextStyle(
-                                                                                  fontSize: 13.0.sp,
-                                                                                  color: Color(0xff9C9C9C),
-                                                                                ),
+                                                                        Expanded(
+                                                                          child: Center(
+                                                                            child: Text(
+                                                                              dateFormatCustom.changeDateToString(date: queryStartDate.value.add(Duration(days: attendanceIndex)), isIncludeWeekday: true),
+                                                                              style: TextStyle(
+                                                                                fontSize: 13.0.sp,
+                                                                                color: attendanceIndex == 0 ? Colors.red : attendanceIndex == 6 ? Color(0xff2093F0) : textColor,
                                                                               ),
-                                                                              Text(
-                                                                                _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: weekTotalOfficeHoursData[0]),
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'Roboto',
-                                                                                  fontSize: 14.0.sp,
-                                                                                  fontWeight: fontWeight['Medium'],
-                                                                                  color: Color(0xff2093F0),
-                                                                                ),
-                                                                              ),
-                                                                            ],
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                        Padding(
-                                                                          padding: EdgeInsets.only(bottom: 6.0.h),
-                                                                          child: Row(
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(
-                                                                                "연장 근무시간",
-                                                                                style: TextStyle(
-                                                                                  fontSize: 13.0.sp,
-                                                                                  color: Color(0xff9C9C9C),
-                                                                                ),
-                                                                              ),
-                                                                              Text(
-                                                                                _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: weekTotalOfficeHoursData[1]),
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'Roboto',
-                                                                                  fontSize: 14.0.sp,
-                                                                                  fontWeight: fontWeight['Medium'],
-                                                                                  color: Color(0xff2093F0),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        Padding(
-                                                                          padding: EdgeInsets.only(bottom: 6.0.h),
-                                                                          child: Row(
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Text(
-                                                                                "주간 근무가능 잔여시간",
-                                                                                style: TextStyle(
-                                                                                  fontSize: 13.0.sp,
-                                                                                  color: Color(0xffF23662),
-                                                                                ),
-                                                                              ),
-                                                                              Text(
-                                                                                _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: weekTotalOfficeHoursData[2]),
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'Roboto',
-                                                                                  fontSize: 14.0.sp,
-                                                                                  fontWeight: fontWeight['Medium'],
-                                                                                  color: Color(0xffF23662),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                          children: [
-                                                                            Text(
-                                                                              "최대 근무시간",
+                                                                        Expanded(
+                                                                          child: Center(
+                                                                            child: Text(
+                                                                              attendanceData[attendanceIndex].attendTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[attendanceIndex].attendTime),
                                                                               style: TextStyle(
                                                                                 fontSize: 13.0.sp,
                                                                                 color: Color(0xff9C9C9C),
                                                                               ),
                                                                             ),
-                                                                            Text(
-                                                                              "52시간",
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          child: Center(
+                                                                            child: Text(
+                                                                              attendanceData[attendanceIndex].endTime == null ? "-" : dateFormatCustom.changeTimeToString(time: attendanceData[attendanceIndex].endTime),
                                                                               style: TextStyle(
-                                                                                fontFamily: 'Roboto',
-                                                                                fontSize: 14.0.sp,
-                                                                                fontWeight: fontWeight['Medium'],
-                                                                                color: Color(0xff131313),
+                                                                                fontSize: 13.0.sp,
+                                                                                color: Color(0xff9C9C9C),
                                                                               ),
                                                                             ),
-                                                                          ],
+                                                                          ),
+                                                                        ),
+                                                                        Expanded(
+                                                                          child: Center(
+                                                                            child: Text(
+                                                                              _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: _totalOfficeHoursCalculationFunction.dayOfficeHoursCalculation(attendanceData: attendanceData[attendanceIndex])),
+                                                                              style: TextStyle(
+                                                                                fontSize: 13.0.sp,
+                                                                                color: Color(0xff9C9C9C),
+                                                                              ),
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ],
-                                                                    );
-                                                                  }
+                                                                    ),
+                                                                  );
+                                                                },
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
+                                                              Container(
+                                                                child: Divider(
+                                                                  color: Color(0xffECECEC),
+                                                                  thickness: 1.0.h,
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                padding: EdgeInsets.only(
+                                                                  top: 20.0.h,
+                                                                ),
+                                                                child: ValueListenableBuilder(
+                                                                    valueListenable: employeeWeekTotalOfficeHours,
+                                                                    builder: (BuildContext context, Map<String, List<Duration>> employeeWeekTotalOfficeHoursValue, Widget? child) {
+                                                                      List<Duration> weekTotalOfficeHoursData = employeeWeekTotalOfficeHoursValue[employeeListValue.keys.elementAt(employeeIndex).mail]!;
+                                                                      return Column(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(bottom: 6.0.h),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                Text(
+                                                                                  "주간 총 근무시간",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 13.0.sp,
+                                                                                    color: Color(0xff9C9C9C),
+                                                                                  ),
+                                                                                ),
+                                                                                Text(
+                                                                                  _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: weekTotalOfficeHoursData[0]),
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'Roboto',
+                                                                                    fontSize: 14.0.sp,
+                                                                                    fontWeight: fontWeight['Medium'],
+                                                                                    color: Color(0xff2093F0),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(bottom: 6.0.h),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                Text(
+                                                                                  "연장 근무시간",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 13.0.sp,
+                                                                                    color: Color(0xff9C9C9C),
+                                                                                  ),
+                                                                                ),
+                                                                                Text(
+                                                                                  _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: weekTotalOfficeHoursData[1]),
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'Roboto',
+                                                                                    fontSize: 14.0.sp,
+                                                                                    fontWeight: fontWeight['Medium'],
+                                                                                    color: Color(0xff2093F0),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(bottom: 6.0.h),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                Text(
+                                                                                  "주간 근무가능 잔여시간",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 13.0.sp,
+                                                                                    color: Color(0xffF23662),
+                                                                                  ),
+                                                                                ),
+                                                                                Text(
+                                                                                  _totalOfficeHoursCalculationFunction.changeOfficeHoursToString(officeHours: weekTotalOfficeHoursData[2]),
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'Roboto',
+                                                                                    fontSize: 14.0.sp,
+                                                                                    fontWeight: fontWeight['Medium'],
+                                                                                    color: Color(0xffF23662),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              Text(
+                                                                                "최대 근무시간",
+                                                                                style: TextStyle(
+                                                                                  fontSize: 13.0.sp,
+                                                                                  color: Color(0xff9C9C9C),
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                "52시간",
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Roboto',
+                                                                                  fontSize: 14.0.sp,
+                                                                                  fontWeight: fontWeight['Medium'],
+                                                                                  color: Color(0xff131313),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            );
-                                          }
-                                          else{
-                                            return SizedBox();
-                                          }
-                                        },
-                                      ),
-                                    );
-                                  }
+                                                ],
+                                              );
+                                            }
+                                            else{
+                                              return SizedBox();
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    }
                                 );
                               },
                             ),

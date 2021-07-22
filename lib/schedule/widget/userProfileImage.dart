@@ -124,7 +124,7 @@ Widget getExpenseImage({String? ImageUri, required double size}) {
                   child: (ImageUri != ""  && ImageUri != null) ?
                   FadeInImage.assetNetwork(
                     placeholder: 'assets/images/logo_blue.png',
-                    image: ImageUri!,
+                    image: ImageUri,
                   ) : Icon(
                     Icons.camera_alt_sharp,
                     size: 40.0,

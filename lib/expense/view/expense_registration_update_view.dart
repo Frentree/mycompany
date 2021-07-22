@@ -185,6 +185,23 @@ class _ExpenseRegistrationUpdateViewState extends State<ExpenseRegistrationUpdat
                               buyDate: _format.changeDateTimeToTimestamp(dateTime: seleteTime.value)
                           );
 
+                          if(priceController.text.trim() == ""){
+                            await loginDialogWidget(
+                                context: context,
+                                message: "expense_price_fail".tr(),
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
+                            _isUpload.value = false;
+                          }
+
                           await widget.model.reference!.update(updateExpenseModel.toJson());
 
                           changeImagePath.value = null;

@@ -552,7 +552,7 @@ class _ExpenseViewState extends State<ExpenseView> {
             ),
             SizedBox(height: 2.0.h,),
           ],
-        )
+        ),
       );
     }
     list.add(SizedBox(height: 20.0.h,));

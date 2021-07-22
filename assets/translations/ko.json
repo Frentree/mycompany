@@ -212,5 +212,6 @@
 
 
   "expense" : "경비",
-  "expense_dialog_1" : "경비를 삭제하시겠습니까?"
+  "expense_dialog_1" : "경비를 삭제하시겠습니까?",
+  "expense_price_fail" : "금액을 입력해주세요."
 }

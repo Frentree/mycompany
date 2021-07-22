@@ -164,6 +164,23 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                               );
                             });
                           }
+                          if(priceController.text.trim() == ""){
+                            await loginDialogWidget(
+                                context: context,
+                                message: "expense_price_fail".tr(),
+                                actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h
+                                  ),
+                                ]
+                            );
+                            _isUpload.value = false;
+                          }
+
                           ExpenseModel addExpenseModel = ExpenseModel(
                               mail: loginUser.mail,
                               name: loginUser.name,
