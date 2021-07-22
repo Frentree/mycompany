@@ -208,9 +208,9 @@
   "approver_choise" : "결재자 선택",
   "photo_fail" : "사진 업로드 실패",
   "colleague_dialog_menu" : "사용자 정보 수정",
-  "entered" : "입사일"
+  "entered" : "입사일",
 
 
-
-
+  "expense" : "경비",
+  "expense_dialog_1" : "경비를 삭제하시겠습니까?"
 }

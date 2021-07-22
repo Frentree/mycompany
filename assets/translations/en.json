@@ -204,5 +204,8 @@
   "approver_choise" : "Select approver",
   "photo_fail" : "Failed to upload photos",
   "colleague_dialog_menu" : "사용자 정보 수정",
-  "entered" : "Entered Date"
+  "entered" : "Entered Date",
+
+  "expense" : "경비",
+  "expense_dialog_1" : "경비를 삭제하시겠습니까?"
 }

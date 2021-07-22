@@ -596,8 +596,8 @@ class _ScheduleViewState extends State<ScheduleView> {
                     List<DocumentSnapshot> docs = snapshot.data!.docs;
 
                     return Positioned(
-                      right: 10.0.w,
-                      bottom: 70.0.h,
+                      right: 20.0.w,
+                      bottom: 90.0.h,
                       child: (docs.length != 0) ? Stack(
                         children: [
                           FloatingActionButton(

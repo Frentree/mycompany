@@ -350,7 +350,7 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                   key: key,
                   alignment: Alignment.bottomRight,
                   toggleButtonAnimatedIconData: AnimatedIcons.menu_home,
-                  radius: 150.0.r,
+                  radius: 180.0.r,
                   toggleButtonColor: Color(0xff686868),
                   toggleButtonBoxShadow: [BoxShadow(color: Colors.black)],
                   toggleChk: (val) {
@@ -376,12 +376,12 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                         color: Color(0xff20F06C),
                         badgeLabel: "조회",
                         onTap: () => _reprository.mainNavigator(context: context, navigator: InquiryView(), isMove: false)),
-                    /*CircularMenuItem(
+                    CircularMenuItem(
                         icon: Icons.money_outlined,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: Color(0xff996666),
                         badgeLabel: "경비",
-                        onTap: () => _reprository.mainNavigator(context: context, navigator: ExpenseView(), isMove: false)),*/
+                        onTap: () => _reprository.mainNavigator(context: context, navigator: ExpenseView(), isMove: false)),
                     CircularMenuItem(
                         icon: Icons.settings,
                         boxShadow: [BoxShadow(color: Colors.black)],

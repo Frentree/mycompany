@@ -70,4 +70,7 @@ class PublicFirebaseRepository {
   Stream<List<ExpenseModel>> getExpense({required UserModel loginUser}) =>
       _methods.getExpense(loginUser);
 
+  Future<void> addExpense({required UserModel loginUser,required ExpenseModel model}) =>
+      _methods.addExpense(loginUser, model);
+
 }

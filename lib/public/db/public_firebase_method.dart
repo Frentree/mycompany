@@ -301,4 +301,13 @@ class PublicFirebaseMethods {
         .toList());
   }
 
+  Future<void> addExpense(UserModel loginUser, ExpenseModel model) async {
+    await _firestore.collection(COMPANY)
+        .doc(loginUser.companyCode)
+        .collection(USER)
+        .doc(loginUser.mail)
+        .collection(EXPENSE)
+        .add(model.toJson());
+  }
+
 }
