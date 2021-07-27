@@ -17,7 +17,6 @@ import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
-import 'package:mycompany/setting/widget/setting_dialog.dart';
 
 class ExpenseRegistrationView extends StatefulWidget {
   @override
@@ -77,138 +76,127 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
       },
       child: Scaffold(
         //floatingActionButton: getMainCircularMenu(context: context, navigator: 'schedule'),
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: whiteColor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 98.0.h,
-                  padding: EdgeInsets.only(
-                    left: 27.5.w,
-                    top: 33.0.h,
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    SizedBox(
-                      height: 55.0.h,
-                      child: Row(
+        body: ValueListenableBuilder(
+            valueListenable: _isUpload,
+            builder: (context, bool uploadChk, child) {
+              return Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: whiteColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton(
-                            constraints: BoxConstraints(),
-                            icon: Icon(
-                              Icons.arrow_back_ios_outlined,
+                          Container(
+                            height: 98.0.h,
+                            padding: EdgeInsets.only(
+                              left: 27.5.w,
+                              top: 33.0.h,
                             ),
-                            iconSize: 24.0.h,
-                            splashRadius: 24.0.r,
-                            onPressed: () => Navigator.pop(context, false),
-                            padding: EdgeInsets.zero,
-                            alignment: Alignment.centerLeft,
-                            color: Color(0xff2093F0),
-                          ),
-                          SizedBox(
-                            width: 14.7.w,
-                          ),
-                          Text(
-                            "경비 입력".tr(),
-                            style: TextStyle(
-                              fontSize: 18.0.sp,
-                              fontWeight: fontWeight['Medium'],
-                              color: textColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                        child: Container(
-                          width: 50.0.w,
-                          height: 20.0.h,
-                          alignment: Alignment.centerRight,
-                          color: whiteColor.withOpacity(0),
-                          padding: EdgeInsets.only(right: 27.0.w),
-                          child: SvgPicture.asset(
-                            'assets/icons/check.svg',
-                            width: 23.51.w,
-                            height: 13.37.h,
-                            color: Color(0xff2093F0),
-                          ),
-                        ),
-                        onTap: () async {
-                          _isUpload.value = true;
-                          if(changeImagePath.value != null && changeImagePath.value != ""){
-                            await profileEditFunction
-                                .uploadCompanyImageToStorage(context: context, pickImagePath: changeImagePath.value!)
-                                .then((uploadUrl) {
-                              uploadImageUrl = uploadUrl;
-                            }).catchError((onError) async{
-                              _isUpload.value = false;
-                              await loginDialogWidget(
-                                  context: context,
-                                  message: "photo_fail".tr(),
-                                  actions: [
-                                    confirmElevatedButton(
-                                        topPadding: 81.0.h,
-                                        buttonName: "dialogConfirm".tr(),
-                                        buttonAction: () => Navigator.pop(context),
-                                        customWidth: 200.0,
-                                        customHeight: 40.0.h
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              SizedBox(
+                                height: 55.0.h,
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      constraints: BoxConstraints(),
+                                      icon: Icon(
+                                        Icons.arrow_back_ios_outlined,
+                                      ),
+                                      iconSize: 24.0.h,
+                                      splashRadius: 24.0.r,
+                                      onPressed: () => Navigator.pop(context, false),
+                                      padding: EdgeInsets.zero,
+                                      alignment: Alignment.centerLeft,
+                                      color: Color(0xff2093F0),
                                     ),
-                                  ]
-                              );
-                            });
-                          }
-                          if(priceController.text.trim() == ""){
-                            await loginDialogWidget(
-                                context: context,
-                                message: "expense_price_fail".tr(),
-                                actions: [
-                                  confirmElevatedButton(
-                                      topPadding: 81.0.h,
-                                      buttonName: "dialogConfirm".tr(),
-                                      buttonAction: () => Navigator.pop(context),
-                                      customWidth: 200.0,
-                                      customHeight: 40.0.h
+                                    SizedBox(
+                                      width: 14.7.w,
+                                    ),
+                                    Text(
+                                      "경비 입력".tr(),
+                                      style: TextStyle(
+                                        fontSize: 18.0.sp,
+                                        fontWeight: fontWeight['Medium'],
+                                        color: textColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                  child: Container(
+                                    width: 50.0.w,
+                                    height: 20.0.h,
+                                    alignment: Alignment.centerRight,
+                                    color: whiteColor.withOpacity(0),
+                                    padding: EdgeInsets.only(right: 27.0.w),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/check.svg',
+                                      width: 23.51.w,
+                                      height: 13.37.h,
+                                      color: Color(0xff2093F0),
+                                    ),
                                   ),
-                                ]
-                            );
-                            _isUpload.value = false;
-                          }
+                                  onTap: () async {
+                                    FocusScope.of(context).unfocus();
+                                    _isUpload.value = true;
+                                    if (changeImagePath.value != null && changeImagePath.value != "") {
+                                      await profileEditFunction
+                                          .uploadCompanyImageToStorage(context: context, pickImagePath: changeImagePath.value!)
+                                          .then((uploadUrl) {
+                                        uploadImageUrl = uploadUrl;
+                                      }).catchError((onError) async {
+                                        _isUpload.value = false;
+                                        await loginDialogWidget(context: context, message: "photo_fail".tr(), actions: [
+                                          confirmElevatedButton(
+                                              topPadding: 81.0.h,
+                                              buttonName: "dialogConfirm".tr(),
+                                              buttonAction: () => Navigator.pop(context),
+                                              customWidth: 200.0,
+                                              customHeight: 40.0.h),
+                                        ]);
+                                      });
+                                    }
+                                    if (priceController.text.trim() == "") {
+                                      await loginDialogWidget(context: context, message: "expense_price_fail".tr(), actions: [
+                                        confirmElevatedButton(
+                                            topPadding: 81.0.h,
+                                            buttonName: "dialogConfirm".tr(),
+                                            buttonAction: () => Navigator.pop(context),
+                                            customWidth: 200.0,
+                                            customHeight: 40.0.h),
+                                      ]);
+                                      _isUpload.value = false;
+                                    }
 
-                          ExpenseModel addExpenseModel = ExpenseModel(
-                              mail: loginUser.mail,
-                              name: loginUser.name,
-                              companyCode: loginUser.companyCode!,
-                              contentType: seleteItem,
-                              imageUrl: uploadImageUrl,
-                              detailNote: contentController.text,
-                              status: "미",
-                              cost: int.parse(priceController.text.trim()),
-                              buyDate: _format.changeDateTimeToTimestamp(dateTime: seleteTime.value)
-                          );
+                                    ExpenseModel addExpenseModel = ExpenseModel(
+                                        mail: loginUser.mail,
+                                        name: loginUser.name,
+                                        companyCode: loginUser.companyCode!,
+                                        contentType: seleteItem,
+                                        imageUrl: uploadImageUrl,
+                                        detailNote: contentController.text,
+                                        status: "미",
+                                        cost: int.parse(priceController.text.trim()),
+                                        buyDate: _format.changeDateTimeToTimestamp(dateTime: seleteTime.value));
 
-                          await PublicFirebaseRepository().addExpense(loginUser: loginUser, model: addExpenseModel);
+                                    await PublicFirebaseRepository().addExpense(loginUser: loginUser, model: addExpenseModel);
 
-                          changeImagePath.value = null;
-                          uploadImageUrl = "";
-                          _isUpload.value = false;
+                                    changeImagePath.value = null;
+                                    uploadImageUrl = "";
+                                    _isUpload.value = false;
 
-                          Navigator.pop(context);
-                        }),
-                  ]),
-                ),
-                Expanded(
-                  child: ValueListenableBuilder(
-                      valueListenable: _isUpload,
-                      builder: (context, bool uploadChk, child) {
-                      return Stack(
-                        children: [
+                                    Navigator.pop(context);
+                                  }),
+                            ]),
+                          ),
                           SingleChildScrollView(
                             child: Container(
                               padding: EdgeInsets.only(top: 21.0.h, left: 26.0.w, right: 21.0.w),
@@ -266,12 +254,12 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                                                             }
                                                           },
                                                           borderRadius: BorderRadius.circular(20),
-                                                          child:pickImagePath == null
+                                                          child: pickImagePath == null
                                                               ? getCameraImage(
-                                                            size: 50.0,
-                                                          ) : showTempProfileImage(imageUri: pickImagePath, size: 50.0));
-                                                    }
-                                                ),
+                                                                  size: 50.0,
+                                                                )
+                                                              : showTempProfileImage(imageUri: pickImagePath, size: 50.0));
+                                                    }),
                                               ),
                                             ),
                                           ),
@@ -315,8 +303,7 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                                                     ),
                                                     onTap: () async {
                                                       seleteTime.value = await showExpenseDatePicker(context: context, date: seleteTime.value);
-                                                    }
-                                                ),
+                                                    }),
                                               ],
                                             ),
                                           ),
@@ -349,14 +336,19 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                                         isExpanded: true,
                                         focusColor: Colors.white,
                                         style: getNotoSantMedium(fontSize: 12, color: textColor),
-                                        items: seleteItemList.map((value) =>
-                                            DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Center(child: Text(value,style:TextStyle(color:Colors.black),)),
-                                            )).toList(),
+                                        items: seleteItemList
+                                            .map((value) => DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Center(
+                                                      child: Text(
+                                                    value,
+                                                    style: TextStyle(color: Colors.black),
+                                                  )),
+                                                ))
+                                            .toList(),
                                         onChanged: (val) {
                                           setState(() {
-                                            seleteItem  = val!;
+                                            seleteItem = val!;
                                           });
                                         },
                                       ),
@@ -410,34 +402,34 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                               ),
                             ),
                           ),
-                          Visibility(
-                              visible: uploadChk,
-                              child: Container(
-                                width: double.infinity,
-                                color: blackColor.withOpacity(0.7),
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                      SizedBox(height: 10.0.h,),
-                                      Text("작성 중",
-                                        style: getRobotoMedium(fontSize: 13, color: whiteColor),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                          ),
                         ],
-                      );
-                    }
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
+                  Visibility(
+                      visible: uploadChk,
+                      child: Container(
+                        width: double.infinity,
+                        color: blackColor.withOpacity(0.7),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(
+                                height: 10.0.h,
+                              ),
+                              Text(
+                                "작성 중",
+                                style: getRobotoMedium(fontSize: 13, color: whiteColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      )),
+                ],
+              );
+            }),
       ),
     );
   }

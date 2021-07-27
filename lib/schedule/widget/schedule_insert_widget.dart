@@ -605,7 +605,6 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                         if(!widget.isAllDay.value){
                           return;
                         }
-
                         widget.isHalfway.value = values;
                         if(!values){
                           widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
@@ -936,7 +935,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           width: double.infinity,
                           child: widget.approvalUser.value.mail == "" ?
                           Text(
-                            "approver".tr(),
+                            "requester".tr(),
                             style: getNotoSantRegular(
                               fontSize: 14.0,
                               color: hintTextColor,

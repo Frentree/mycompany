@@ -14,6 +14,7 @@ import 'package:mycompany/schedule/view/schedule_detail_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
+import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_theme.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
@@ -345,8 +346,9 @@ Future<DateTime> showTimesPicker({required BuildContext context, required DateTi
             height: 270.0.h,
             child: Center(
               child: DateTimePickerWidget(
+                minuteDivider: 5,
                 minDateTime: DateTime.parse('1900-01-01'),
-                dateFormat: 'yyyy년 MM월 dd일 HH시 mm분',
+                dateFormat: 'yy년 MM월 dd일(E) HH시 mm분',
                 locale: DateTimePickerLocale.ko,
                 initDateTime: date,
 

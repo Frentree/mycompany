@@ -1,10 +1,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
+import 'package:mycompany/attendance/widget/attendance_button_widget.dart';
 import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/expense/view/expense_registration_update_view.dart';
 import 'package:mycompany/expense/view/expense_registration_view.dart';
+import 'package:mycompany/expense/widget/expense_bottom_sheet_widget.dart';
 import 'package:mycompany/expense/widget/expense_dialog_widget.dart';
+import 'package:mycompany/expense/widget/expense_widget.dart';
+import 'package:mycompany/login/db/login_firestore_repository.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
@@ -27,9 +33,11 @@ class ExpenseView extends StatefulWidget {
 class _ExpenseViewState extends State<ExpenseView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
   int _chosenValue = 0;
+  int _seleteTab = 0;
   DateFormatCustom _format = DateFormatCustom();
 
   List<String> docIdList = [];
+  int totalPrice = 0;
 
   List<String> seleteItem = <String>[
     '전체',
@@ -108,6 +116,9 @@ class _ExpenseViewState extends State<ExpenseView> {
                       height: 30.0.h,
                       width: double.infinity,
                       child: TabBar(
+                        onTap: (val) {
+                          _seleteTab = val;
+                        },
                         tabs: [
                           Tab(
                             child: Text(
@@ -194,16 +205,17 @@ class _ExpenseViewState extends State<ExpenseView> {
                                       List<ExpenseModel> expenseList = snapshot.data!;
 
                                       expenseList.sort((a, b) => b.buyDate.compareTo(a.buyDate));
-                                      List<ExpenseModel> waitingExpense = [];
-                                      List<ExpenseModel> progressExpense = [];
-                                      List<ExpenseModel> completeExpense = [];
+                                      List<ExpenseModel> waitingExpense = [];   // 결재 미진행
+                                      List<ExpenseModel> progressExpense = [];  // 결재 진행중
+                                      List<ExpenseModel> successExpense = [];   // 결재 완료
+                                      List<ExpenseModel> completeExpense = [];   // 입금 완료
 
                                       expenseList.map((e) {
                                         DateTime butTime = _format.changeTimestampToDateTime(timestamp: e.buyDate);
                                         DateTime now = DateTime.now();
                                         if(e.status == "미"){
                                           waitingExpense.add(e);
-                                        } else if (e.status == "결"){
+                                        } else if (e.status == "진"){
                                           if(_chosenValue == 0){
                                             progressExpense.add(e);
                                           } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
@@ -215,7 +227,19 @@ class _ExpenseViewState extends State<ExpenseView> {
                                           } else if (_chosenValue == 4 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
                                             progressExpense.add(e);
                                           }
-                                        } else {
+                                        } else if (e.status == "결"){
+                                          if(_chosenValue == 0){
+                                            successExpense.add(e);
+                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                            successExpense.add(e);
+                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                            successExpense.add(e);
+                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                            successExpense.add(e);
+                                          } else if (_chosenValue == 4 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                            successExpense.add(e);
+                                          }
+                                        }else {
                                           if(_chosenValue == 0){
                                             completeExpense.add(e);
                                           } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
@@ -237,7 +261,10 @@ class _ExpenseViewState extends State<ExpenseView> {
                                               children: getNotExpenseData(context: context, expenseList: waitingExpense, expenseName: "미결재 (선택가능)"),
                                             ),
                                             Column(
-                                              children: getExpenseData(context: context, expenseList: progressExpense, expenseName: "진행중"),
+                                              children: getExpenseData(context: context, expenseList: successExpense, expenseName: "결재 진행중"),
+                                            ),
+                                            Column(
+                                              children: getExpenseData(context: context, expenseList: progressExpense, expenseName: "입금 진행중"),
                                             ),
                                             Column(
                                               children: getExpenseData(context: context, expenseList: completeExpense                                                                                                                                                          , expenseName: "입금완료"),
@@ -246,15 +273,43 @@ class _ExpenseViewState extends State<ExpenseView> {
                                         ),
                                       );
                                     },
-                                  )
+                                  ),
                               ),
                             ],
                           ),
-                          Text("gdgd"),
+                          Text("현재 미구현된 화면입니다."),
                         ],
                       ),
                     ),
                   ]),
+            ),
+            bottomSheet:  Visibility(
+              visible: docIdList.length > 0,
+              child: Row(
+                children: [
+                  expenseBottomSheetButton(
+                    context: context,
+                      buttonName: 'dialogCancel'.tr(),
+                      buttonNameColor: textColor,
+                      buttonColor: Color(0xffF7F7F7),
+                      buttonAction: () {
+                        docIdList.clear();
+                        totalPrice = 0;
+                        setState(() {});
+                      }
+                  ),
+                  expenseBottomSheetButton(
+                      context: context,
+                      buttonName: "결재자 지정",
+                      buttonNameColor: whiteColor,
+                      buttonColor: Color(0xff2093F0),
+                      buttonAction: () async {
+                        List<EmployeeModel> approvalList = await LoginFirestoreRepository().readAllEmployeeData(companyId: loginUser.companyCode!);
+                        await selectExpenseApprovalBottomSheet(context: context, approvalList: approvalList, loginUser: loginUser, docId: docIdList, totalPrice: totalPrice);
+                      }
+                  ),
+                ],
+              ),
             ),
           ),
         )
@@ -439,11 +494,13 @@ class _ExpenseViewState extends State<ExpenseView> {
                 SizedBox(height: 2.0.h,),
               ],
             ),
-            onTap: () {
+            onTap: () async {
               if(!docIdList.contains(app.reference!.id)){
                 docIdList.add(app.reference!.id);
+                totalPrice += app.cost;
               } else {
                 docIdList.remove(app.reference!.id);
+                totalPrice -= app.cost;
               }
               setState(() {});
             },

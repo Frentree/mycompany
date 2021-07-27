@@ -362,13 +362,13 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                         icon: Icons.power_settings_new,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: Color(0xff6B70FC),
-                        badgeLabel: "근무 상태",
+                        badgeLabel: "근태",
                         onTap: () => _reprository.mainNavigator(context: context, navigator: AttendanceDashboardView(), isMove: false)),
                     CircularMenuItem(
                         icon: Icons.create,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: workInsertColor,
-                        badgeLabel: "일정 등록",
+                        badgeLabel: "일정",
                         onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false)),
                     CircularMenuItem(
                         icon: Icons.apps_sharp,
