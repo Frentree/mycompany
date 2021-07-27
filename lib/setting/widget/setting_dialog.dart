@@ -22,6 +22,7 @@ import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/widget/userProfileImage.dart';
 import 'package:mycompany/setting/model/grade_model.dart';
+import 'package:mycompany/setting/widget/setting_dialog_widget.dart';
 
 /* 조직도 관련 다이얼로그 시작 */
 Future<bool> addTeamDialog(BuildContext context, String companyCode, TextEditingController teamNameContoller) async {
@@ -1547,9 +1548,10 @@ Future<bool> addAnnualUpdateDialog(BuildContext context, EmployeeModel employeeM
   annualController.text = "0";
   List<int> count = [-5, -3, -1, 1, 3, 5];
 
-  await loginDialogWidget(
+  await settingDialogWidget(
     context: context,
     message: "vacation_dialog_1".tr(),
+    width: 260.0,
     actions: [
       Expanded(
         child: Column(

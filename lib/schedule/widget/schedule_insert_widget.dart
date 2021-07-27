@@ -237,7 +237,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 5.0.h, right: 12.0.w),
+              padding: EdgeInsets.only(top: 5.0.h, right: 5.0.w),
               child: SvgPicture.asset(
                 'assets/icons/time.svg',
                 width: 18.0.w,
@@ -272,10 +272,16 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 ),
                 onTap: () async {
                   widget.startDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: widget.startDateTime.value);
+                  if(widget.startDateTime.value.difference(widget.endDateTime.value).inDays >= 0
+                    && widget.startDateTime.value.difference(widget.endDateTime.value).inHours >= 0
+                      && widget.startDateTime.value.difference(widget.endDateTime.value).inMinutes >= 0
+                  ) {
+                    widget.endDateTime.value =  widget.startDateTime.value.add(Duration(hours: 1));
+                  }
                   widget.isAllDay.value = false;
                 }),
             Container(
-              padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 20.2.w),
+              padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 18.2.w),
               child: SvgPicture.asset(
                 'assets/icons/arrow_right.svg',
                 width: 11.55.w,
@@ -310,6 +316,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 ),
                 onTap: () async {
                   widget.endDateTime.value = await ScheduleFunctionReprository().dateTimeSet(context: context, date: widget.endDateTime.value);
+
+                  if(widget.endDateTime.value.difference(widget.startDateTime.value).inDays <= 0
+                      && widget.endDateTime.value.difference(widget.startDateTime.value).inHours <= 0
+                      && widget.endDateTime.value.difference(widget.startDateTime.value).inMinutes <= 0
+                  ) {
+                    widget.startDateTime.value =  widget.endDateTime.value.add(Duration(hours: -1));
+                  }
+
                   widget.isAllDay.value = false;
                 }),
           ],
@@ -505,51 +519,65 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         SizedBox(
           height: 10.0.h,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        Column(
           children: [
-            ValueListenableBuilder(
-              valueListenable: widget.isAllDay,
-              builder: (context, bool value, child) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      value? "halfway".tr() : "annual".tr(),
-                      style: getNotoSantRegular(
-                          fontSize: 14.0,
-                          color: widget.isAllDay.value ? workInsertColor : hintTextColor
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5.0.w,
-                    ),
-                    FlutterSwitch(
-                      width: 30.0.w,
-                      height: 15.0.h,
-                      toggleSize: 16.0.w,
-                      padding: 0,
-                      value: value,
-                      onToggle: (values){
-                        widget.isAllDay.value = values;
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ValueListenableBuilder(
+                  valueListenable: widget.isAllDay,
+                  builder: (context, bool value, child) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "annual".tr(),
+                          style: getNotoSantRegular(
+                              fontSize: 14.0,
+                              color: !widget.isAllDay.value ? workInsertColor : hintTextColor
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.w,
+                        ),
+                        FlutterSwitch(
+                          width: 30.0.w,
+                          height: 15.0.h,
+                          toggleSize: 16.0.w,
+                          padding: 0,
+                          value: value,
+                          onToggle: (values){
+                            widget.isAllDay.value = values;
 
-                        if(!values){
-                          widget.isHalfway.value = false;
+                            if(!values){
+                              widget.isHalfway.value = false;
 
-                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
-                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
-                        } else {
-                          widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
-                          widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      width: 10.0.w,
-                    ),
-                  ],
-                );
-              },
+                              widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                              widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
+                            } else {
+                              widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
+                              widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 10.0.w,
+                        ),
+                        Text(
+                          "halfway".tr(),
+                          style: getNotoSantRegular(
+                              fontSize: 14.0,
+                              color: widget.isAllDay.value ? workInsertColor : hintTextColor
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.0.h,
             ),
             ValueListenableBuilder(
               valueListenable: widget.isHalfway,
@@ -558,14 +586,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      value ? "pm".tr() : "am".tr(),
+                      "am".tr(),
                       style: getNotoSantRegular(
                           fontSize: 14.0,
-                          color: value ? workInsertColor : hintTextColor
+                          color: !value ? workInsertColor : hintTextColor
                       ),
                     ),
                     SizedBox(
-                      width: 5.0.w,
+                      width: 10.0.w,
                     ),
                     FlutterSwitch(
                       width: 30.0.w,
@@ -577,7 +605,6 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                         if(!widget.isAllDay.value){
                           return;
                         }
-
                         widget.isHalfway.value = values;
                         if(!values){
                           widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
@@ -587,6 +614,16 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
                         }
                       },
+                    ),
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    Text(
+                      "pm".tr(),
+                      style: getNotoSantRegular(
+                          fontSize: 14.0,
+                          color: value ? workInsertColor : hintTextColor
+                      ),
                     ),
                   ],
                 );
@@ -692,9 +729,14 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                                             children: [
                                               getProfileImage(ImageUri: user.profilePhoto,size: 14),
                                               SizedBox(width: 5.0.w,),
-                                              Text(
-                                                user.name,
-                                                style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                              Container(
+                                                width: 57.0.w,
+                                                child: Text(
+                                                  user.name,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.visible,
+                                                  style: getNotoSantRegular(fontSize: 14.0, color: textColor),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -893,7 +935,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           width: double.infinity,
                           child: widget.approvalUser.value.mail == "" ?
                           Text(
-                            "approver".tr(),
+                            "requester".tr(),
                             style: getNotoSantRegular(
                               fontSize: 14.0,
                               color: hintTextColor,

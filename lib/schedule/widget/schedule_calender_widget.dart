@@ -6,6 +6,7 @@ import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 
 class ScheduleCalenderWidget {
@@ -25,16 +26,38 @@ class ScheduleCalenderWidget {
               ? Container(
             width: 2.0.w,
             color: meeting.color,
-          )
-              : Container(),
+          ) : Container(),
           Container(
             color: meeting.color.withOpacity(0.12),
-            child: Center(
-              child: Text(
-                meeting.subject,
-                style: TextStyle(
-                  fontSize: 10.0.sp,
+            child:(meeting.profile != loginUser.mail) ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  meeting.type!.substring(0,1),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.visible,
+                  style: getNotoSantBold(fontSize: 8, color: textColor),
                 ),
+                Container(
+                  width: 29.0.w,
+                  child: Text(
+                    meeting.profile == loginUser.mail
+                        ? meeting.title! : meeting.subject,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.visible,
+                    style: getNotoSantRegular(fontSize: 8, color: textColor),
+                  ),
+                ),
+              ],
+            ) : Center(
+              child: Text(
+                meeting.title!,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.visible,
+                style: getNotoSantRegular(fontSize: 8, color: textColor),
               ),
             ),
           ),

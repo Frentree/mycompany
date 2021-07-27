@@ -13,3 +13,4 @@ const String NOTICE = 'notice';
 const String NOTICECOMMENT = 'noticeComment';
 const String COMMENT = 'comment';
 const String WIFI = 'wifi';
+const String EXPENSE = 'expense';

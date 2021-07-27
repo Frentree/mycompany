@@ -556,8 +556,6 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
 
                               double officeHoursRatio = (value[0].inMinutes / 3120);
 
-                              print(value[1]);
-
                               return Column(
                                 children: [
                                   Padding(

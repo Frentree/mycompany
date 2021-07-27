@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/text_style.dart';
 
 class CircularMenuItem extends StatelessWidget {
   /// if icon and animatedIcon are passed, icon will be ignored
@@ -54,34 +56,33 @@ class CircularMenuItem extends StatelessWidget {
   Widget _buildCircularMenuItem(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(margin),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        boxShadow: boxShadow ??
-            [
-              BoxShadow(
-                color: color ?? Theme.of(context).primaryColor,
-                blurRadius: 10,
+      height: 70.0,
+      child: Stack(
+        children: [
+          ClipOval(
+            child: Material(
+              color: color ?? Theme.of(context).primaryColor,
+              child: InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(padding),
+                  child: animatedIcon == null
+                      ? Icon(
+                        icon,
+                        size: iconSize,
+                        color: iconColor ?? Colors.white,
+                      )
+                      : animatedIcon,
+                ),
+                onTap: onTap,
               ),
-            ],
-        shape: BoxShape.circle,
-      ),
-      child: ClipOval(
-        child: Material(
-          color: color ?? Theme.of(context).primaryColor,
-          child: InkWell(
-            child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: animatedIcon == null
-                  ? Icon(
-                icon,
-                size: iconSize,
-                color: iconColor ?? Colors.white,
-              )
-                  : animatedIcon,
             ),
-            onTap: onTap,
           ),
-        ),
+          badgeLabel != null ? Positioned(
+            width: iconSize*1.7,
+            height: iconSize * 4
+            ,child: Center(child: Text(badgeLabel!, style: getNotoSantBold(fontSize: 10, color: whiteColor),))) :
+          Text("", style: getNotoSantBold(fontSize: 8, color: whiteColor),),
+        ],
       ),
     );
   }

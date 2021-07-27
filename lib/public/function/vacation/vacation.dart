@@ -133,7 +133,7 @@ Future<double> UsedVacation(
   }
 
   /// 회계연도 기준
-  if (type) {
+  else if (type) {
     print('회계연도 기준');
 
     if (_present.year - _enterDate.year >= 2) {
@@ -189,17 +189,16 @@ double TotalVacation(String date, bool type, double addition) {
     if (_yearChecker == '0') {
       return MoreThanOneWithEnteredDate(_tmp, addition);
     }
-    return LessThanOneWithEnteredDate(_tmp, addition);
+    result = LessThanOneWithEnteredDate(_tmp, addition);
   }
-
   /// 회계연도 기준
-  if (type) {
+  else if (type) {
     if (_present.year >= _tmp.year + 2) {
-      MoreThanThird(_tmp, addition);
+      result = MoreThanThird(_tmp, addition);
     } else if (_present.year == _tmp.year + 1) {
-      SecondYear(_tmp, addition);
+      result = SecondYear(_tmp, addition);
     } else {
-      FirstYear(_tmp, addition);
+      result = FirstYear(_tmp, addition);
     }
   }
   return result;
@@ -250,7 +249,7 @@ double FirstYear(DateTime date, double addition) {
 
   print(_sub);
 
-  result = 0.0 + _sub.month;
+  result = 0.0 + _sub.month + addition;
 
   if (result < 0) {
     result = 0;

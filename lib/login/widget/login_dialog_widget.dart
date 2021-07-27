@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mycompany/login/widget/login_button_widget.dart';
-import 'package:mycompany/public/function/page_route.dart';
 import 'package:mycompany/public/style/color.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 Future<dynamic> loginDialogWidget({required BuildContext context, required String message, List<Widget>? actions, bool? barrierDismissibleValue}) {
   return showDialog(

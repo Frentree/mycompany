@@ -91,8 +91,6 @@ class ApprovalModel {
         userMail = mapData["userMail"] ?? Timestamp.now(),
         colleagues = mapData["colleagues"] ?? [{mapData["userMail"] : mapData["user"]}],
         overtime = mapData["overtime"] ??  null;
-
-
   toJson(){
     return {
       "docIds": docIds ?? [],
