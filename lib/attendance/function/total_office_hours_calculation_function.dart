@@ -24,7 +24,9 @@ class TotalOfficeHoursCalculationFunction {
   Duration overTimeCalculation({
     required Timestamp endTime,
   }) {
-    DateTime defaultEndTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 18, 00);
+
+    print(endTime.toDate());
+    DateTime defaultEndTime = DateTime(endTime.toDate().year, endTime.toDate().month, endTime.toDate().day, 18, 00);
 
     Duration officeHours = dateFormatCustom.changeTimestampToDateTime(timestamp: endTime).difference(defaultEndTime);
 
@@ -150,6 +152,8 @@ class TotalOfficeHoursCalculationFunction {
       if((element.attendTime != null) && (element.endTime != null)){
         Timestamp tempAttendTime = dateFormatCustom.showTimestampUpToMinutes(timestamp: element.attendTime!);
         Timestamp tempEndTime = dateFormatCustom.showTimestampUpToMinutes(timestamp: element.endTime!);
+
+        print("임시 퇴근 시간 : ${tempEndTime.toDate()}");
 
         weekTotal[0] += officeHoursCalculation(attendTime: tempAttendTime, endTime: tempEndTime);
         if(element.overTime != 0){

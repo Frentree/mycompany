@@ -110,8 +110,8 @@ class SignInViewState extends State<SignInView> {
                       FocusScope.of(context).unfocus();
                       _loginFunctionRepository.signInFunction(
                         context: context,
-                        email: _emailTextController.text,
-                        password: _passwordTextController.text,
+                        email: _emailTextController.text.replaceAll(" ", ""),
+                        password: _passwordTextController.text.replaceAll(" ", ""),
                       );
                     },
                   );

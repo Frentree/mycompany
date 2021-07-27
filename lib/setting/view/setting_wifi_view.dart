@@ -163,7 +163,10 @@ class SettingWifiViewState extends State<SettingWifiView> {
 
                                       registerAbleWifiList.value.forEach((element){
                                         if(element.documentId != ""){
-                                          _settingFirestoreRepository.deleteWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
+                                          int connectedWifiIndex = registeredWifiList.value.indexWhere((registeredElement) => registeredElement.wifiName.startsWith(element.wifiName));
+                                          if(connectedWifiIndex < 0){
+                                            _settingFirestoreRepository.deleteWifiData(companyId: loginEmployeeData.companyCode, wifiModel: element);
+                                          }
                                         }
                                       });
 
