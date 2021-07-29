@@ -7,11 +7,11 @@ import 'package:mycompany/login/model/user_model.dart';
 class ExpenseFirebaseRepository {
   ExpenseFirebaseCurd _methods = ExpenseFirebaseCurd.setting();
 
-  Future<void> updatgeExpenseStatusData({required UserModel loginUser, required List<dynamic> docsId, required String status}) =>
-      _methods.updatgeExpenseStatusData(loginUser, docsId, status);
+  Future<void> updatgeExpenseStatusData({required UserModel loginUser,required String mail, required List<dynamic> docsId, required String status}) =>
+      _methods.updatgeExpenseStatusData(loginUser, mail, docsId, status);
 
-  Future<List<ExpenseModel>> getExpenseData({required UserModel loginUser,required List<dynamic> docsId}) =>
-      _methods.getExpenseData(loginUser, docsId);
+  Future<List<ExpenseModel>> getExpenseData({required UserModel loginUser, required String mail, required List<dynamic> docsId}) =>
+      _methods.getExpenseData(loginUser, mail, docsId);
 
 
   Stream<List<ExpenseModel>> getExpense({required UserModel loginUser}) =>
@@ -22,4 +22,7 @@ class ExpenseFirebaseRepository {
 
   Stream<List<ApprovalModel>> getApprovalExpensed({required UserModel loginUser}) =>
       _methods.getApprovalExpensed(loginUser);
+
+  Stream<List<ApprovalModel>> getMyApprovalExpensed({required UserModel loginUser}) =>
+      _methods.getMyApprovalExpensed(loginUser);
 }

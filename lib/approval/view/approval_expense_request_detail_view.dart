@@ -186,7 +186,12 @@ class _ApprovalExpenseRequestDetailViewState extends State<ApprovalExpenseReques
                                         topPadding: 81.0.h,
                                         buttonName: "dialogConfirm".tr(),
                                         buttonAction: () async {
-                                          await ExpenseFirebaseRepository().updatgeExpenseStatusData(loginUser: loginUser, docsId: widget.model.docIds!, status: "미");
+                                          await ExpenseFirebaseRepository().updatgeExpenseStatusData(
+                                              loginUser: loginUser,
+                                              mail: widget.model.userMail,
+                                              docsId: widget.model.docIds!,
+                                              status: "미"
+                                          );
                                           widget.model.reference!.delete();
                                           Navigator.pop(context, true);
                                         },

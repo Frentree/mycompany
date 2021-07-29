@@ -37,7 +37,7 @@ class _ExpenseViewState extends State<ExpenseView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
   ExpenseFirebaseRepository expenseFirebaseRepository = ExpenseFirebaseRepository();
   int _chosenValue = 0;
-  int _seleteTab = 0;
+  int _chosenSendValue = 0;
   DateFormatCustom _format = DateFormatCustom();
 
   List<String> docIdList = [];
@@ -48,7 +48,14 @@ class _ExpenseViewState extends State<ExpenseView> {
     '3개월',
     '6개월',
     '12개월',
+    '24개월',
     '전체',
+  ];
+
+  List<String> seleteSendItem = <String>[
+    '전체',
+    '미입금',
+    '입금완료',
   ];
 
   @override
@@ -120,9 +127,6 @@ class _ExpenseViewState extends State<ExpenseView> {
                       height: 30.0.h,
                       width: double.infinity,
                       child: TabBar(
-                        onTap: (val) {
-                          _seleteTab = val;
-                        },
                         tabs: [
                           Tab(
                             child: Text(
@@ -215,44 +219,50 @@ class _ExpenseViewState extends State<ExpenseView> {
                                       List<ExpenseModel> completeExpense = [];   // 입금 완료
 
                                       expenseList.map((e) {
-                                        DateTime butTime = _format.changeTimestampToDateTime(timestamp: e.buyDate);
+                                        DateTime buyTime = _format.changeTimestampToDateTime(timestamp: e.buyDate);
                                         DateTime now = DateTime.now();
                                         if(e.status == "미"){
                                           waitingExpense.add(e);
                                         } else if (e.status == "진"){
                                           if(_chosenValue == 4){
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 0 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 0 && buyTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 1 && buyTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 2 && buyTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 3 && buyTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                            progressExpense.add(e);
+                                          } else if (_chosenValue == 5 && buyTime.difference(DateTime(now.year, now.month - 24, 1)).inDays > 0) {
                                             progressExpense.add(e);
                                           }
                                         } else if (e.status == "결"){
                                           if(_chosenValue == 4){
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 0 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 0 && buyTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 1 && buyTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 2 && buyTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 3 && buyTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                            successExpense.add(e);
+                                          } else if (_chosenValue == 5 && buyTime.difference(DateTime(now.year, now.month - 24, 1)).inDays > 0) {
                                             successExpense.add(e);
                                           }
                                         }else {
                                           if(_chosenValue == 4){
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 0 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 0 && buyTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 1 && buyTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 2 && buyTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 3 && buyTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                            completeExpense.add(e);
+                                          } else if (_chosenValue == 5 && buyTime.difference(DateTime(now.year, now.month - 24, 1)).inDays > 0) {
                                             completeExpense.add(e);
                                           }
                                         }
@@ -271,7 +281,7 @@ class _ExpenseViewState extends State<ExpenseView> {
                                               children: getExpenseData(context: context, expenseList: progressExpense, expenseName: "입금 진행중"),
                                             ),
                                             Column(
-                                              children: getExpenseData(context: context, expenseList: completeExpense                                                                                                                                                          , expenseName: "입금완료"),
+                                              children: getExpenseData(context: context, expenseList: completeExpense, expenseName: "입금완료"),
                                             ),
                                           ],
                                         ),
@@ -311,26 +321,25 @@ class _ExpenseViewState extends State<ExpenseView> {
                                       },
                                     ),
                                     Expanded(child: Container(),),
-                                    Container(
-                                      height: 27.0.h,
-                                      child: ElevatedButton(
-                                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseRegistrationView())),
-                                        style: ElevatedButton.styleFrom(
-                                          primary: whiteColor,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(14.0.r),
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "경비 입력",
-                                            style: TextStyle(
-                                              fontSize: 13.0.sp,
-                                              color: Color(0xff2093F0),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                    Text(
+                                      "입금",
+                                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                                    ),
+                                    SizedBox(width: 20.0.w,),
+                                    DropdownButton<int>(
+                                      value: _chosenSendValue,
+                                      focusColor: Colors.white,
+                                      style: getNotoSantMedium(fontSize: 12, color: textColor),
+                                      items: seleteSendItem.map((value) =>
+                                          DropdownMenuItem<int>(
+                                            value: seleteSendItem.indexOf(value),
+                                            child: Text(value,style:TextStyle(color:Colors.black),),
+                                          )).toList(),
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _chosenSendValue  = val!;
+                                        });
+                                      },
                                     ),
                                   ],
                                 ),
@@ -363,7 +372,33 @@ class _ExpenseViewState extends State<ExpenseView> {
                                       ),
                                     );
                                   },
-                                ) : Container(child: Text("q2q2"),),
+                                ) : StreamBuilder<List<ApprovalModel>>(
+                                  stream: expenseFirebaseRepository.getMyApprovalExpensed(loginUser: loginUser),
+                                  builder: (context, snapshot) {
+                                    if(!snapshot.hasData){
+                                      return Container();
+                                    }
+                                    List<ApprovalModel> approvalList = snapshot.data!;
+
+                                    if(approvalList.length == 0) {
+                                      return Container(child: Text("신청한 경비 내용이 없습니다.",
+                                        style: getRobotoRegular(fontSize: 15, color: textColor),
+                                      ),);
+                                    }
+
+                                    approvalList.sort((a, b) => a.requestStartDate.compareTo(b.requestStartDate));
+                                    approvalList.sort((a, b) => a.userMail.compareTo(b.userMail));
+
+
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                          children: [
+                                            Column(children: getNotMyApprovalExpenseData(context: context, approvalList: approvalList, loginUser: loginUser),),
+                                          ]
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -409,9 +444,12 @@ class _ExpenseViewState extends State<ExpenseView> {
     );
   }
 
-  getNotApprovalExpenseData({required BuildContext context, required List<ApprovalModel> approvalList, required UserModel loginUser}){
+
+  getNotMyApprovalExpenseData({required BuildContext context, required List<ApprovalModel> approvalList, required UserModel loginUser}){
     List<Widget> list = <Widget>[Container(width: 16.w)];
+    List<ApprovalModel> approvalListChk =[];
     String email = "";
+    DateTime now = DateTime.now();
 
     if(approvalList.isEmpty){
       return list;
@@ -420,6 +458,32 @@ class _ExpenseViewState extends State<ExpenseView> {
     Column column = Column(children: [],);
 
     for(ApprovalModel app in approvalList){
+      DateTime approvalTime = _format.changeTimestampToDateTime(timestamp: app.requestStartDate);
+
+      if(_chosenSendValue == 0){
+
+      } else if(_chosenSendValue == 1 && app.isSend != false){
+        continue;
+      } else if(_chosenSendValue == 2 && app.isSend != true){
+        continue;
+      }
+
+      if(_chosenValue == 4){
+        approvalListChk.add(app);
+      } else if (_chosenValue == 0 && approvalTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 1 && approvalTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 2 && approvalTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 3 && approvalTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 5 && approvalTime.difference(DateTime(now.year, now.month - 24, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      }
+    }
+
+    for(ApprovalModel app in approvalListChk){
       if(email == app.userMail){
         count++;
       } else {
@@ -436,18 +500,18 @@ class _ExpenseViewState extends State<ExpenseView> {
             Row(
               children: [
                 Container(
-                    width: 70.0.w,
+                    width: 60.0.w,
                     child: Text(
-                      (app.isSend! == false) ? "미입금" : "입금 완료",
+                      (app.isSend! == false) ? "미입금" : "입금완료",
                       style: getRobotoBold(fontSize: 13, color: (app.isSend! == false) ? Colors.red : Colors.blue),
                       maxLines: 1,
                       overflow: TextOverflow.visible,
                     )
                 ),
                 Container(
-                    width: 100.0.w,
+                    width: 80.0.w,
                     child: Text(
-                      app.requestStartDate.toDate().month.toString() + "월 경비 내역" ,
+                      app.requestStartDate.toDate().month.toString() + "월 경비" ,
                       style: getRobotoBold(fontSize: 13, color: textColor),
                       maxLines: 1,
                       overflow: TextOverflow.visible,
@@ -462,14 +526,18 @@ class _ExpenseViewState extends State<ExpenseView> {
                 ),
               ],
             ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                      Icons.zoom_in
+                  ),
+                  onPressed: () {
+                    showExpenseDataDetail(context: context, model: app, loginUser: loginUser);
+                  },
+                ),
 
-            IconButton(
-              icon: Icon(
-                  Icons.double_arrow
-              ),
-              onPressed: () {
-
-              },
+              ],
             ),
           ],
         ),
@@ -494,47 +562,221 @@ class _ExpenseViewState extends State<ExpenseView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.0.w,
-                      vertical: 10.0.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xff2093F0),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12.0.r),
-                        topRight: Radius.circular(12.0.r),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          app.user,
-                          style: getRobotoBold(fontSize: 13, color: whiteColor),
-                        ),
-                        Icon(
-                          Icons.zoom_in_sharp,
-                          color: whiteColor,
-                        )
-                      ],
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.0.w,
+                    vertical: 10.0.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2093F0),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12.0.r),
+                      topRight: Radius.circular(12.0.r),
                     ),
                   ),
-                  onTap: () {
-                    showExpenseDataDetail(context: context, model: app, loginUser: loginUser);
-                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        app.user,
+                        style: getRobotoBold(fontSize: 13, color: whiteColor),
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
                   children: [
                     column
                   ],
                 ),
-                SizedBox(height: 15.0.h,)
               ],
             ),
           ),
         ));
+        list.add(SizedBox(height: 20.0.h,));
+      }
+    }
+
+    return list;
+  }
+
+  getNotApprovalExpenseData({required BuildContext context, required List<ApprovalModel> approvalList, required UserModel loginUser}){
+    List<Widget> list = <Widget>[Container(width: 16.w)];
+    List<ApprovalModel> approvalListChk =[];
+    String email = "";
+    DateTime now = DateTime.now();
+
+    if(approvalList.isEmpty){
+      return list;
+    }
+    int count = 0;
+    Column column = Column(children: [],);
+
+    for(ApprovalModel app in approvalList){
+      DateTime approvalTime = _format.changeTimestampToDateTime(timestamp: app.requestStartDate);
+
+      if(_chosenSendValue == 0){
+
+      } else if(_chosenSendValue == 1 && app.isSend != false){
+        continue;
+      } else if(_chosenSendValue == 2 && app.isSend != true){
+        continue;
+      }
+
+      if(_chosenValue == 4){
+        approvalListChk.add(app);
+      } else if (_chosenValue == 0 && approvalTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 1 && approvalTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 2 && approvalTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 3 && approvalTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      } else if (_chosenValue == 5 && approvalTime.difference(DateTime(now.year, now.month - 24, 1)).inDays > 0) {
+        approvalListChk.add(app);
+      }
+    }
+
+    for(ApprovalModel app in approvalListChk){
+      if(email == app.userMail){
+        count++;
+      } else {
+        email = app.userMail;
+        count = 0;
+        column = Column(children: [],);
+      }
+
+      column.children.add(Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 5.0.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                    width: 60.0.w,
+                    child: Text(
+                      (app.isSend! == false) ? "미입금" : "입금완료",
+                      style: getRobotoBold(fontSize: 13, color: (app.isSend! == false) ? Colors.red : Colors.blue),
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                ),
+                Container(
+                    width: 80.0.w,
+                    child: Text(
+                      app.requestStartDate.toDate().month.toString() + "월 경비" ,
+                      style: getRobotoBold(fontSize: 13, color: textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                ),
+                Container(
+                    child: Text(app.totalCost!.toString() + "원",
+                      style: getRobotoBold(fontSize: 13, color: textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                      Icons.zoom_in
+                  ),
+                  onPressed: () {
+                    showExpenseDataDetail(context: context, model: app, loginUser: loginUser);
+                  },
+                ),
+                Visibility(
+                  visible: app.isSend == false,
+                  child: IconButton(
+                    icon: Icon(
+                        Icons.double_arrow
+                    ),
+                    onPressed: () async {
+                      await loginDialogWidget(context: context, message: "expense_dialog_2".tr(),
+                        actions: [
+                          confirmElevatedButton(
+                              topPadding: 81.0.h,
+                              buttonName: "dialogConfirm".tr(),
+                              buttonAction: () async {
+                                await app.reference!.update({"isSend" : true});
+                                await expenseFirebaseRepository.updatgeExpenseStatusData(loginUser: loginUser, mail: app.userMail, docsId: app.docIds!, status: "입완");
+                                Navigator.pop(context, true);
+                              },
+                              customWidth: 80.0,
+                              customHeight: 40.0),
+                          confirmElevatedButton(
+                              topPadding: 81.0.h,
+                              buttonName: "dialogCancel".tr(),
+                              buttonAction: () => Navigator.pop(context, false),
+                              customWidth: 80.0,
+                              customHeight: 40.0),
+                      ]);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ));
+
+      if(count == 0){
+        list.add(Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0.w),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Color(0xff9C9C9C).withOpacity(0.3),
+                  offset: Offset(1.0, 15.0),
+                  blurRadius: 20.0,
+                ),
+              ],
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(12.0.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.0.w,
+                    vertical: 10.0.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2093F0),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12.0.r),
+                      topRight: Radius.circular(12.0.r),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        app.user,
+                        style: getRobotoBold(fontSize: 13, color: whiteColor),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    column
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
+        list.add(SizedBox(height: 20.0.h,));
       }
     }
 

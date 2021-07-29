@@ -272,7 +272,7 @@ Future<dynamic> selectExpenseApprovalBottomSheet({required BuildContext context,
                                 );
 
                                 await approvalFirebaseRepository.createApprovalData(companyId: loginUser.companyCode!, approvalModelModel: model);
-                                await expenseFirebaseRepository.updatgeExpenseStatusData(loginUser: loginUser, docsId: docId, status: "결");
+                                await expenseFirebaseRepository.updatgeExpenseStatusData(loginUser: loginUser, mail: model.userMail, docsId: docId, status: "결");
                                 sendFcmWithTokens(loginUser, [selectApproval.value!.mail], "[결재 요청]", "[${loginUser.name}]님이 경비 결재를 요청 했습니다.", "");
 
                                 Navigator.pop(context);

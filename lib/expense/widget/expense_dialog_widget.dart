@@ -84,7 +84,7 @@ Widget? showExpenseDataDetail({required BuildContext context, required ApprovalM
               ),
               Expanded(
                 child: FutureBuilder<List<ExpenseModel>>(
-                  future: expenseFirebaseRepository.getExpenseData(loginUser: loginUser, docsId: model.docIds!),
+                  future: expenseFirebaseRepository.getExpenseData(loginUser: loginUser, mail: model.userMail, docsId: model.docIds!),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Container();

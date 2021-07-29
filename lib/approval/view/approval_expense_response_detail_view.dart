@@ -206,7 +206,12 @@ class _ApprovalExpenseResponseDetailViewState extends State<ApprovalExpenseRespo
                                           "approvalContent" : noteController.text,
                                         });
 
-                                        await ExpenseFirebaseRepository().updatgeExpenseStatusData(loginUser: loginUser, docsId: widget.model.docIds!, status: "미");
+                                        await ExpenseFirebaseRepository().updatgeExpenseStatusData(
+                                            loginUser: loginUser,
+                                            mail: widget.model.userMail,
+                                            docsId: widget.model.docIds!,
+                                            status: "미"
+                                        );
 
                                         Navigator.pop(context,true);
                                       },
@@ -253,8 +258,14 @@ class _ApprovalExpenseResponseDetailViewState extends State<ApprovalExpenseRespo
                                           "approvalContent" : noteController.text,
                                           "isSend" : false
                                         });
+                                        print(widget.model.docIds!);
 
-                                        await ExpenseFirebaseRepository().updatgeExpenseStatusData(loginUser: loginUser, docsId: widget.model.docIds!, status: "진");
+                                        await ExpenseFirebaseRepository().updatgeExpenseStatusData(
+                                            loginUser: loginUser,
+                                            mail: widget.model.userMail,
+                                            docsId: widget.model.docIds!,
+                                            status: "진"
+                                        );
 
                                         Navigator.pop(context,true);
                                       },

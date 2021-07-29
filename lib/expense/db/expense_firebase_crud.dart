@@ -11,22 +11,22 @@ class ExpenseFirebaseCurd {
   DateFormatCustom _formatCustom = DateFormatCustom();
 
   // 결재 상태 변화
-  Future<void> updatgeExpenseStatusData(UserModel loginUser, List<dynamic> docsId, String status) async {
+  Future<void> updatgeExpenseStatusData(UserModel loginUser, String mail, List<dynamic> docsId, String status) async {
     await _store.collection(COMPANY)
         .doc(loginUser.companyCode)
         .collection(USER)
-        .doc(loginUser.mail)
+        .doc(mail)
         .collection(EXPENSE)
         .where("docId", whereIn: docsId)
         .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
   }
 
   // 결재 경비 목록
-  Future<List<ExpenseModel>> getExpenseData(UserModel loginUser, List<dynamic> docsId) async {
+  Future<List<ExpenseModel>> getExpenseData(UserModel loginUser, String mail, List<dynamic> docsId) async {
     return await _store.collection(COMPANY)
         .doc(loginUser.companyCode)
         .collection(USER)
-        .doc(loginUser.mail)
+        .doc(mail)
         .collection(EXPENSE)
         .where("docId", whereIn: docsId)
         .get().then((value) => value.docs.map((e) => ExpenseModel.fromMap(mapData: e.data(), reference: e.reference)).toList());
@@ -60,6 +60,20 @@ class ExpenseFirebaseCurd {
         .doc(loginUser.companyCode)
         .collection(WORKAPPROVAL)
         .where("approvalType", isEqualTo: "경비")
+        .where("status", isEqualTo: "승인")
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((document) => ApprovalModel.fromMap(mapData: document.data() as dynamic, reference: document.reference))
+        .toList());
+  }
+
+  Stream<List<ApprovalModel>> getMyApprovalExpensed(UserModel loginUser) {
+    return _store.collection(COMPANY)
+        .doc(loginUser.companyCode)
+        .collection(WORKAPPROVAL)
+        .where("userMail", isEqualTo: loginUser.mail)
+        .where("approvalType", isEqualTo: "경비")
+        .where("status", isEqualTo: "승인")
         .snapshots()
         .map((snapshot) => snapshot.docs
         .map((document) => ApprovalModel.fromMap(mapData: document.data() as dynamic, reference: document.reference))
