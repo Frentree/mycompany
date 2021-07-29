@@ -326,7 +326,11 @@ getCommentsWidget(
 
 PublicFunctionRepository _reprository = PublicFunctionRepository();
 
-Widget getMainCircularMenu({required BuildContext context, required ValueNotifier<bool> isMenu, required GlobalKey<CircularMenuState> key}) {
+Widget getMainCircularMenu({required BuildContext context,
+  required ValueNotifier<bool> isMenu,
+  required GlobalKey<CircularMenuState> key,
+  required UserModel loginUser,
+  required EmployeeModel employeeModel}) {
   return ValueListenableBuilder(
       valueListenable: isMenu,
       builder: (context, bool value, child) {
@@ -363,31 +367,46 @@ Widget getMainCircularMenu({required BuildContext context, required ValueNotifie
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: Color(0xff6B70FC),
                         badgeLabel: "근태",
-                        onTap: () => _reprository.mainNavigator(context: context, navigator: AttendanceDashboardView(), isMove: false)),
+                        onTap: () => _reprository.mainNavigator(
+                            context: context, navigator: AttendanceDashboardView(), isMove: false, loginUser: loginUser, employeeModel: employeeModel
+                        )
+                    ),
                     CircularMenuItem(
                         icon: Icons.create,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: workInsertColor,
                         badgeLabel: "일정",
-                        onTap: () => _reprository.mainNavigator(context: context, navigator: ScheduleRegisrationView(), isMove: false)),
+                        onTap: () => _reprository.mainNavigator(
+                            context: context, navigator: ScheduleRegisrationView(), isMove: false, loginUser: loginUser, employeeModel: employeeModel
+                        )
+                    ),
                     CircularMenuItem(
                         icon: Icons.apps_sharp,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: Color(0xff20F06C),
                         badgeLabel: "조회",
-                        onTap: () => _reprository.mainNavigator(context: context, navigator: InquiryView(), isMove: false)),
+                        onTap: () => _reprository.mainNavigator(
+                            context: context, navigator: InquiryView(), isMove: false, loginUser: loginUser, employeeModel: employeeModel
+                        )
+                    ),
                     CircularMenuItem(
                         icon: Icons.money_outlined,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: Color(0xff996666),
                         badgeLabel: "경비",
-                        onTap: () => _reprository.mainNavigator(context: context, navigator: ExpenseView(), isMove: false)),
+                        onTap: () =>  _reprository.mainNavigator(
+                            context: context, navigator: ExpenseView(), isMove: false, loginUser: loginUser, employeeModel: employeeModel
+                        )
+                    ),
                     CircularMenuItem(
                         icon: Icons.settings,
                         boxShadow: [BoxShadow(color: Colors.black)],
                         color: Color(0xffF23662),
                         badgeLabel: "설정",
-                        onTap: () => _reprository.mainNavigator(context: context, navigator: SettingView(), isMove: true)),
+                        onTap: () => _reprository.mainNavigator(
+                            context: context, navigator: SettingView(), isMove: false, loginUser: loginUser, employeeModel: employeeModel
+                        )
+                    ),
                   ]),
             ),
           ],

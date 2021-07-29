@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/provider/employee_Info_provider.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:mycompany/schedule/view/schedule_registration_view.dart';
@@ -11,8 +12,11 @@ import 'package:provider/provider.dart';
 
 class PublicFunction {
 
-  void mainNavigator(BuildContext context, Widget navigator, bool isMove){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => navigator), (route) => isMove);
+  void mainNavigator(BuildContext context, Widget navigator, bool isMove, UserModel loginUser, EmployeeModel employeeModel){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StreamProvider<EmployeeModel>(
+        create: (BuildContext context) => PublicFirebaseRepository().getEmployeeUser(loginUser: loginUser),
+        initialData: employeeModel,
+        child:navigator)), (route) => isMove);
   }
 
   Future<bool> onBackPressed(BuildContext context) async {

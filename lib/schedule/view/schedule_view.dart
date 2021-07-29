@@ -605,7 +605,10 @@ class _ScheduleViewState extends State<ScheduleView> {
                             child: Icon(
                                 Icons.mail
                             ),
-                            onPressed: () => PublicFunctionRepository().mainNavigator(context: context, navigator: InquiryView(approvalChk: true,), isMove: false)),
+                            onPressed: () => PublicFunctionRepository().mainNavigator(context: context, navigator: InquiryView(approvalChk: true,),
+                                isMove: false,
+                                loginUser: loginUser,
+                                employeeModel: loginEmployee)),
                           Positioned(
                             right: 0,
                             top: 0,
@@ -630,7 +633,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                     );
                   }
               ),
-              getMainCircularMenu(context: context, isMenu: isMenu, key: _circularKey),
+              getMainCircularMenu(context: context, isMenu: isMenu, key: _circularKey, loginUser: loginUser, employeeModel: loginEmployee),
             ],
           ),
         ),

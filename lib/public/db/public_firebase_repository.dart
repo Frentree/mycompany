@@ -67,10 +67,4 @@ class PublicFirebaseRepository {
   Future<WorkModel> getOutWorkLocation({required UserModel loginUser, required String mail}) =>
       _methods.getOutWorkLocation(loginUser, mail);
 
-  Stream<List<ExpenseModel>> getExpense({required UserModel loginUser}) =>
-      _methods.getExpense(loginUser);
-
-  Future<void> addExpense({required UserModel loginUser,required ExpenseModel model}) =>
-      _methods.addExpense(loginUser, model);
-
 }

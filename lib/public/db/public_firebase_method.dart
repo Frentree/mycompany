@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/login/model/company_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
@@ -287,27 +288,6 @@ class PublicFirebaseMethods {
     }).toList());
 
     return model;
-  }
-
-  Stream<List<ExpenseModel>> getExpense(UserModel loginUser) {
-    return _firestore.collection(COMPANY)
-        .doc(loginUser.companyCode)
-        .collection(USER)
-        .doc(loginUser.mail)
-        .collection(EXPENSE)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((document) => ExpenseModel.fromMap(mapData: document.data() as dynamic, reference: document.reference))
-        .toList());
-  }
-
-  Future<void> addExpense(UserModel loginUser, ExpenseModel model) async {
-    await _firestore.collection(COMPANY)
-        .doc(loginUser.companyCode)
-        .collection(USER)
-        .doc(loginUser.mail)
-        .collection(EXPENSE)
-        .add(model.toJson());
   }
 
 }

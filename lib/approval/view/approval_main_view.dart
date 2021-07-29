@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
+import 'package:mycompany/approval/view/approval_expense_request_detail_view.dart';
+import 'package:mycompany/approval/view/approval_expense_response_detail_view.dart';
 import 'package:mycompany/approval/view/approval_request_detail_view.dart';
 import 'package:mycompany/approval/view/approval_response_detail_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
@@ -32,9 +34,9 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   DateFormatCustom _format = DateFormatCustom();
   ApprovalFirebaseRepository _approvalFirebaseRepository = ApprovalFirebaseRepository();
 
-  var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent, Colors.amber, Colors.purple];
+  var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent, Colors.amber, Colors.purple, Colors.cyan];
   int typeChoise = 1;
-  var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타", "연장", "요청"];
+  var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타", "연장", "요청", "경비"];
 
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
@@ -163,13 +165,13 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         child: Column(
                           children: [
                             Column(
-                              children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: 0),
+                              children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: "approval_request".tr()),
                             ),
                             Column(
-                              children: getRequestData(context: context, approval: requestCompleteApproval, approvalName: 1),
+                              children: getRequestData(context: context, approval: requestCompleteApproval, approvalName: "approval_consent".tr()),
                             ),
                             Column(
-                              children: getRequestData(context: context, approval: requestCancelApproval, approvalName: 2),
+                              children: getRequestData(context: context, approval: requestCancelApproval, approvalName: "approval_return".tr()),
                             ),
                           ],
                         ),
@@ -204,13 +206,13 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         child: Column(
                             children: [
                               Column(
-                                children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: 0),
+                                children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: "approval_request".tr()),
                               ),
                               Column(
-                                children: getResponseData(context: context, approval: responseCompleteApproval, approvalName: 1),
+                                children: getResponseData(context: context, approval: responseCompleteApproval, approvalName: "approval_consent".tr()),
                               ),
                               Column(
-                                children: getResponseData(context: context, approval: responseCancelApproval, approvalName: 2),
+                                children: getResponseData(context: context, approval: responseCancelApproval, approvalName: "approval_return".tr()),
                               ),
                             ]
                         ),
@@ -226,7 +228,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
       ),
     );
   }
-  getRequestData({required BuildContext context, required List<ApprovalModel> approval, required int approvalName}){
+  getRequestData({required BuildContext context, required List<ApprovalModel> approval, required String approvalName}){
 
     var list = <Widget>[Container(width: 16.w)];
 
@@ -243,7 +245,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
           padding: EdgeInsets.only(left: 17.0.w),
           alignment: Alignment.centerLeft,
           child: Text(
-            approvalName == 0 ? "approval_request".tr() : approvalName == 1 ? "approval_consent".tr() : "approval_return".tr(),
+            approvalName,
             style: getNotoSantBold(fontSize: 12.0, color: textColor),
           ),
         ),
@@ -263,129 +265,243 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
       } else {
         typeChoise = 6;
       }
-      list.add(
-        InkWell(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 36.0.h,
-                padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
-                child: Row(
-                  children: [
-                    Container(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: _color[typeChoise],
-                            borderRadius: BorderRadius.all(Radius.circular(20.0.r))
-                        ),
-                        width: 34.0.w,
-                        height: 19.0.h,
-                        child: Center(
-                          child: Text(
-                            app.approvalType.toString(),
-                            style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+
+      if(app.approvalType == "경비"){
+        list.add(
+          InkWell(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 36.0.h,
+                  padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: _color[typeChoise],
+                              borderRadius: BorderRadius.all(Radius.circular(20.0.r))
+                          ),
+                          width: 34.0.w,
+                          height: 19.0.h,
+                          child: Center(
+                            child: Text(
+                              app.approvalType.toString(),
+                              style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 10.0.w,),
-                    Container(
-                      width: 50.0.w,
-                      child: Column(
+                      SizedBox(width: 10.0.w,),
+                      Container(
+                        width: 50.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                app.approvalUser,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantBold(fontSize: 12.0, color: textColor)
+                            ),
+                            Text(
+                                position,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 50.0.w,
+                      ),
+                      Container(
+                        width: 80.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              app.title.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantBold(fontSize: 12.0, color: textColor),
+                            ),
+                            Text(
+                              _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 13.0.w,
+                      ),
+                      Container(
+                        width: 2.0.w,
+                        height: 29.0.h,
+                        color: _color[typeChoise],
+                      ),
+                      SizedBox(
+                        width: 6.0.w,
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                              app.approvalUser,
-                              overflow: TextOverflow.ellipsis,
-                              style: getNotoSantBold(fontSize: 12.0, color: textColor)
-                          ),
-                          Text(
-                              position,
-                              overflow: TextOverflow.ellipsis,
-                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
+                            app.totalCost!.toString() + "원",
+                            style: TextStyle(
+                                fontSize: 10.0.sp,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: "Roboto"
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 50.0.w,
-                    ),
-                    Container(
-                      width: 80.0.w,
-                      child: Column(
+                    ],
+                  ),
+                ),
+                SizedBox(height: 15.0.h,),
+              ],
+            ),
+            onTap: () async {
+              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ApprovalExpenseRequestDetailView(model: app,)));
+
+              if(result) {
+                setState(() {
+                  getApprovalRequestClearDate();
+                  getApprovalData();
+                });
+              }
+            },
+          ),
+        );
+      } else {
+        list.add(
+          InkWell(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 36.0.h,
+                  padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: _color[typeChoise],
+                              borderRadius: BorderRadius.all(Radius.circular(20.0.r))
+                          ),
+                          width: 34.0.w,
+                          height: 19.0.h,
+                          child: Center(
+                            child: Text(
+                              app.approvalType.toString(),
+                              style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10.0.w,),
+                      Container(
+                        width: 50.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                app.approvalUser,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantBold(fontSize: 12.0, color: textColor)
+                            ),
+                            Text(
+                                position,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 50.0.w,
+                      ),
+                      Container(
+                        width: 80.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              app.title.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantBold(fontSize: 12.0, color: textColor),
+                            ),
+                            Text(
+                              app.requestContent.toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 13.0.w,
+                      ),
+                      Container(
+                        width: 2.0.w,
+                        height: 29.0.h,
+                        color: _color[typeChoise],
+                      ),
+                      SizedBox(
+                        width: 6.0.w,
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            app.title.toString(),
-                            overflow: TextOverflow.ellipsis,
-                            style: getNotoSantBold(fontSize: 12.0, color: textColor),
+                            _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
+                            style: TextStyle(
+                                fontSize: 10.0.sp,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: "Roboto"
+                            ),
                           ),
                           Text(
-                            app.requestContent.toString(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                              _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
+                              style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 13.0.w,
-                    ),
-                    Container(
-                      width: 2.0.w,
-                      height: 29.0.h,
-                      color: _color[typeChoise],
-                    ),
-                    SizedBox(
-                      width: 6.0.w,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
-                          style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: "Roboto"
-                          ),
-                        ),
-                        Text(
-                            _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
-                            style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 15.0.h,),
-            ],
+                SizedBox(height: 15.0.h,),
+              ],
+            ),
+            onTap: () async {
+              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ApprovalRequestDetailView(model: app,)));
+
+              if(result) {
+                setState(() {
+                  getApprovalRequestClearDate();
+                  getApprovalData();
+                });
+              }
+            },
           ),
-          onTap: () async {
-            var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ApprovalRequestDetailView(model: app,)));
-
-            if(result) {
-              setState(() {
-                getApprovalRequestClearDate();
-                getApprovalData();
-              });
-            }
-          },
-        ),
-      );
+        );
+      }
     }
-
     list.add(SizedBox(height: 20.0.h,));
 
     return list;
   }
 
-  getResponseData({required BuildContext context, required List<ApprovalModel> approval, required int approvalName}){
+  getResponseData({required BuildContext context, required List<ApprovalModel> approval, required String approvalName}){
 
     var list = <Widget>[Container(width: 16.w)];
 
@@ -402,7 +518,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
           padding: EdgeInsets.only(left: 17.0.w),
           alignment: Alignment.centerLeft,
           child: Text(
-            approvalName == 0 ? "approval_request".tr() : approvalName == 1 ? "approval_consent".tr() : "approval_return".tr(),
+            approvalName,
             style: getNotoSantBold(fontSize: 12.0, color: textColor),
           ),
         ),
@@ -422,121 +538,235 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
       } else {
         typeChoise = 6;
       }
-      list.add(
-        InkWell(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 36.0.h,
-                padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
-                child: Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: _color[typeChoise],
-                            borderRadius: BorderRadius.all(Radius.circular(20.0))
-                        ),
-                        width: 34.0.w,
-                        height: 19.0.h,
-                        child: Center(
-                          child: Text(
-                            app.approvalType.toString(),
-                            style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+      if(app.approvalType == "경비"){
+        list.add(
+          InkWell(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 36.0.h,
+                  padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: _color[typeChoise],
+                              borderRadius: BorderRadius.all(Radius.circular(20.0.r))
+                          ),
+                          width: 34.0.w,
+                          height: 19.0.h,
+                          child: Center(
+                            child: Text(
+                              app.approvalType.toString(),
+                              style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 10.0.w,),
-                    Container(
-                      width: 50.0.w,
-                      child: Column(
+                      SizedBox(width: 10.0.w,),
+                      Container(
+                        width: 50.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                app.approvalUser,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantBold(fontSize: 12.0, color: textColor)
+                            ),
+                            Text(
+                                position,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 50.0.w,
+                      ),
+                      Container(
+                        width: 80.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              app.title.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantBold(fontSize: 12.0, color: textColor),
+                            ),
+                            Text(
+                              _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 13.0.w,
+                      ),
+                      Container(
+                        width: 2.0.w,
+                        height: 29.0.h,
+                        color: _color[typeChoise],
+                      ),
+                      SizedBox(
+                        width: 6.0.w,
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                              app.user,
-                              overflow: TextOverflow.ellipsis,
-                              style: getNotoSantBold(fontSize: 12.0, color: textColor)
-                          ),
-                          Text(
-                              position,
-                              overflow: TextOverflow.ellipsis,
-                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
+                            app.totalCost!.toString() + "원",
+                            style: TextStyle(
+                                fontSize: 10.0.sp,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: "Roboto"
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 50.0.w,
-                    ),
-                    Container(
-                      width: 80.0.w,
-                      child: Column(
+                    ],
+                  ),
+                ),
+                SizedBox(height: 15.0.h,),
+              ],
+            ),
+            onTap: () async {
+              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ApprovalExpenseResponseDetailView(model: app,)));
+
+              if(result) {
+                setState(() {
+                  getApprovalRequestClearDate();
+                  getApprovalData();
+                });
+              }
+            },
+          ),
+        );
+      } else {
+        list.add(
+          InkWell(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 36.0.h,
+                  padding: EdgeInsets.only(left: 17.0.w, right: 17.0.w),
+                  child: Row(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: _color[typeChoise],
+                              borderRadius: BorderRadius.all(Radius.circular(20.0))
+                          ),
+                          width: 34.0.w,
+                          height: 19.0.h,
+                          child: Center(
+                            child: Text(
+                              app.approvalType.toString(),
+                              style: getNotoSantRegular(fontSize: 10.0, color: whiteColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10.0.w,),
+                      Container(
+                        width: 50.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                app.user,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantBold(fontSize: 12.0, color: textColor)
+                            ),
+                            Text(
+                                position,
+                                overflow: TextOverflow.ellipsis,
+                                style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor)
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 50.0.w,
+                      ),
+                      Container(
+                        width: 80.0.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              app.title.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantBold(fontSize: 12.0, color: textColor),
+                            ),
+                            Text(
+                              app.requestContent.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 13.0.w,
+                      ),
+                      Container(
+                        width: 2.0.w,
+                        height: 29.0.h,
+                        color: _color[typeChoise],
+                      ),
+                      SizedBox(
+                        width: 6.0.w,
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            app.title.toString(),
-                            overflow: TextOverflow.ellipsis,
-                            style: getNotoSantBold(fontSize: 12.0, color: textColor),
+                            _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
+                            style: TextStyle(
+                                fontSize: 10.0.sp,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: "Roboto"
+                            ),
                           ),
                           Text(
-                            app.requestContent.toString(),
-                            overflow: TextOverflow.ellipsis,
-                            style: getNotoSantRegular(fontSize: 10.0, color: hintTextColor),
+                              _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
+                              style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 13.0.w,
-                    ),
-                    Container(
-                      width: 2.0.w,
-                      height: 29.0.h,
-                      color: _color[typeChoise],
-                    ),
-                    SizedBox(
-                      width: 6.0.w,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
-                          style: TextStyle(
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: "Roboto"
-                          ),
-                        ),
-                        Text(
-                            _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
-                            style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 15.0.h,),
-            ],
-          ),
-          onTap: () async {
-            var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ApprovalResponseDetailView(model: app,)));
+                SizedBox(height: 15.0.h,),
+              ],
+            ),
+            onTap: () async {
+              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ApprovalResponseDetailView(model: app,)));
 
-            if(result) {
-              setState(() {
-                getApprovalResponseClearDate();
-                getApprovalData();
-              });
-            }
-          },
-        ),
-      );
+              if(result) {
+                setState(() {
+                  getApprovalResponseClearDate();
+                  getApprovalData();
+                });
+              }
+            },
+          ),
+        );
+      }
     }
 
     list.add(SizedBox(height: 20.0.h,));

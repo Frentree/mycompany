@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
 import 'package:mycompany/attendance/widget/attendance_button_widget.dart';
+import 'package:mycompany/expense/db/expense_firestore_repository.dart';
 import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/expense/view/expense_registration_update_view.dart';
 import 'package:mycompany/expense/view/expense_registration_view.dart';
@@ -24,6 +26,7 @@ import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseView extends StatefulWidget {
   @override
@@ -32,24 +35,25 @@ class ExpenseView extends StatefulWidget {
 
 class _ExpenseViewState extends State<ExpenseView> {
   PublicFunctionRepository _publicFunctionRepository = PublicFunctionRepository();
+  ExpenseFirebaseRepository expenseFirebaseRepository = ExpenseFirebaseRepository();
   int _chosenValue = 0;
   int _seleteTab = 0;
   DateFormatCustom _format = DateFormatCustom();
 
   List<String> docIdList = [];
-  int totalPrice = 0;
+  int totalCost = 0;
 
   List<String> seleteItem = <String>[
-    '전체',
     '1개월',
     '3개월',
     '6개월',
     '12개월',
+    '전체',
   ];
 
   @override
   Widget build(BuildContext context) {
-    
+    EmployeeModel loginEmployee = Provider.of<EmployeeModel>(context);
     UserModel loginUser = PublicFunction().getUserProviderSetting(context);
     return WillPopScope(
         onWillPop: () => _publicFunctionRepository.onScheduleBackPressed(context: context),
@@ -197,7 +201,7 @@ class _ExpenseViewState extends State<ExpenseView> {
                               ),
                               Expanded(
                                   child: StreamBuilder<List<ExpenseModel>>(
-                                    stream: PublicFirebaseRepository().getExpense(loginUser: loginUser),
+                                    stream: expenseFirebaseRepository.getExpense(loginUser: loginUser),
                                     builder: (context, snapshot) {
                                       if(!snapshot.hasData){
                                         return Container();
@@ -216,39 +220,39 @@ class _ExpenseViewState extends State<ExpenseView> {
                                         if(e.status == "미"){
                                           waitingExpense.add(e);
                                         } else if (e.status == "진"){
-                                          if(_chosenValue == 0){
+                                          if(_chosenValue == 4){
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 0 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
                                             progressExpense.add(e);
-                                          } else if (_chosenValue == 4 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
                                             progressExpense.add(e);
                                           }
                                         } else if (e.status == "결"){
-                                          if(_chosenValue == 0){
+                                          if(_chosenValue == 4){
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 0 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
                                             successExpense.add(e);
-                                          } else if (_chosenValue == 4 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
                                             successExpense.add(e);
                                           }
                                         }else {
-                                          if(_chosenValue == 0){
+                                          if(_chosenValue == 4){
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 0 && butTime.difference(DateTime(now.year, now.month - 1, 1)).inDays > 0) {
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 1 && butTime.difference(DateTime(now.year, now.month - 3, 1)).inDays > 0) {
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 2 && butTime.difference(DateTime(now.year, now.month - 6, 1)).inDays > 0) {
                                             completeExpense.add(e);
-                                          } else if (_chosenValue == 4 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
+                                          } else if (_chosenValue == 3 && butTime.difference(DateTime(now.year, now.month - 12, 1)).inDays > 0) {
                                             completeExpense.add(e);
                                           }
                                         }
@@ -277,7 +281,92 @@ class _ExpenseViewState extends State<ExpenseView> {
                               ),
                             ],
                           ),
-                          Text("현재 미구현된 화면입니다."),
+                          Column(
+                            children: [
+                              Container(
+                                height: 60.0.h,
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "기간 선택",
+                                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                                    ),
+                                    SizedBox(width: 20.0.w,),
+                                    DropdownButton<int>(
+                                      value: _chosenValue,
+                                      focusColor: Colors.white,
+                                      style: getNotoSantMedium(fontSize: 12, color: textColor),
+                                      items: seleteItem.map((value) =>
+                                          DropdownMenuItem<int>(
+                                            value: seleteItem.indexOf(value),
+                                            child: Text(value,style:TextStyle(color:Colors.black),),
+                                          )).toList(),
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _chosenValue  = val!;
+                                        });
+                                      },
+                                    ),
+                                    Expanded(child: Container(),),
+                                    Container(
+                                      height: 27.0.h,
+                                      child: ElevatedButton(
+                                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseRegistrationView())),
+                                        style: ElevatedButton.styleFrom(
+                                          primary: whiteColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(14.0.r),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "경비 입력",
+                                            style: TextStyle(
+                                              fontSize: 13.0.sp,
+                                              color: Color(0xff2093F0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: (loginEmployee.level!.contains(9) || loginEmployee.level!.contains(7)) ?
+                                StreamBuilder<List<ApprovalModel>>(
+                                  stream: expenseFirebaseRepository.getApprovalExpensed(loginUser: loginUser),
+                                  builder: (context, snapshot) {
+                                    if(!snapshot.hasData){
+                                      return Container();
+                                    }
+                                    List<ApprovalModel> approvalList = snapshot.data!;
+
+                                    if(approvalList.length == 0) {
+                                      return Container(child: Text("신청한 경비 내용이 없습니다.",
+                                        style: getRobotoRegular(fontSize: 15, color: textColor),
+                                      ),);
+                                    }
+
+                                    approvalList.sort((a, b) => a.requestStartDate.compareTo(b.requestStartDate));
+                                    approvalList.sort((a, b) => a.userMail.compareTo(b.userMail));
+
+
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          Column(children: getNotApprovalExpenseData(context: context, approvalList: approvalList, loginUser: loginUser),),
+                                        ]
+                                      ),
+                                    );
+                                  },
+                                ) : Container(child: Text("q2q2"),),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -294,7 +383,7 @@ class _ExpenseViewState extends State<ExpenseView> {
                       buttonColor: Color(0xffF7F7F7),
                       buttonAction: () {
                         docIdList.clear();
-                        totalPrice = 0;
+                        totalCost = 0;
                         setState(() {});
                       }
                   ),
@@ -305,7 +394,11 @@ class _ExpenseViewState extends State<ExpenseView> {
                       buttonColor: Color(0xff2093F0),
                       buttonAction: () async {
                         List<EmployeeModel> approvalList = await LoginFirestoreRepository().readAllEmployeeData(companyId: loginUser.companyCode!);
-                        await selectExpenseApprovalBottomSheet(context: context, approvalList: approvalList, loginUser: loginUser, docId: docIdList, totalPrice: totalPrice);
+                        await selectExpenseApprovalBottomSheet(context: context, approvalList: approvalList, loginUser: loginUser, docId: docIdList, totalCost: totalCost);
+
+                        docIdList.clear();
+                        totalCost = 0;
+                        setState(() {});
                       }
                   ),
                 ],
@@ -314,6 +407,138 @@ class _ExpenseViewState extends State<ExpenseView> {
           ),
         )
     );
+  }
+
+  getNotApprovalExpenseData({required BuildContext context, required List<ApprovalModel> approvalList, required UserModel loginUser}){
+    List<Widget> list = <Widget>[Container(width: 16.w)];
+    String email = "";
+
+    if(approvalList.isEmpty){
+      return list;
+    }
+    int count = 0;
+    Column column = Column(children: [],);
+
+    for(ApprovalModel app in approvalList){
+      if(email == app.userMail){
+        count++;
+      } else {
+        email = app.userMail;
+        count = 0;
+        column = Column(children: [],);
+      }
+
+      column.children.add(Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 5.0.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                    width: 70.0.w,
+                    child: Text(
+                      (app.isSend! == false) ? "미입금" : "입금 완료",
+                      style: getRobotoBold(fontSize: 13, color: (app.isSend! == false) ? Colors.red : Colors.blue),
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                ),
+                Container(
+                    width: 100.0.w,
+                    child: Text(
+                      app.requestStartDate.toDate().month.toString() + "월 경비 내역" ,
+                      style: getRobotoBold(fontSize: 13, color: textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                ),
+                Container(
+                    child: Text(app.totalCost!.toString() + "원",
+                      style: getRobotoBold(fontSize: 13, color: textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                    )
+                ),
+              ],
+            ),
+
+            IconButton(
+              icon: Icon(
+                  Icons.double_arrow
+              ),
+              onPressed: () {
+
+              },
+            ),
+          ],
+        ),
+      ));
+
+      if(count == 0){
+        list.add(Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0.w),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Color(0xff9C9C9C).withOpacity(0.3),
+                  offset: Offset(1.0, 15.0),
+                  blurRadius: 20.0,
+                ),
+              ],
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(12.0.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                InkWell(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.0.w,
+                      vertical: 10.0.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xff2093F0),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12.0.r),
+                        topRight: Radius.circular(12.0.r),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          app.user,
+                          style: getRobotoBold(fontSize: 13, color: whiteColor),
+                        ),
+                        Icon(
+                          Icons.zoom_in_sharp,
+                          color: whiteColor,
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    showExpenseDataDetail(context: context, model: app, loginUser: loginUser);
+                  },
+                ),
+                Column(
+                  children: [
+                    column
+                  ],
+                ),
+                SizedBox(height: 15.0.h,)
+              ],
+            ),
+          ),
+        ));
+      }
+    }
+
+    return list;
   }
 
 
@@ -497,10 +722,10 @@ class _ExpenseViewState extends State<ExpenseView> {
             onTap: () async {
               if(!docIdList.contains(app.reference!.id)){
                 docIdList.add(app.reference!.id);
-                totalPrice += app.cost;
+                totalCost += app.cost;
               } else {
                 docIdList.remove(app.reference!.id);
-                totalPrice -= app.cost;
+                totalCost -= app.cost;
               }
               setState(() {});
             },
