@@ -26,6 +26,7 @@ class ApprovalModel {
   List<dynamic>? docIds;
   String? workIds;
   bool allDay;
+  bool? isSend;
   String status;
   String location;
   String? approvalContent;
@@ -50,6 +51,7 @@ class ApprovalModel {
     this.docIds,
     this.workIds,
     required this.allDay,
+    this.isSend,
     required this.status,
     required this.location,
     this.approvalContent,
@@ -71,9 +73,10 @@ class ApprovalModel {
   });
 
   ApprovalModel.fromMap({required Map mapData, this.reference})
-      : docIds = mapData["docIds"] ?? [],
+      : docIds = mapData["docIds"] ?? [""],
         workIds = mapData["workIds"] ?? "",
         allDay = mapData["allDay"] ?? false,
+        isSend = mapData["isSend"] ?? false,
         status = mapData["status"] ?? "요청",
         location = mapData["location"] ?? "",
         approvalContent = mapData["approvalContent"] ?? "",
@@ -96,6 +99,7 @@ class ApprovalModel {
       "docIds": docIds ?? [],
       "workIds": workIds ?? "",
       "allDay": allDay,
+      "isSend": isSend,
       "status": status,
       "location": location,
       "approvalContent": approvalContent ?? "",

@@ -208,5 +208,9 @@
 
   "expense" : "경비",
   "expense_dialog_1" : "경비를 삭제하시겠습니까?",
-  "expense_price_fail" : "금액을 입력해주세요."
+  "expense_price_fail" : "금액을 입력해주세요.",
+  "cost" : "Cost",
+  "total_cost" : "Total Cost",
+  "expense_date" : "경비 결재 요청일",
+  "expense_item" : "Expense Item View"
 }

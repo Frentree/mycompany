@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mycompany/expense/db/expense_firestore_repository.dart';
 import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/expense/widget/expense_dialog_widget.dart';
 import 'package:mycompany/inquiry/function/profile_edit_function.dart';
@@ -24,6 +25,7 @@ class ExpenseRegistrationView extends StatefulWidget {
 }
 
 class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
+  ExpenseFirebaseRepository expenseFirebaseRepository = ExpenseFirebaseRepository();
   DateFormatCustom _format = DateFormatCustom();
   ImagePicker imagePicker = ImagePicker();
   ProfileEditFunction profileEditFunction = ProfileEditFunction();
@@ -187,7 +189,7 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                                         cost: int.parse(priceController.text.trim()),
                                         buyDate: _format.changeDateTimeToTimestamp(dateTime: seleteTime.value));
 
-                                    await PublicFirebaseRepository().addExpense(loginUser: loginUser, model: addExpenseModel);
+                                    await expenseFirebaseRepository.addExpense(loginUser: loginUser, model: addExpenseModel);
 
                                     changeImagePath.value = null;
                                     uploadImageUrl = "";

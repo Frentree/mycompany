@@ -1,33 +1,35 @@
-import 'package:easy_localization/easy_localization.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/widget/approval_detail_widget.dart';
+import 'package:mycompany/expense/db/expense_firestore_repository.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
-import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
-import 'package:mycompany/public/style/text_style.dart';
-import 'package:mycompany/approval/model/approval_model.dart';
 
-class ApprovalResponseDetailView extends StatefulWidget {
+import 'package:mycompany/public/style/text_style.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/public/style/color.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+class ApprovalExpenseResponseDetailView extends StatefulWidget {
+
   final ApprovalModel model;
 
-  ApprovalResponseDetailView({
-    required this.model,
-  });
+  ApprovalExpenseResponseDetailView({required this.model,});
 
   @override
-  _ApprovalResponseDetailViewState createState() => _ApprovalResponseDetailViewState();
+  _ApprovalExpenseResponseDetailViewState createState() => _ApprovalExpenseResponseDetailViewState();
 }
 
-class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView> {
+class _ApprovalExpenseResponseDetailViewState extends State<ApprovalExpenseResponseDetailView> {
   DateFormatCustom _format = DateFormatCustom();
   TextEditingController noteController = TextEditingController();
   late UserModel loginUser;
@@ -38,13 +40,18 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
     super.initState();
     loginUser = PublicFunction().getUserProviderSetting(context);
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    noteController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-
     return WillPopScope(
-      onWillPop: () async {
+      onWillPop:() async {
         Navigator.pop(context, false);
         return true;
       },
@@ -117,7 +124,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                         SizedBox(
                           height: 10.0.h,
                         ),
-                        getDetailsScrollContents(title: "content", content: widget.model.requestContent, size: 150),
+                        getDetailsScrollContents(title: "total_cost", content: widget.model.totalCost.toString() + " 원", size: 70),
                         SizedBox(
                           height: 10.0.h,
                         ),
@@ -125,11 +132,10 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                         SizedBox(
                           height: 10.0.h,
                         ),
-                        getDetailsContents(title: "target_date", content: "${_format.getDate(date: widget.model.requestStartDate.toDate())} - ${_format.getDate(date: widget.model.requestEndDate.toDate())}", size: 70),
+                        getExpenseItem(title: "expense_item",context: context, size: 70, model: widget.model, loginUser: loginUser),
                         SizedBox(
                           height: 10.0.h,
                         ),
-                        getDetailsContents(title: "location", content: widget.model.location, size: 70),
                         SizedBox(
                           height: 10.0.h,
                         ),
@@ -143,7 +149,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                         SizedBox(
                           height: 10.0.h,
                         ),
-                        getDetailsContents(title: "approval_request_date", content: "${_format.getDate(date: widget.model.createDate!.toDate())}", size: 70),
+                        getDetailsContents(title: "expense_date", content: "${_format.getDate(date: widget.model.requestStartDate.toDate())}", size: 70),
                         SizedBox(
                           height: 10.0.h,
                         ),
@@ -152,8 +158,9 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                           height: 10.0.h,
                         ),
                         getDetailsContents(title: "approval_completion_date", content: widget.model.status == "요청" ? "" :  _format.getDate(date: widget.model.approvalDate!.toDate()), size: 70),
-                  ],
-                )),
+                      ],
+                    )
+                ),
                 Container(
                   width: double.infinity,
                   height: 57.0.h,
@@ -194,13 +201,14 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                       topPadding: 81.0.h,
                                       buttonName: "dialogConfirm".tr(),
                                       buttonAction: () async {
-                                        Navigator.pop(
-                                            context,
-                                            await ApprovalFirebaseRepository().updateWorkApproval(
-                                                model: widget.model,
-                                                companyCode: loginUser.companyCode.toString(),
-                                                approval: "반려",
-                                                content: noteController.text));
+                                        await widget.model.reference!.update({
+                                          "status" : "반려",
+                                          "approvalContent" : noteController.text,
+                                        });
+
+                                        await ExpenseFirebaseRepository().updatgeExpenseStatusData(loginUser: loginUser, docsId: widget.model.docIds!, status: "미");
+
+                                        Navigator.pop(context,true);
                                       },
                                       customWidth: 80.0,
                                       customHeight: 40.0),
@@ -214,7 +222,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                 if (result) {
                                   sendFcmWithTokens(loginUser, [widget.model.userMail],
                                       "[결재 반려]",
-                                      "[${loginUser.name}] 님이 ${widget.model.approvalType == "요청" ? "업무 요청" : widget.model.approvalType} 결재를 반려 했습니다.", "");
+                                      "[${loginUser.name}] 님이 경비 결재를 반려 했습니다.", "");
                                   Navigator.pop(context, true);
                                 }
                               },
@@ -240,13 +248,15 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                       topPadding: 81.0.h,
                                       buttonName: "dialogConfirm".tr(),
                                       buttonAction: () async {
-                                        Navigator.pop(
-                                            context,
-                                            await ApprovalFirebaseRepository().updateWorkApproval(
-                                                model: widget.model,
-                                                companyCode: loginUser.companyCode.toString(),
-                                                approval: "승인",
-                                                content: noteController.text));
+                                        await widget.model.reference!.update({
+                                          "status" : "승인",
+                                          "approvalContent" : noteController.text,
+                                          "isSend" : false
+                                        });
+
+                                        await ExpenseFirebaseRepository().updatgeExpenseStatusData(loginUser: loginUser, docsId: widget.model.docIds!, status: "진");
+
+                                        Navigator.pop(context,true);
                                       },
                                       customWidth: 80.0,
                                       customHeight: 40.0),
@@ -260,7 +270,7 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                                 if (result) {
                                   sendFcmWithTokens(loginUser, [widget.model.userMail],
                                       "[결재 승인]",
-                                      "[${loginUser.name}] 님이 ${widget.model.approvalType == "요청" ? "업무 요청" : widget.model.approvalType} 결재를 승인 했습니다.", "");
+                                      "[${loginUser.name}] 님이 경비 결재를 승인 했습니다.", "");
                                   Navigator.pop(context, true);
                                 }
                               },
@@ -278,4 +288,5 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
       ),
     );
   }
+
 }
