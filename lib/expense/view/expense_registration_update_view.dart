@@ -175,7 +175,6 @@ class _ExpenseRegistrationUpdateViewState extends State<ExpenseRegistrationUpdat
                                           ]
                                       );
                                     });
-                                    print("gdgd");
                                   }
 
                                   ExpenseModel updateExpenseModel = ExpenseModel(

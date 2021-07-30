@@ -12,13 +12,37 @@ class ExpenseFirebaseCurd {
 
   // 결재 상태 변화
   Future<void> updatgeExpenseStatusData(UserModel loginUser, String mail, List<dynamic> docsId, String status) async {
-    await _store.collection(COMPANY)
-        .doc(loginUser.companyCode)
-        .collection(USER)
-        .doc(mail)
-        .collection(EXPENSE)
-        .where("docId", whereIn: docsId)
-        .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
+    if(docsId.length > 10){
+      await _store.collection(COMPANY)
+          .doc(loginUser.companyCode)
+          .collection(USER)
+          .doc(mail)
+          .collection(EXPENSE)
+          .where("docId", isEqualTo: docsId)
+          .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
+    } else {
+      int count = (docsId.length / 10).toInt();
+      print("count => " + count.toString());
+      for(int i = 0; i < count; i++){
+        await _store.collection(COMPANY)
+            .doc(loginUser.companyCode)
+            .collection(USER)
+            .doc(mail)
+            .collection(EXPENSE)
+            .where("docId", isEqualTo: docsId.sublist((i*10), (i*10+9)))
+            .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
+      }
+    }
+
+    for(String id in docsId){
+      await _store.collection(COMPANY)
+          .doc(loginUser.companyCode)
+          .collection(USER)
+          .doc(mail)
+          .collection(EXPENSE)
+          .where("docId", isEqualTo: id)
+          .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
+    }
   }
 
   // 결재 경비 목록
