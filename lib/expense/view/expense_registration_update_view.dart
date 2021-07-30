@@ -181,6 +181,7 @@ class _ExpenseRegistrationUpdateViewState extends State<ExpenseRegistrationUpdat
                                   ExpenseModel updateExpenseModel = ExpenseModel(
                                       mail: loginUser.mail,
                                       name: loginUser.name,
+                                      docId: widget.model.reference!.id,
                                       companyCode: loginUser.companyCode!,
                                       contentType: seleteItem,
                                       imageUrl: uploadImageUrl,
