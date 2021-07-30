@@ -8,12 +8,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 class ProfileEditFunction {
-  Future<PickedFile?> selectImage({
+  Future<XFile?> selectImage({
     required ImageSource imageSource,
   }) async {
-    ImagePicker imagePicker = ImagePicker();
-
-    PickedFile? pickImage = await imagePicker.getImage(source: imageSource);
+    XFile? pickImage = await ImagePicker().pickImage(source: imageSource);
 
     return pickImage;
   }
