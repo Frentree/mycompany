@@ -154,4 +154,12 @@ class ScheduleFirebaseMethods {
   Stream<QuerySnapshot> getPositionStream(String companyCode){
     return _store.collection(COMPANY).doc(companyCode).collection(POSITION).snapshots();
   }
+
+  Future<void> insertAdminSchedule(EmployeeModel loginEmployee, WorkModel model) async {
+    await _store.collection(COMPANY).doc(loginEmployee.companyCode).collection(WORK).add(model.toJson());
+  }
+
+  Future<void> updateAdminSchedule(EmployeeModel loginEmployee, WorkModel model, String docId) async {
+    await _store.collection(COMPANY).doc(loginEmployee.companyCode).collection(WORK).doc(docId).update(model.toJson());
+  }
 }

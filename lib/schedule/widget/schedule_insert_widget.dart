@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/vacation/vacation.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
@@ -19,6 +20,7 @@ import 'package:mycompany/schedule/widget/userProfileImage.dart';
 class ScheduleInsertWidget extends StatefulWidget {
   //final DateTime timeZone;
   Key? key;
+  final EmployeeModel loginEmployee;
   final String workName;
   final TextEditingController titleController;
   final TextEditingController noteController;
@@ -38,6 +40,7 @@ class ScheduleInsertWidget extends StatefulWidget {
   final String companyCode;
 
   ScheduleInsertWidget({
+    required this.loginEmployee,
     required this.workName,
     required this.titleController,
     required this.noteController,
@@ -116,7 +119,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
           getLocation(),
           getNote(),
           getColleague(),
-          getApproval()
+          Visibility(
+            visible: !widget.loginEmployee.level!.contains(9),
+            child: getApproval())
         ],
       ),
     );
@@ -148,7 +153,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
           getTitleWidget(),
           getDateTime(),
           getNote(),
-          getApproval()
+          Visibility(
+              visible: !widget.loginEmployee.level!.contains(9),
+              child: getApproval())
         ],
       ),
     );
@@ -164,7 +171,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
         children: [
           getAnnual(),
           getNote(),
-          getApproval(),
+          Visibility(
+              visible: !widget.loginEmployee.level!.contains(9),
+              child: getApproval()),
           getAnnualTotal(context),
         ],
       ),
@@ -198,7 +207,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
           getLocation(),
           getNote(),
           getColleague(),
-          getApproval()
+          Visibility(
+              visible: !widget.loginEmployee.level!.contains(9),
+              child: getApproval())
         ],
       ),
     );
@@ -401,9 +412,22 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                     ),
                     Row(
                       children: [
-                        Text(
-                          "${(widget.totalVacation!.value - widget.useVacation!.value)}",
-                          style: getNotoSantMedium(fontSize: 12, color: textColor),
+                        FutureBuilder<double>(
+                          future: UsedVacation(widget.loginEmployee.companyCode, widget.loginEmployee.mail, widget.loginEmployee.enteredDate!, widget.companyVacation!.value),
+                          builder: (context, snapshot) {
+                            if(!snapshot.hasData){
+                              return Text(
+                                "${(widget.totalVacation!.value - widget.useVacation!.value)}",
+                                style: getNotoSantMedium(fontSize: 12, color: textColor),
+                              );
+                            }
+
+                            widget.useVacation!.value = snapshot.data!;
+                            return Text(
+                              "${(widget.totalVacation!.value - widget.useVacation!.value)}",
+                              style: getNotoSantMedium(fontSize: 12, color: textColor),
+                            );
+                          }
                         ),
                         Text(
                           " / ",
@@ -476,6 +500,12 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 ),
                 onTap: () async {
                   widget.startDateTime.value = await showDatesPicker(context: context, date: widget.startDateTime.value);
+
+                  if(widget.startDateTime.value.difference(widget.endDateTime.value).inDays >= 0) {
+                    widget.endDateTime.value =  widget.startDateTime.value.add(Duration(days: 0));
+                  }
+                  widget.isAllDay.value = false;
+
                 }),
             Container(
               padding: EdgeInsets.only(top: 9.7.h, left: 20.2.w, right: 20.2.w),
@@ -513,6 +543,11 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                 ),
                 onTap: () async {
                   widget.endDateTime.value = await showDatesPicker(context: context, date: widget.endDateTime.value);
+
+                  if(widget.endDateTime.value.difference(widget.startDateTime.value).inDays <= 0 ) {
+                    widget.startDateTime.value =  widget.endDateTime.value.add(Duration(days: 0));
+                  }
+
                 }),
           ],
         ),

@@ -54,7 +54,3 @@ class ProfileEditFunction {
     return imageUrl;
   }
 }
-
-void aaa(){
-
-}

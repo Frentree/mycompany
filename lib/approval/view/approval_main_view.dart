@@ -573,7 +573,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                                app.approvalUser,
+                                app.user,
                                 overflow: TextOverflow.ellipsis,
                                 style: getNotoSantBold(fontSize: 12.0, color: textColor)
                             ),

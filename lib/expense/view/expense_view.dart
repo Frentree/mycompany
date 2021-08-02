@@ -272,7 +272,7 @@ class _ExpenseViewState extends State<ExpenseView> {
                                         child: Column(
                                           children: [
                                             Column(
-                                              children: getNotExpenseData(context: context, expenseList: waitingExpense, expenseName: "미결재 (선택가능)"),
+                                              children: getNotExpenseData(context: context, expenseList: waitingExpense, expenseName: "미결재 (선택가능&전체선택)"),
                                             ),
                                             Column(
                                               children: getExpenseData(context: context, expenseList: successExpense, expenseName: "결재 진행중"),
@@ -793,16 +793,23 @@ class _ExpenseViewState extends State<ExpenseView> {
 
     list.add(Column(
       children: [
-        Container(
-          width: double.infinity,
-          height: 23.0.h,
-          color: calendarDetailLineColor,
-          padding: EdgeInsets.only(left: 17.0.w),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            expenseName,
-            style: getNotoSantBold(fontSize: 12.0, color: textColor),
+        InkWell(
+          child: Container(
+            width: double.infinity,
+            height: 35.0.h,
+            color: calendarDetailLineColor,
+            padding: EdgeInsets.only(left: 17.0.w),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              expenseName,
+              style: getNotoSantBold(fontSize: 12.0, color: textColor),
+            ),
           ),
+          onTap: () {
+            setState(() {
+              docIdList = List.from(expenseList.map((e) => e.docId).toList());
+            });
+          },
         ),
         SizedBox(height: 15.0.h,),
       ],
@@ -932,6 +939,9 @@ class _ExpenseViewState extends State<ExpenseView> {
                                                 topPadding: 81.0.h,
                                                 buttonName: "dialogConfirm".tr(),
                                                 buttonAction: () async {
+                                                  if(docIdList.contains(app.docId)){
+                                                    docIdList.remove(app.docId);
+                                                  }
                                                   app.reference!.delete();
                                                   Navigator.pop(context);
                                                 },
@@ -974,7 +984,7 @@ class _ExpenseViewState extends State<ExpenseView> {
           )
       );
     }
-    list.add(SizedBox(height: 20.0.h,));
+    list.add(SizedBox(height: 40.0.h,));
     return list;
   }
 
@@ -989,7 +999,7 @@ class _ExpenseViewState extends State<ExpenseView> {
       children: [
         Container(
           width: double.infinity,
-          height: 23.0.h,
+          height: 35.0.h,
           color: calendarDetailLineColor,
           padding: EdgeInsets.only(left: 17.0.w),
           alignment: Alignment.centerLeft,

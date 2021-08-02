@@ -16,10 +16,13 @@ import 'package:mycompany/public/function/vacation/vacation.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
+import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/public/model/team_model.dart';
+import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
+import 'package:provider/provider.dart';
 
 class ScheduleRegisrationView extends StatefulWidget {
   @override
@@ -42,8 +45,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   List<String> workTeamChkList = [];
 
   late UserModel loginUser;
-  late EmployeeModel loginEmployee;
-
   // 반차(오후&연차)
   ValueNotifier<bool> _isHalfway = ValueNotifier<bool>(false);
 
@@ -60,13 +61,9 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
     companyVacation.value = company.vacation!;
 
-    totalVacation.value = TotalVacation(loginEmployee.enteredDate!, companyVacation.value, loginEmployee.vacation!.toDouble());
-    useVacation.value = await UsedVacation(loginUser.companyCode, loginUser.mail, loginEmployee.enteredDate!, companyVacation.value);
-
     setState(() {
       teamList = team;
       employeeList = employee;
-
     });
   }
 
@@ -121,7 +118,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     _scrollController = ScrollController();
     super.initState();
     loginUser = PublicFunction().getUserProviderSetting(context);
-    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
     _getPersonalDataSource();
 
     setState(() {});
@@ -148,6 +144,11 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   @override
   Widget build(BuildContext context) {
+    EmployeeModel loginEmployee = Provider.of<EmployeeModel>(context);
+
+    totalVacation.value = TotalVacation(loginEmployee.enteredDate!, companyVacation.value, 0);
+
+
     return WillPopScope(
       onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
       child: Scaffold(
@@ -225,36 +226,65 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             ),
                           ),
                           onTap: () async {
-                            var result = await CalenderMethod().insertSchedule(
-                                allDay: _isAllDay.value,
-                                workName: works[workChkCount],
-                                title: titleController.text,
-                                content: noteController.text,
-                                startTime: _startDateTime.value,
-                                endTime: _endDateTime.value,
-                                workColleagueChkList: workColleagueChkList,
-                                isAllDay: _isAllDay.value,
-                                location: locationController.text,
-                                approvalUser: approvalUser.value,
-                                loginUser: loginUser
-                            );
+                            List<Map<String, String>>? colleaguesList;
 
-                            if(result){
+                            if(workColleagueChkList.length != 0){
+                              colleaguesList = [{loginUser.mail : loginUser.name}];
+                              workColleagueChkList.map((e) {
+                                Map<String,String> map = {e.mail.toString() : e.name.toString()};
+                                colleaguesList!.add(map);
+                              }).toList();
+                            }
+
+                            if(loginEmployee.level!.contains(9) && works[workChkCount] != "요청"){
+                              WorkModel workModel = WorkModel(
+                                allDay: _isAllDay.value,
+                                type: works[workChkCount],
+                                title: titleController.text,
+                                contents: noteController.text,
+                                location: locationController.text,
+                                startTime: Timestamp.fromDate(_startDateTime.value),
+                                endTime: Timestamp.fromDate(_startDateTime.value),
+                                colleagues: colleaguesList,
+                                name: loginEmployee.name,
+                                createUid: loginEmployee.mail,
+                              );
+
+                              ScheduleFirebaseReository().insertAdminSchedule(loginEmployee: loginEmployee, model: workModel);
+
                               _publicFunctionReprository.onBackPressed(context: context);
                             } else {
-                              loginDialogWidget(
-                                  context: context,
-                                  message: "결재자를 선택해주세요.",
-                                  actions: [
-                                    confirmElevatedButton(
-                                        topPadding: 81.0.h,
-                                        buttonName: "dialogConfirm".tr(),
-                                        buttonAction: () => Navigator.pop(context),
-                                        customWidth: 200.0,
-                                        customHeight: 40.0.h
-                                    ),
-                                  ]
+                              var result = await CalenderMethod().insertSchedule(
+                                  allDay: _isAllDay.value,
+                                  workName: works[workChkCount],
+                                  title: titleController.text,
+                                  content: noteController.text,
+                                  startTime: _startDateTime.value,
+                                  endTime: _endDateTime.value,
+                                  colleaguesList: colleaguesList,
+                                  isAllDay: _isAllDay.value,
+                                  location: locationController.text,
+                                  approvalUser: approvalUser.value,
+                                  loginUser: loginUser
                               );
+
+                              if(result){
+                                _publicFunctionReprository.onBackPressed(context: context);
+                              } else {
+                                loginDialogWidget(
+                                    context: context,
+                                    message: "결재자를 선택해주세요.",
+                                    actions: [
+                                      confirmElevatedButton(
+                                          topPadding: 81.0.h,
+                                          buttonName: "dialogConfirm".tr(),
+                                          buttonAction: () => Navigator.pop(context),
+                                          customWidth: 200.0,
+                                          customHeight: 40.0.h
+                                      ),
+                                    ]
+                                );
+                              }
                             }
                           }
                       ),
@@ -344,6 +374,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             child: Container(
                               width: 309.0.w,
                               child: ScheduleInsertWidget(
+                                loginEmployee: loginEmployee,
                                 workName: works[workChkCount],
                                 isAllDay: _isAllDay,
                                 isHalfway: _isHalfway,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/style/color.dart';
@@ -15,6 +16,7 @@ import 'package:mycompany/schedule/view/schedule_registration_update_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:provider/provider.dart';
 
 class CalenderMethod{
   final ScheduleFirebaseReository _repository = ScheduleFirebaseReository();
@@ -175,27 +177,17 @@ class CalenderMethod{
     String? location,
     required DateTime startTime,
     required DateTime endTime,
-    required List<EmployeeModel> workColleagueChkList,
+    required List<Map<String, String>>? colleaguesList,
     required bool isAllDay,
     EmployeeModel? approvalUser,
   }) async {
     // 선택된 동료 리스트
-    List<Map<String, String>>? colleaguesList;
     bool result = false;
 
     if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
       if(approvalUser == null || approvalUser.mail == ""){
         return false;
       }
-    }
-
-    // 선택된 동료가 있으면
-    if(workColleagueChkList.length != 0){
-      colleaguesList = [{loginUser.mail : loginUser.name}];
-      workColleagueChkList.map((e) {
-        Map<String,String> map = {e.mail.toString() : e.name.toString()};
-        colleaguesList!.add(map);
-      }).toList();
     }
 
     if(workName == "연차" && allDay){
@@ -207,7 +199,7 @@ class CalenderMethod{
 
     WorkModel workModel = WorkModel(
       allDay: allDay,
-      type: workName,
+      type: workName == "요청" ? "외근" : workName,
       title: title,
       contents: content,
       location: location,
@@ -252,13 +244,12 @@ class CalenderMethod{
     String? location,
     required DateTime startTime,
     required DateTime endTime,
-    required List<EmployeeModel> workColleagueChkList,
+    required List<Map<String,dynamic>> colleaguesList,
     required bool isAllDay,
     EmployeeModel? approvalUser,
     required UserModel loginUser,
   }) async {
     // 선택된 동료 리스트
-    List<Map<String,dynamic>>? colleaguesList;
     bool result = false;
 
     if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
@@ -266,17 +257,6 @@ class CalenderMethod{
         return false;
       }
     }
-
-    // 선택된 동료가 있으면
-    if(workColleagueChkList.length != 0){
-      colleaguesList = [{loginUser.mail : loginUser.name}];
-
-      workColleagueChkList.map((e) {
-        Map<String,String> map = {e.mail.toString() : e.name.toString()};
-        colleaguesList!.add(map);
-      }).toList();
-    }
-
 
     WorkModel workModel = WorkModel(
       allDay: allDay,
@@ -317,7 +297,9 @@ class CalenderMethod{
     required BuildContext context,
     required String companyCode,
     required String documentId,
-    required Appointment appointment
+    required Appointment appointment,
+    required UserModel loginUser,
+    required EmployeeModel loginEmployee,
   }) async {
     int resultCode = 0; // 0 : 성공, 404 : 결재 중인 항목일때, 405 : 스케줄 삭제 오류
 
@@ -328,7 +310,11 @@ class CalenderMethod{
     var approvalResult = await _repository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
 
     if(approvalResult){
-      var scheduleResult = await Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment,)));
+      var scheduleResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          StreamProvider<EmployeeModel>(
+              create: (BuildContext context) => PublicFirebaseRepository().getEmployeeUser(loginUser: loginUser),
+              initialData: loginEmployee,
+              child:ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment))));
       if(!scheduleResult){
         resultCode = 407;
       }

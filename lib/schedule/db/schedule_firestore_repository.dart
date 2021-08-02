@@ -57,4 +57,10 @@ class ScheduleFirebaseReository {
 
   Stream<QuerySnapshot> getPositionStream({required String companyCode}) =>
       _curd.getPositionStream(companyCode);
+
+  Future<void> insertAdminSchedule({required EmployeeModel loginEmployee, required WorkModel model}) =>
+      _curd.insertAdminSchedule(loginEmployee, model);
+
+  Future<void> updateAdminSchedule({required EmployeeModel loginEmployee, required WorkModel model, required String docId}) =>
+      _curd.updateAdminSchedule(loginEmployee, model, docId);
 }

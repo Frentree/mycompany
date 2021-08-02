@@ -258,7 +258,6 @@ class _ApprovalExpenseResponseDetailViewState extends State<ApprovalExpenseRespo
                                           "approvalContent" : noteController.text,
                                           "isSend" : false
                                         });
-                                        print(widget.model.docIds!);
 
                                         await ExpenseFirebaseRepository().updatgeExpenseStatusData(
                                             loginUser: loginUser,
