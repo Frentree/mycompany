@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/approval/view/approval_join_company_view.dart';
 import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
@@ -40,6 +41,10 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
 
   list.add(SettingModel(munuName: "setting_menu_10".tr(), menuLavel: [0], menuIcon: Icon(Icons.home_work_outlined, color: workInsertColor, size: 30.0.h),
     widget: SettingCompanyInformationView(gradeLevel: employeeModel.level!,)
+  ));
+
+  list.add(SettingModel(munuName: "회사가입 신청", menuLavel: [8, 9], menuIcon: Icon(Icons.assignment_ind, color: workInsertColor, size: 30.0.h),
+      widget: ApprovalJoinCompanyView()
   ));
 
   if(getGradeChk(employeeModel: employeeModel, level: [8,9])){
