@@ -13,13 +13,13 @@ import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
-import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 import 'package:provider/provider.dart';
@@ -30,11 +30,11 @@ class ScheduleRegisrationView extends StatefulWidget {
 }
 
 class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
-
   PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
 
   // 전체 팀
   List<TeamModel> teamList = <TeamModel>[];
+
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
 
@@ -45,6 +45,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   List<String> workTeamChkList = [];
 
   late UserModel loginUser;
+
   // 반차(오후&연차)
   ValueNotifier<bool> _isHalfway = ValueNotifier<bool>(false);
 
@@ -52,7 +53,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   ValueNotifier<double> totalVacation = ValueNotifier<double>(0);
   ValueNotifier<double> useVacation = ValueNotifier<double>(0);
   ValueNotifier<bool> companyVacation = ValueNotifier<bool>(false);
-
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
@@ -85,7 +85,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   // 결재자
   late ValueNotifier<EmployeeModel> approvalUser = ValueNotifier<EmployeeModel>(defaultEmpUser);
-
 
   List workNames = [
     "internal_work".tr(),
@@ -131,7 +130,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     totalVacation.dispose();
     useVacation.dispose();
     companyVacation.dispose();
-
     _scrollController.dispose();
     titleController.dispose();
     noteController.dispose();
@@ -147,7 +145,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     EmployeeModel loginEmployee = Provider.of<EmployeeModel>(context);
 
     totalVacation.value = TotalVacation(loginEmployee.enteredDate!, companyVacation.value, 0);
-
 
     return WillPopScope(
       onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
@@ -170,14 +167,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                   ),
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff000000).withOpacity(0.16),
-                            blurRadius: 3.0.h,
-                            offset: Offset(0.0, 1.0)
-                        )
-                      ]
-                  ),
+                      boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -228,15 +218,17 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                           onTap: () async {
                             List<Map<String, String>>? colleaguesList;
 
-                            if(workColleagueChkList.length != 0){
-                              colleaguesList = [{loginUser.mail : loginUser.name}];
+                            if (workColleagueChkList.length != 0) {
+                              colleaguesList = [
+                                {loginUser.mail: loginUser.name}
+                              ];
                               workColleagueChkList.map((e) {
-                                Map<String,String> map = {e.mail.toString() : e.name.toString()};
+                                Map<String, String> map = {e.mail.toString(): e.name.toString()};
                                 colleaguesList!.add(map);
                               }).toList();
                             }
 
-                            if(loginEmployee.level!.contains(9) && works[workChkCount] != "요청"){
+                            if (loginEmployee.level!.contains(9) && works[workChkCount] != "요청") {
                               WorkModel workModel = WorkModel(
                                 allDay: _isAllDay.value,
                                 type: works[workChkCount],
@@ -265,40 +257,31 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                   isAllDay: _isAllDay.value,
                                   location: locationController.text,
                                   approvalUser: approvalUser.value,
-                                  loginUser: loginUser
-                              );
+                                  loginUser: loginUser);
 
-                              if(result){
+                              if (result) {
                                 _publicFunctionReprository.onBackPressed(context: context);
                               } else {
-                                loginDialogWidget(
-                                    context: context,
-                                    message: "결재자를 선택해주세요.",
-                                    actions: [
-                                      confirmElevatedButton(
-                                          topPadding: 81.0.h,
-                                          buttonName: "dialogConfirm".tr(),
-                                          buttonAction: () => Navigator.pop(context),
-                                          customWidth: 200.0,
-                                          customHeight: 40.0.h
-                                      ),
-                                    ]
-                                );
+                                loginDialogWidget(context: context, message: "결재자를 선택해주세요.", actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h),
+                                ]);
                               }
                             }
-                          }
-                      ),
+                          }),
                     ],
                   ),
                 ),
-                SizedBox(height: 10.0.h,),
+                SizedBox(
+                  height: 10.0.h,
+                ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(
-                      top: 21.0.h,
-                      left: 26.0.w,
-                      right: 21.0.w
-                    ),
+                    padding: EdgeInsets.only(top: 21.0.h, left: 26.0.w, right: 21.0.w),
                     child: Column(
                       children: [
                         SizedBox(
@@ -340,26 +323,22 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                             elevation: MaterialStateProperty.all(
                                               0.0,
                                             )),
-                                        child: Text(
-                                          workNames[index],
-                                          style: getNotoSantMedium(
-                                              fontSize: 13.0,
-                                              color: workChkCount != index ? calendarLineColor : whiteColor
-                                          )
-                                        ),
+                                        child: Text(workNames[index],
+                                            style: getNotoSantMedium(fontSize: 13.0, color: workChkCount != index ? calendarLineColor : whiteColor)),
                                         onPressed: () {
                                           // 결재자
                                           approvalUser.value = defaultEmpUser;
-                                          _isAllDay.value = false;
-                                          _isHalfway.value = false;
 
-                                          if(works[index] == "연차"){
+                                          if (works[index] == "연차") {
+                                            _isAllDay.value = true;
+                                            _isHalfway.value = false;
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 9, 0, 0);
                                             _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 18, 0, 0);
-                                          } else {
+                                          }
+                                          /* else {
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
                                             _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
-                                          }
+                                          }*/
                                           setState(() {
                                             workChkCount = index;
                                           });
@@ -367,8 +346,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                       ),
                                     ));
                               },
-                            )
-                        ),
+                            )),
                         Expanded(
                           child: SingleChildScrollView(
                             child: Container(
@@ -396,7 +374,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),

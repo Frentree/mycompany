@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,23 @@ class ProfileEditFunction {
     UserModel loginUserData = userInfoProvider.getUserData()!;
 
     Reference profileReference = firebaseStorage.ref().child("company/${loginUserData.companyCode}");
+
+    UploadTask uploadTask = profileReference.putFile(File(pickImagePath));
+
+    String imageUrl = await (await uploadTask).ref.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  Future<String?> uploadExpensedImageToStorage({
+    required BuildContext context,
+    required String pickImagePath, pickImage,
+    required UserModel loginUser
+  }) async {
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
+    Reference profileReference = firebaseStorage.ref().child("expenses/${loginUser.companyCode}/${loginUser.mail}/${DateTime.now()}");
 
     UploadTask uploadTask = profileReference.putFile(File(pickImagePath));
 

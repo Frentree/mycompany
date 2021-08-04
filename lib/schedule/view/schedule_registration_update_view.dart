@@ -369,7 +369,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                           onPressed: () {
                                             // 결재자
                                             approvalUser.value = defaultEmpUser;
-                                            _isAllDay.value = false;
+                                            /*_isAllDay.value = false;
                                             _isHalfway.value = false;
 
                                             if(workNames[index] == "annual".tr()){
@@ -378,7 +378,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                             } else {
                                               _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
                                               _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
-                                            }
+                                            }*/
                                             setState(() {
                                               workChkCount = index;
                                             });

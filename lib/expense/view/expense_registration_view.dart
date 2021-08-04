@@ -151,7 +151,7 @@ class _ExpenseRegistrationViewState extends State<ExpenseRegistrationView> {
                                     _isUpload.value = true;
                                     if (changeImagePath.value != null && changeImagePath.value != "") {
                                       await profileEditFunction
-                                          .uploadCompanyImageToStorage(context: context, pickImagePath: changeImagePath.value!)
+                                          .uploadExpensedImageToStorage(context: context, pickImagePath: changeImagePath.value!, loginUser: loginUser)
                                           .then((uploadUrl) {
                                         uploadImageUrl = uploadUrl;
                                       }).catchError((onError) async {

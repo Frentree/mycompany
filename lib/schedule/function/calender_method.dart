@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
@@ -8,9 +6,9 @@ import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
-import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/view/schedule_registration_update_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
@@ -18,7 +16,7 @@ import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
 import 'package:provider/provider.dart';
 
-class CalenderMethod{
+class CalenderMethod {
   final ScheduleFirebaseReository _repository = ScheduleFirebaseReository();
   ApprovalFirebaseRepository approvalRepository = ApprovalFirebaseRepository();
 
@@ -27,7 +25,6 @@ class CalenderMethod{
 
     int typeChoise = 1;
     var typeList = ["내근", "외근", "요청", "업무", "미팅", "연차", "반차", "휴가", "기타"];
-
 
     final List<Appointment> shedules = <Appointment>[];
     var schduleData = await _repository.getSchedules(companyCode: companyCode);
@@ -44,10 +41,10 @@ class CalenderMethod{
       String? location = model.location;
       String? notes = "[${type}] ${title}";
       Timestamp startTimes = model.startTime;
-     // late String? position = mailChkList.firstWhere((element) => element.mail == mail).position.toString();
-     // late String? team = mailChkList.firstWhere((element) => element.mail == mail).team.toString();
+      // late String? position = mailChkList.firstWhere((element) => element.mail == mail).position.toString();
+      // late String? team = mailChkList.firstWhere((element) => element.mail == mail).team.toString();
 
-      if(typeList.contains(type)){
+      if (typeList.contains(type)) {
         typeChoise = typeList.indexOf(type);
       } else {
         typeChoise = 6;
@@ -58,69 +55,70 @@ class CalenderMethod{
 
       var colleagues = model.colleagues!;
 
-      for(var data in colleagues) {
+      for (var data in colleagues) {
         Map<String, dynamic> map = data;
         String mail = map.keys.toString().replaceAll("(", "").replaceAll(")", "");
         String name = map.values.toString().replaceAll("(", "").replaceAll(")", "");
         EmployeeModel empModel = empList.where((element) => element.mail == mail).first;
 
-          if (mailChkList.contains(mail)) {
-            shedules.add(Appointment(
-              isAllDay: model.allDay,
-              startTime: startTime,
-              endTime: endTime,
-              subject: name,
-              color: _color[typeChoise],
-              notes: notes,
-              type: type,
-              profile: mail.toString(),
-              userName: name,
-              userMail: mail,
-              team: empModel.team,
-              title: title,
-              content: content,
-              colleagues: model.colleagues,
-              documentId: doc.id,
-              position: empModel.position,
-              location: location != null ? location : "",
-              organizerId: model.createUid,
-              organizerName: model.name,
-            ));
-          }
+        if (mailChkList.contains(mail)) {
+          shedules.add(Appointment(
+            isAllDay: model.allDay,
+            startTime: startTime,
+            endTime: endTime,
+            subject: name,
+            color: _color[typeChoise],
+            notes: notes,
+            type: type,
+            profile: mail.toString(),
+            userName: name,
+            userMail: mail,
+            team: empModel.team,
+            title: title,
+            content: content,
+            colleagues: model.colleagues,
+            documentId: doc.id,
+            position: empModel.position,
+            location: location != null ? location : "",
+            organizerId: model.createUid,
+            organizerName: model.name,
+          ));
+        }
       }
     }
 
     return shedules;
   }
 
-  void getScheduleDetail({required CalendarTapDetails details,required BuildContext context,required List<EmployeeModel> employeeList}){
-    dynamic appointment = details.appointments;
-    DateTime? date = details.date;
+  void getScheduleDetail({required CalendarTapDetails details, required BuildContext context, required List<EmployeeModel> employeeList}) {
+    List<dynamic> appointment = details.appointments!;
+    DateTime? dates = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
-    if(appointment != null){
-      showScheduleDetail(context: context, data: appointment, date: date!, employeeList: employeeList);
+
+    if (appointment.length != 0) {
+      showScheduleDetail(context: context, data: appointment, date: dates!, employeeList: employeeList);
     }
   }
 
-  Future<DateTime> dateSet(DateTime date, BuildContext context) async{
+  Future<DateTime> dateSet(DateTime date, BuildContext context) async {
     DateTime pickTime = await showDatesPicker(context: context, date: date);
     //CalendarElement element = details.targetElement; //  달력 요소
 
     return pickTime;
   }
 
-  Future<DateTime> dateTimeSet(DateTime date, BuildContext context) async{
+  Future<DateTime> dateTimeSet(DateTime date, BuildContext context) async {
     DateTime pickTime = await showDateTimePicker(context: context, date: date);
     //CalendarElement element = details.targetElement; //  달력 요소
 
     return pickTime;
   }
 
-  void mainNavigator(CalendarTapDetails details, BuildContext context, List<EmployeeModel> employeeList){
+  void mainNavigator(CalendarTapDetails details, BuildContext context, List<EmployeeModel> employeeList) {
     dynamic appointment = details.appointments;
     DateTime? date = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
-    if(appointment != null){
+    if (appointment != null) {
       showScheduleDetail(context: context, data: appointment, date: date!, employeeList: employeeList);
     }
   }
@@ -132,7 +130,7 @@ class CalenderMethod{
     List<QueryDocumentSnapshot> teamSnapshot = teamData.docs;
 
     for (var doc in teamSnapshot) {
-      teamList.add(TeamModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>), reference: doc.reference));
+      teamList.add(TeamModel.fromMap(mapData: (doc.data() as Map<dynamic, dynamic>), reference: doc.reference));
     }
 
     return teamList;
@@ -145,7 +143,7 @@ class CalenderMethod{
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
     for (var doc in empSnapshot) {
-      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>)));
+      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic, dynamic>)));
     }
 
     return empList;
@@ -159,13 +157,11 @@ class CalenderMethod{
     List<QueryDocumentSnapshot> empSnapshot = empData.docs;
 
     for (var doc in empSnapshot) {
-      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic,dynamic>), reference: doc.reference));
+      empList.add(EmployeeModel.fromMap(mapData: (doc.data() as Map<dynamic, dynamic>), reference: doc.reference));
     }
 
     return empList;
   }
-
-
 
   // 스케줄 입력
   Future<bool> insertSchedule({
@@ -184,16 +180,16 @@ class CalenderMethod{
     // 선택된 동료 리스트
     bool result = false;
 
-    if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
-      if(approvalUser == null || approvalUser.mail == ""){
+    if (workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근") {
+      if (approvalUser == null || approvalUser.mail == "") {
         return false;
       }
     }
 
-    if(workName == "연차" && allDay){
+    if (workName == "연차" && !allDay) {
       workName = "반차";
       title = "반차";
-    } else if(workName == "연차" && !allDay) {
+    } else if (workName == "연차" && allDay) {
       title = "연차";
     }
 
@@ -210,23 +206,30 @@ class CalenderMethod{
       createUid: workName == "요청" ? approvalUser!.mail : loginUser.mail,
     );
 
-    switch(workName) {
-      case "내근": case "미팅":
+    switch (workName) {
+      case "내근":
+      case "미팅":
         result = await _repository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: loginUser.companyCode!);
         break;
-      case "외근": case "요청": case "업무":
+      case "외근":
+      case "요청":
+      case "업무":
         result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
-        sendFcmWithTokens(loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName == "요청" ? "업무 요청" : workName} 결재를 요청 했습니다.", "");
+        sendFcmWithTokens(
+            loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName == "요청" ? "업무 요청" : workName} 결재를 요청 했습니다.", "");
         break;
-      case "재택": case "외출": case "연차": case "반차":
+      case "재택":
+      case "외출":
+      case "연차":
+      case "반차":
         result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
         sendFcmWithTokens(loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName} 결재를 요청 했습니다.", "");
         break;
     }
 
-    if(workModel.type == "기타" && approvalUser!.mail == ""){
+    if (workModel.type == "기타" && approvalUser!.mail == "") {
       result = await _repository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: loginUser.companyCode!);
-    }else if(workModel.type == "기타" && approvalUser!.mail != "") {
+    } else if (workModel.type == "기타" && approvalUser!.mail != "") {
       result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser);
     }
 
@@ -244,7 +247,7 @@ class CalenderMethod{
     String? location,
     required DateTime startTime,
     required DateTime endTime,
-    required List<Map<String,dynamic>> colleaguesList,
+    required List<Map<String, dynamic>> colleaguesList,
     required bool isAllDay,
     EmployeeModel? approvalUser,
     required UserModel loginUser,
@@ -252,8 +255,8 @@ class CalenderMethod{
     // 선택된 동료 리스트
     bool result = false;
 
-    if(workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근"){
-      if(approvalUser == null || approvalUser.mail == ""){
+    if (workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근") {
+      if (approvalUser == null || approvalUser.mail == "") {
         return false;
       }
     }
@@ -271,22 +274,28 @@ class CalenderMethod{
       createUid: workName == "요청" ? approvalUser!.mail : loginUser.mail,
     );
 
-    switch(workName) {
-      case "내근": case "미팅":
-      result = await _repository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
-      break;
-      case "외근": case "요청":
-      result = await _repository.updateWorkApprovalDocument(workModel: workModel, loginUser: loginUser, approvalUser: approvalUser!, documentId: documentId);
-      break;
-      case "재택": case "외출": case "연차":
-      result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
-      break;
+    switch (workName) {
+      case "내근":
+      case "미팅":
+        result = await _repository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
+        break;
+      case "외근":
+      case "요청":
+        result = await _repository.updateWorkApprovalDocument(
+            workModel: workModel, loginUser: loginUser, approvalUser: approvalUser!, documentId: documentId);
+        break;
+      case "재택":
+      case "외출":
+      case "연차":
+        result = await approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
+        break;
     }
 
-    if(workModel.type == "기타" && approvalUser!.mail == ""){
+    if (workModel.type == "기타" && approvalUser!.mail == "") {
       result = await _repository.updateWorkNotApprovalDocument(workModel: workModel, companyCode: companyCode, documentId: documentId);
-    }else if(workModel.type == "기타" && approvalUser!.mail != "") {
-      result = await _repository.updateWorkApprovalDocument(workModel: workModel, loginUser: loginUser, approvalUser: approvalUser, documentId: documentId);
+    } else if (workModel.type == "기타" && approvalUser!.mail != "") {
+      result = await _repository.updateWorkApprovalDocument(
+          workModel: workModel, loginUser: loginUser, approvalUser: approvalUser, documentId: documentId);
     }
 
     return result;
@@ -303,19 +312,21 @@ class CalenderMethod{
   }) async {
     int resultCode = 0; // 0 : 성공, 404 : 결재 중인 항목일때, 405 : 스케줄 삭제 오류
 
-    if(appointment.type == "반차" || appointment.type == "연차"){
+    if (appointment.type == "반차" || appointment.type == "연차") {
       return 400;
     }
 
     var approvalResult = await _repository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
 
-    if(approvalResult){
-      var scheduleResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          StreamProvider<EmployeeModel>(
-              create: (BuildContext context) => PublicFirebaseRepository().getEmployeeUser(loginUser: loginUser),
-              initialData: loginEmployee,
-              child:ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment))));
-      if(!scheduleResult){
+    if (approvalResult) {
+      var scheduleResult = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => StreamProvider<EmployeeModel>(
+                  create: (BuildContext context) => PublicFirebaseRepository().getEmployeeUser(loginUser: loginUser),
+                  initialData: loginEmployee,
+                  child: ScheduleRegisrationUpdateView(documentId: documentId, appointment: appointment))));
+      if (!scheduleResult) {
         resultCode = 407;
       }
     } else {
@@ -326,18 +337,14 @@ class CalenderMethod{
   }
 
   // 스케줄 삭제
-  Future<int> deleteSchedule({
-    required String companyCode,
-    required String documentId
-  }) async {
+  Future<int> deleteSchedule({required String companyCode, required String documentId}) async {
     int resultCode = 0; // 0 : 성공, 404 : 결재 중인 항목일때, 405 : 스케줄 삭제 오류
 
     var approvalResult = await _repository.getApprovalListSizeDocument(companyCode: companyCode, documentId: documentId);
 
-
-    if(approvalResult){
+    if (approvalResult) {
       var scheduleResult = await _repository.deleteScheduleDocument(companyCode: companyCode, documentId: documentId);
-      if(!scheduleResult){
+      if (!scheduleResult) {
         resultCode = 405;
       }
     } else {
@@ -348,47 +355,37 @@ class CalenderMethod{
   }
 
   // 초대된 동료에서 빠지기
-  Future<int> deleteColleagues({
-    required String companyCode,
-    required Appointment appointment
-  }) async {
+  Future<int> deleteColleagues({required String companyCode, required Appointment appointment}) async {
     int resultCode = 0;
     List<dynamic> colleagues = appointment.colleagues!;
 
-    List<Map<String,String>> colleaguesList = [];
+    List<Map<String, String>> colleaguesList = [];
 
-    for(var data in colleagues){
+    for (var data in colleagues) {
       String mail = data.keys.toString().replaceAll("(", "").replaceAll(")", "");
       String name = data.values.toString().replaceAll("(", "").replaceAll(")", "");
 
-      if(mail != appointment.profile) {
-        Map<String, String> map = {mail : name};
+      if (mail != appointment.profile) {
+        Map<String, String> map = {mail: name};
         colleaguesList.add(map);
       }
     }
 
     resultCode = await _repository.workColleaguesDelete(companyCode: companyCode, documentId: appointment.documentId.toString(), map: colleaguesList);
 
-
     return resultCode;
   }
 
-
   // 스케줄 댓글등록
-  Future<int> insertScheduleCommentMethod({required UserModel loginUser, CommentModel? model, required TextEditingController noticeComment, required Appointment mode}) async {
+  Future<int> insertScheduleCommentMethod(
+      {required UserModel loginUser, CommentModel? model, required TextEditingController noticeComment, required Appointment mode}) async {
     late CommentModel insertModel;
 
     var result = -1;
 
     if (model == null) {
-      insertModel = CommentModel(
-          level: 0,
-          comment: noticeComment.text,
-          createDate: Timestamp.now(),
-          uid: loginUser.mail,
-          uname: loginUser.name,
-          commentId: ""
-      );
+      insertModel =
+          CommentModel(level: 0, comment: noticeComment.text, createDate: Timestamp.now(), uid: loginUser.mail, uname: loginUser.name, commentId: "");
     } else {
       insertModel = CommentModel(
           level: 1,
@@ -399,16 +396,13 @@ class CalenderMethod{
           createDate: Timestamp.now(),
           uid: loginUser.mail,
           uname: loginUser.name,
-          commentId: model.reference!.id
-      );
+          commentId: model.reference!.id);
     }
 
-    result =  await _repository.insertScheduleComment(companyCode: loginUser.companyCode, scheduleId: mode.documentId, model: insertModel);
+    result = await _repository.insertScheduleComment(companyCode: loginUser.companyCode, scheduleId: mode.documentId, model: insertModel);
 
     noticeComment.text = "";
 
-
     return result;
-
   }
 }

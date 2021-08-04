@@ -566,7 +566,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "annual".tr(),
+                          "halfway".tr(),
                           style: getNotoSantRegular(
                               fontSize: 14.0,
                               color: !widget.isAllDay.value ? workInsertColor : hintTextColor
@@ -584,12 +584,11 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           onToggle: (values){
                             widget.isAllDay.value = values;
 
-                            if(!values){
-                              widget.isHalfway.value = false;
-
+                            if(values){
                               widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
                               widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
                             } else {
+                              widget.isHalfway.value = false;
                               widget.startDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
                               widget.endDateTime.value = DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 12);
                             }
@@ -599,7 +598,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                           width: 10.0.w,
                         ),
                         Text(
-                          "halfway".tr(),
+                          "annual".tr(),
                           style: getNotoSantRegular(
                               fontSize: 14.0,
                               color: widget.isAllDay.value ? workInsertColor : hintTextColor
@@ -637,7 +636,7 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                       padding: 0,
                       value: value,
                       onToggle: (values){
-                        if(!widget.isAllDay.value){
+                        if(widget.isAllDay.value){
                           return;
                         }
                         widget.isHalfway.value = values;
@@ -666,8 +665,6 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
             ),
           ],
         ),
-
-
         SizedBox(
           height: 11.0.h,
         )

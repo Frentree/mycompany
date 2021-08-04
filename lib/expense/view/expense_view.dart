@@ -808,6 +808,9 @@ class _ExpenseViewState extends State<ExpenseView> {
           onTap: () {
             setState(() {
               docIdList = List.from(expenseList.map((e) => e.docId).toList());
+              totalCost = 0;
+              expenseList.map((e) => totalCost += e.cost).toList();
+              print(totalCost);
             });
           },
         ),
