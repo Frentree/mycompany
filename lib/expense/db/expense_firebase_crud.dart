@@ -25,7 +25,7 @@ class ExpenseFirebaseCurd {
       int start = 0;
       int end = 0;
       print("count => " + count.toString());
-      for(int i = 0; i < count; i++){
+      for(int i = 0; i <= count; i++){
         start = (i*10);
         end = (i*10+9);
         if(end > docsId.length){
@@ -60,7 +60,6 @@ class ExpenseFirebaseCurd {
       int start = 0;
       int end = 0;
 
-      print("count => " + count.toString());
       for(int i = 0; i <= count; i++){
         start = (i*10);
         end = (i*10+9);
