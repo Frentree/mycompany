@@ -314,7 +314,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         ),
                       ),
                       SizedBox(
-                        width: 50.0.w,
+                        width: 30.0.w,
                       ),
                       Container(
                         width: 80.0.w,
@@ -426,7 +426,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         ),
                       ),
                       SizedBox(
-                        width: 50.0.w,
+                        width: 30.0.w,
                       ),
                       Container(
                         width: 80.0.w,
@@ -463,7 +463,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
+                            _format.getDateTimes(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
                             style: TextStyle(
                                 fontSize: 10.0.sp,
                                 fontWeight: FontWeight.w800,
@@ -471,7 +471,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                             ),
                           ),
                           Text(
-                              _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
+                              _format.getDateTimes(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
                               style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
                           ),
                         ],
@@ -586,7 +586,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         ),
                       ),
                       SizedBox(
-                        width: 50.0.w,
+                        width: 30.0.w,
                       ),
                       Container(
                         width: 80.0.w,
@@ -699,7 +699,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         ),
                       ),
                       SizedBox(
-                        width: 50.0.w,
+                        width: 30.0.w,
                       ),
                       Container(
                         width: 80.0.w,
@@ -735,7 +735,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
+                            _format.getDateTimes(date: _format.changeTimestampToDateTime(timestamp: app.requestStartDate)),
                             style: TextStyle(
                                 fontSize: 10.0.sp,
                                 fontWeight: FontWeight.w800,
@@ -743,7 +743,7 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                             ),
                           ),
                           Text(
-                              _format.getDate(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
+                              _format.getDateTimes(date: _format.changeTimestampToDateTime(timestamp: app.requestEndDate)),
                               style: getRobotoMedium(fontSize: 10.0, color: hintTextColor)
                           ),
                         ],

@@ -125,7 +125,8 @@ class _ApprovalResponseDetailViewState extends State<ApprovalResponseDetailView>
                         SizedBox(
                           height: 10.0.h,
                         ),
-                        getDetailsContents(title: "target_date", content: "${_format.getDate(date: widget.model.requestStartDate.toDate())} - ${_format.getDate(date: widget.model.requestEndDate.toDate())}", size: 70),
+                        getDetailsContents(title: "target_date", content: "${_format.getDateTimes(date: widget.model.requestStartDate.toDate())}"
+                            " - ${_format.getDateTimes(date: widget.model.requestEndDate.toDate())}", size: 70),
                         SizedBox(
                           height: 10.0.h,
                         ),

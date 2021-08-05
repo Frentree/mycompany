@@ -516,7 +516,13 @@ class _ScheduleViewState extends State<ScheduleView> {
                                 });
                               },
                               todayHighlightColor: checkColor,
-                              onTap: (CalendarTapDetails details) => CalenderMethod().getScheduleDetail(details: details, context: context, employeeList: employeeList),
+                              onTap: (CalendarTapDetails details) {
+                                setState(() {
+                                  _isColleague = false;
+                                });
+
+                                CalenderMethod().getScheduleDetail(details: details, context: context, loginUser: loginUser, employeeList: employeeList);
+                              }
                             ),
                           ),
                           _isDatePopup ? Container(

@@ -25,6 +25,10 @@ import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 import 'package:provider/provider.dart';
 
 class ScheduleRegisrationView extends StatefulWidget {
+  DateTime? choiseDate;
+
+  ScheduleRegisrationView({this.choiseDate});
+
   @override
   _ScheduleRegisrationViewState createState() => _ScheduleRegisrationViewState();
 }
@@ -74,10 +78,10 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   DateTime timeZone = DateTime.now();
 
-  late DateTime startTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
-  late DateTime endTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
-  late ValueNotifier<DateTime> _startDateTime = ValueNotifier<DateTime>(startTime);
-  late ValueNotifier<DateTime> _endDateTime = ValueNotifier<DateTime>(endTime);
+  late DateTime startTime;
+  late DateTime endTime;
+  late ValueNotifier<DateTime> _startDateTime;
+  late ValueNotifier<DateTime> _endDateTime;
 
   ValueNotifier<bool> _isAllDay = ValueNotifier<bool>(false);
 
@@ -113,6 +117,18 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   @override
   void initState() {
+    if(widget.choiseDate != null) {
+      startTime = DateTime(widget.choiseDate!.year, widget.choiseDate!.month, widget.choiseDate!.day, timeZone.hour + 1, 0, 0);
+      endTime = DateTime(widget.choiseDate!.year, widget.choiseDate!.month, widget.choiseDate!.day, timeZone.hour + 2, 0, 0);
+      _startDateTime = ValueNotifier<DateTime>(startTime);
+      _endDateTime = ValueNotifier<DateTime>(endTime);
+    } else {
+      startTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
+      endTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
+      _startDateTime = ValueNotifier<DateTime>(startTime);
+      _endDateTime = ValueNotifier<DateTime>(endTime);
+    }
+
     // TODO: implement initState
     _scrollController = ScrollController();
     super.initState();
@@ -332,8 +348,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                           if (works[index] == "연차") {
                                             _isAllDay.value = true;
                                             _isHalfway.value = false;
-                                            _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 9, 0, 0);
-                                            _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 18, 0, 0);
+                                            _startDateTime.value = DateTime(_startDateTime.value.year, _startDateTime.value.month, _startDateTime.value.day, 9, 0, 0);
+                                            _endDateTime.value = DateTime(_endDateTime.value.year, _endDateTime.value.month, _endDateTime.value.day, 18, 0, 0);
                                           }
                                           /* else {
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);

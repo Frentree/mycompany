@@ -90,13 +90,15 @@ class CalenderMethod {
     return shedules;
   }
 
-  void getScheduleDetail({required CalendarTapDetails details, required BuildContext context, required List<EmployeeModel> employeeList}) {
+  void getScheduleDetail({required CalendarTapDetails details, required BuildContext context, required UserModel loginUser, required List<EmployeeModel> employeeList}) {
     List<dynamic> appointment = details.appointments!;
     DateTime? dates = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
 
     if (appointment.length != 0) {
-      showScheduleDetail(context: context, data: appointment, date: dates!, employeeList: employeeList);
+      showScheduleDetail(context: context, data: appointment, date: dates!, loginUser: loginUser, employeeList: employeeList);
+    } else {
+      showNotScheduleDetail(context: context, date: dates!, loginUser: loginUser, employeeList: employeeList);
     }
   }
 
@@ -114,14 +116,14 @@ class CalenderMethod {
     return pickTime;
   }
 
-  void mainNavigator(CalendarTapDetails details, BuildContext context, List<EmployeeModel> employeeList) {
+/*  void mainNavigator(CalendarTapDetails details, BuildContext context, List<EmployeeModel> employeeList) {
     dynamic appointment = details.appointments;
     DateTime? date = details.date;
     //CalendarElement element = details.targetElement; //  달력 요소
     if (appointment != null) {
-      showScheduleDetail(context: context, data: appointment, date: date!, employeeList: employeeList);
+      showScheduleDetail(context: context, data: appointment, loginUser: loginUser, date: date!, employeeList: employeeList);
     }
-  }
+  }*/
 
   Future<List<TeamModel>> getTeam(String? companyCode) async {
     List<TeamModel> teamList = [];

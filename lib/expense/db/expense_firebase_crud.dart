@@ -12,48 +12,80 @@ class ExpenseFirebaseCurd {
 
   // 결재 상태 변화
   Future<void> updatgeExpenseStatusData(UserModel loginUser, String mail, List<dynamic> docsId, String status) async {
-    if(docsId.length > 10){
+    if(docsId.length < 10){
       await _store.collection(COMPANY)
           .doc(loginUser.companyCode)
           .collection(USER)
           .doc(mail)
           .collection(EXPENSE)
-          .where("docId", isEqualTo: docsId)
+          .where("docId", whereIn: docsId)
           .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
     } else {
       int count = (docsId.length / 10).toInt();
+      int start = 0;
+      int end = 0;
       print("count => " + count.toString());
       for(int i = 0; i < count; i++){
+        start = (i*10);
+        end = (i*10+9);
+        if(end > docsId.length){
+          end = (docsId.length);
+        }
+
         await _store.collection(COMPANY)
             .doc(loginUser.companyCode)
             .collection(USER)
             .doc(mail)
             .collection(EXPENSE)
-            .where("docId", isEqualTo: docsId.sublist((i*10), (i*10+9)))
+            .where("docId", whereIn: docsId.sublist(start, end))
             .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
       }
-    }
-
-    for(String id in docsId){
-      await _store.collection(COMPANY)
-          .doc(loginUser.companyCode)
-          .collection(USER)
-          .doc(mail)
-          .collection(EXPENSE)
-          .where("docId", isEqualTo: id)
-          .get().then((value) => value.docs.map((e) => e.reference.update({"status" : status})).toList());
     }
   }
 
   // 결재 경비 목록
   Future<List<ExpenseModel>> getExpenseData(UserModel loginUser, String mail, List<dynamic> docsId) async {
-    return await _store.collection(COMPANY)
+    List<ExpenseModel> expenseList = [];
+
+    if(docsId.length < 10){
+      return await _store.collection(COMPANY)
+          .doc(loginUser.companyCode)
+          .collection(USER)
+          .doc(mail)
+          .collection(EXPENSE)
+          .where("docId", whereIn: docsId)
+          .get().then((value) => value.docs.map((e) => ExpenseModel.fromMap(mapData: e.data(), reference: e.reference)).toList());
+    } else {
+      int count = (docsId.length / 10).toInt();
+      int start = 0;
+      int end = 0;
+
+      print("count => " + count.toString());
+      for(int i = 0; i <= count; i++){
+        start = (i*10);
+        end = (i*10+9);
+        if(end > docsId.length){
+          end = (docsId.length);
+        }
+        await _store.collection(COMPANY)
+            .doc(loginUser.companyCode)
+            .collection(USER)
+            .doc(mail)
+            .collection(EXPENSE)
+            .where("docId", whereIn: docsId.sublist(start, end))
+            .get().then((value) => value.docs.map((e) => expenseList.add(ExpenseModel.fromMap(mapData: e.data(), reference: e.reference))).toList());
+      }
+    }
+/*
+    await _store.collection(COMPANY)
         .doc(loginUser.companyCode)
         .collection(USER)
         .doc(mail)
         .collection(EXPENSE)
         .where("docId", whereIn: docsId)
-        .get().then((value) => value.docs.map((e) => ExpenseModel.fromMap(mapData: e.data(), reference: e.reference)).toList());
+        .get().then((value) => value.docs.map((e) => ExpenseModel.fromMap(mapData: e.data(), reference: e.reference)).toList());*/
+
+    return expenseList;
   }
 
   // 경비 추가
