@@ -7,7 +7,7 @@ class AttendanceFirestoreRepository {
   AttendanceFirestoreCrud _attendanceFirestoreCrud = AttendanceFirestoreCrud.settings();
 
   Future<void> createAttendanceData({required String companyId, required AttendanceModel attendanceModel}) => _attendanceFirestoreCrud.createAttendanceData(companyId: companyId, attendanceModel: attendanceModel);
-  Future<List<AttendanceModel>> readMyAttendanceData({required EmployeeModel employeeData, required Timestamp today}) => _attendanceFirestoreCrud.readMyAttendanceData(employeeData: employeeData, today: today);
+  Future<List<AttendanceModel>> readMyAttendanceData({required EmployeeModel employeeData}) => _attendanceFirestoreCrud.readMyAttendanceData(employeeData: employeeData);
   Future<List<AttendanceModel>> readTodayMyAttendanceData({required EmployeeModel employeeData, required Timestamp today}) => _attendanceFirestoreCrud.readTodayMyAttendanceData(employeeData: employeeData, today: today,);
   Future<List<AttendanceModel>> readEmployeeAttendanceData({required EmployeeModel employeeData, required Timestamp today}) => _attendanceFirestoreCrud.readEmployeeAttendanceData(employeeData: employeeData, today: today);
   Future<void> updateAttendanceData({required String companyId, required AttendanceModel attendanceModel}) => _attendanceFirestoreCrud.updateAttendanceData(companyId: companyId, attendanceModel: attendanceModel);

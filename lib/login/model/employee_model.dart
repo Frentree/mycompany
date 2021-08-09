@@ -19,6 +19,10 @@
 사용자검색 : userSearch
 상태 : status
 사번 : employeeNum
+
+status
+0 : 회사 다님
+1 : 회사 퇴사
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';

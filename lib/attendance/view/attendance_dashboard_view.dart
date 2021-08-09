@@ -102,7 +102,7 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
               ),
             ),
             FutureBuilder<List<AttendanceModel>>(
-                future: _attendanceFirestoreRepository.readMyAttendanceData(employeeData: loginEmployeeData!, today: dateFormatCustom.changeDateTimeToTimestamp(dateTime: today)),
+                future: _attendanceFirestoreRepository.readMyAttendanceData(employeeData: loginEmployeeData!),
                 builder: (context, snapshot) {
                   if(snapshot.hasData == false || snapshot.data == null){
                     return Container();
@@ -110,10 +110,12 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
 
                   snapshot.data!.sort((a, b) => b.createDate!.compareTo(a.createDate!));
 
+                  int todayAttendanceDataIndex = snapshot.data!.indexWhere((element) => element.createDate == dateFormatCustom.changeDateTimeToTimestamp(dateTime: today));
+
                   ValueNotifier<String> officeHours = ValueNotifier<String>("");
-                  ValueNotifier<int> attendanceStatus = ValueNotifier<int>(snapshot.data![0].status!);
-                  ValueNotifier<Timestamp?> attendanceAttendTime = ValueNotifier<Timestamp?>(snapshot.data![0].attendTime);
-                  ValueNotifier<Timestamp?> attendanceEndTime = ValueNotifier<Timestamp?>(snapshot.data![0].endTime);
+                  ValueNotifier<int> attendanceStatus = ValueNotifier<int>(snapshot.data![todayAttendanceDataIndex].status!);
+                  ValueNotifier<Timestamp?> attendanceAttendTime = ValueNotifier<Timestamp?>(snapshot.data![todayAttendanceDataIndex].attendTime);
+                  ValueNotifier<Timestamp?> attendanceEndTime = ValueNotifier<Timestamp?>(snapshot.data![todayAttendanceDataIndex].endTime);
                   ValueNotifier<DateTime> queryEndDate = ValueNotifier<DateTime>(DateTime(now.year, now.month, now.day + (6 - now.weekday)));
                   ValueNotifier<DateTime> queryStartDate = ValueNotifier<DateTime>(queryEndDate.value.subtract(Duration(days: 6)));
                   ValueNotifier<List<AttendanceModel>> weekAttendanceData = ValueNotifier<List<AttendanceModel>>(_totalOfficeHoursCalculationFunction.getWeekAttendanceData(attendanceDataList: snapshot.data!, startDate: queryStartDate.value, endDate: queryEndDate.value));
@@ -174,11 +176,11 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                                         attendanceStatus.value = changedWorkType;
                                         attendanceEndTime.value = null;
 
-                                        snapshot.data![0].status = changedWorkType;
-                                        snapshot.data![0].endTime = null;
-                                        snapshot.data![0].autoOffWork = 0;
+                                        snapshot.data![todayAttendanceDataIndex].status = changedWorkType;
+                                        snapshot.data![todayAttendanceDataIndex].endTime = null;
+                                        snapshot.data![todayAttendanceDataIndex].autoOffWork = 0;
 
-                                        _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![0]);
+                                        _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![todayAttendanceDataIndex]);
                                         if(timer == null || timer!.isActive == false){
                                           timer = _totalOfficeHoursCalculationFunction.todayOfficeHoursCalculation(officeHours: officeHours, attendTime: attendanceAttendTime, endTime: attendanceEndTime);
                                         }
@@ -242,12 +244,12 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                                               attendanceStatus.value = changedWorkType;
                                               attendanceAttendTime.value = Timestamp.now();
 
-                                              snapshot.data![0].status = changedWorkType;
-                                              snapshot.data![0].attendTime = Timestamp.now();
-                                              snapshot.data![0].certificationDevice = 1;
-                                              snapshot.data![0].manualOnWorkReason = 0;
+                                              snapshot.data![todayAttendanceDataIndex].status = changedWorkType;
+                                              snapshot.data![todayAttendanceDataIndex].attendTime = Timestamp.now();
+                                              snapshot.data![todayAttendanceDataIndex].certificationDevice = 1;
+                                              snapshot.data![todayAttendanceDataIndex].manualOnWorkReason = 0;
 
-                                              _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![0]);
+                                              _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![todayAttendanceDataIndex]);
 
                                               timer = _totalOfficeHoursCalculationFunction.todayOfficeHoursCalculation(officeHours: officeHours, attendTime: attendanceAttendTime, endTime: attendanceEndTime);
                                             }
@@ -286,11 +288,11 @@ class AttendanceDashboardViewState extends State<AttendanceDashboardView> {
                                                 attendanceStatus.value = 6;
                                                 attendanceEndTime.value = Timestamp.now();
 
-                                                snapshot.data![0].status = 6;
-                                                snapshot.data![0].endTime = Timestamp.now();
-                                                snapshot.data![0].autoOffWork = 1;
+                                                snapshot.data![todayAttendanceDataIndex].status = 6;
+                                                snapshot.data![todayAttendanceDataIndex].endTime = Timestamp.now();
+                                                snapshot.data![todayAttendanceDataIndex].autoOffWork = 1;
 
-                                                _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![0]);
+                                                _attendanceFirestoreRepository.updateAttendanceData(companyId: loginEmployeeData.companyCode, attendanceModel: snapshot.data![todayAttendanceDataIndex]);
 
                                                 if(queryEndDate.value == DateTime(now.year, now.month, now.day + (6 - now.weekday))){
                                                   weekTotalOfficeHours.value = _totalOfficeHoursCalculationFunction.weekTotalOfficeHoursCalculation(attendanceDataList: weekAttendanceData.value);

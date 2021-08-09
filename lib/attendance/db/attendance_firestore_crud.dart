@@ -16,7 +16,7 @@ class AttendanceFirestoreCrud {
         .add(attendanceModel.toJson());
   }
 
-  Future<List<AttendanceModel>> readMyAttendanceData({required EmployeeModel employeeData, required Timestamp today}) async {
+  Future<List<AttendanceModel>> readMyAttendanceData({required EmployeeModel employeeData}) async {
     List<AttendanceModel> _attendanceData = [];
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firebaseFirestore
         .collection(COMPANY)

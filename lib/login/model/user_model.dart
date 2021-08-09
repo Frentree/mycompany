@@ -17,6 +17,7 @@ state
 1 : 승인 대기
 2 : 승인 완료
 3 : 승인 반려
+4 : 회사 퇴사
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';

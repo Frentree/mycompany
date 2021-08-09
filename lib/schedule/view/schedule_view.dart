@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:ui';
-
 import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -186,6 +184,10 @@ class _ScheduleViewState extends State<ScheduleView> {
                         children: docs.map((doc) {
                           AttendanceModel model = AttendanceModel.fromMap(mapData: (doc.data() as dynamic));
                           EmployeeModel employeeModel = employeeList.where((element) => element.mail == model.mail).first;
+
+                          if(employeeModel.status == 1){
+                            return SizedBox();
+                          }
 
                           return Container(
                             height: 67.0.h,

@@ -233,6 +233,13 @@ class _SettingColleagueViewState extends State<SettingColleagueView> {
                                                   style: getNotoSantMedium(fontSize: 12.0, color: textColor),
                                                 ),
                                               ),
+                                              PopupMenuItem(
+                                                value: 2,
+                                                child: Text(
+                                                  "퇴사 처리",
+                                                  style: getNotoSantMedium(fontSize: 12.0, color: textColor),
+                                                ),
+                                              ),
                                             ],
                                             onSelected: (value) async {
                                               if(value== 1){

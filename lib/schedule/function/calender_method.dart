@@ -79,7 +79,7 @@ class CalenderMethod{
               content: content,
               colleagues: model.colleagues,
               documentId: doc.id,
-              position: empModel.position,
+              position: empModel.status == 0 ? empModel.position  : "퇴사자",
               location: location != null ? location : "",
               organizerId: model.createUid,
               organizerName: model.name,
