@@ -24,12 +24,11 @@ class ExpenseFirebaseCurd {
       int count = (docsId.length / 10).toInt();
       int start = 0;
       int end = 0;
-      print("count => " + count.toString());
       for(int i = 0; i <= count; i++){
         start = (i*10);
-        end = (i*10+9);
+        end = (i*10+10);
         if(end > docsId.length){
-          end = (docsId.length);
+          end = docsId.length + 1;
         }
 
         await _store.collection(COMPANY)
@@ -62,7 +61,7 @@ class ExpenseFirebaseCurd {
 
       for(int i = 0; i <= count; i++){
         start = (i*10);
-        end = (i*10+9);
+        end = (i*10+10);
         if(end > docsId.length){
           end = (docsId.length);
         }
