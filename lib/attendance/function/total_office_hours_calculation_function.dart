@@ -112,7 +112,12 @@ class TotalOfficeHoursCalculationFunction {
     attendanceDataList.forEach((element) {
       DateTime dataCreateDate = dateFormatCustom.changeTimestampToDateTime(timestamp: element.createDate!);
       if((dataCreateDate.compareTo(startDate) >= 0) && (dataCreateDate.compareTo(endDate) <= 0)){
-        weekAttendanceData[element.createDate!.toDate().weekday] = element;
+        if(element.createDate!.toDate().weekday == 7){
+          weekAttendanceData[0] = element;
+        }
+        else{
+          weekAttendanceData[element.createDate!.toDate().weekday] = element;
+        }
       }
     });
 
@@ -137,7 +142,12 @@ class TotalOfficeHoursCalculationFunction {
       if(employeeWeekAttendanceData.keys.contains(element.mail)){
         DateTime dataCreateDate = dateFormatCustom.changeTimestampToDateTime(timestamp: element.createDate!);
         if((dataCreateDate.compareTo(startDate) >= 0) && (dataCreateDate.compareTo(endDate) <= 0)){
-          employeeWeekAttendanceData[element.mail]![element.createDate!.toDate().weekday] = element;
+          if(element.createDate!.toDate().weekday == 7){
+            employeeWeekAttendanceData[element.mail]![0] = element;
+          }
+          else{
+            employeeWeekAttendanceData[element.mail]![element.createDate!.toDate().weekday] = element;
+          }
         }
       }
     });
