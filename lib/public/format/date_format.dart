@@ -158,6 +158,11 @@ class DateFormatCustom {
     return date.year.toString() + "." +  twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + changeWeekDay(date: date) +")";
   }
 
+  // ex) 10.15(수) 00:11
+  String getDateTimes({required DateTime date}) {
+    return "${twoDigitsFormat(date.month)}.${twoDigitsFormat(date.day)}(${changeWeekDay(date: date)}) ${twoDigitsFormat(date.hour)} : ${twoDigitsFormat(date.minute)}";
+  }
+
   String getMonthAndDay({required DateTime date}) {
 
     return twoDigitsFormat(date.month) + "." + twoDigitsFormat(date.day) + "(" + changeWeekDay(date: date) +")";

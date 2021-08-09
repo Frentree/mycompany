@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/widget/approval_detail_widget.dart';
+import 'package:mycompany/expense/db/expense_firestore_repository.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/login/widget/login_button_widget.dart';
 import 'package:mycompany/login/widget/login_dialog_widget.dart';
@@ -17,17 +18,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ApprovalRequestDetailView extends StatefulWidget {
+class ApprovalExpenseRequestDetailView extends StatefulWidget {
 
   final ApprovalModel model;
 
-  ApprovalRequestDetailView({required this.model,});
+  ApprovalExpenseRequestDetailView({required this.model,});
 
   @override
-  _ApprovalRequestDetailViewState createState() => _ApprovalRequestDetailViewState();
+  _ApprovalExpenseRequestDetailViewState createState() => _ApprovalExpenseRequestDetailViewState();
 }
 
-class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
+class _ApprovalExpenseRequestDetailViewState extends State<ApprovalExpenseRequestDetailView> {
   DateFormatCustom _format = DateFormatCustom();
 
   late UserModel loginUser;
@@ -113,7 +114,7 @@ class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      getDetailsScrollContents(title: "content", content: widget.model.requestContent, size: 150),
+                      getDetailsScrollContents(title: "total_cost", content: widget.model.totalCost.toString() + " 원", size: 70),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -121,12 +122,7 @@ class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      getDetailsContents(title: "target_date", content: "${_format.getDateTimes(date: widget.model.requestStartDate.toDate())} - "
-                          "${_format.getDateTimes(date: widget.model.requestEndDate.toDate())}", size: 70),
-                      SizedBox(
-                        height: 10.0.h,
-                      ),
-                      getDetailsContents(title: "location", content: widget.model.location, size: 70),
+                      getExpenseItem(title: "expense_item",context: context, size: 70, model: widget.model, loginUser: loginUser),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -138,7 +134,7 @@ class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      getDetailsContents(title: "approval_request_date", content: "${_format.getDate(date: widget.model.createDate!.toDate())}", size: 70),
+                      getDetailsContents(title: "expense_date", content: "${_format.getDate(date: widget.model.requestStartDate.toDate())}", size: 70),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -190,7 +186,14 @@ class _ApprovalRequestDetailViewState extends State<ApprovalRequestDetailView> {
                                         topPadding: 81.0.h,
                                         buttonName: "dialogConfirm".tr(),
                                         buttonAction: () async {
-                                          Navigator.pop(context, await ApprovalFirebaseRepository().requestApprovalCencel(model: widget.model, companyCode: loginUser.companyCode.toString()));
+                                          await ExpenseFirebaseRepository().updatgeExpenseStatusData(
+                                              loginUser: loginUser,
+                                              mail: widget.model.userMail,
+                                              docsId: widget.model.docIds!,
+                                              status: "미"
+                                          );
+                                          widget.model.reference!.delete();
+                                          Navigator.pop(context, true);
                                         },
                                         customWidth: 80.0,
                                         customHeight: 40.0

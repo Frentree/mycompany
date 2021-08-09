@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mycompany/inquiry/view/inquiry_view.dart';
 import 'package:mycompany/login/model/employee_model.dart';
+import 'package:mycompany/login/model/user_model.dart';
 
 import 'package:mycompany/public/format/date_format.dart';
+import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/view/schedule_detail_view.dart';
+import 'package:mycompany/schedule/view/schedule_registration_view.dart';
 import 'package:mycompany/schedule/view/schedule_view.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_picker_widget.dart';
 import 'package:mycompany/schedule/widget/date_time_picker/date_time_picker_i18n.dart';
@@ -23,7 +28,7 @@ import 'package:easy_localization/easy_localization.dart';
 
   DateFormatCustom _format = DateFormatCustom();
 
-  Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date, required List<EmployeeModel> employeeList}) {
+  Widget? showScheduleDetail({required BuildContext context,required List<dynamic> data,required DateTime date, required UserModel loginUser, required List<EmployeeModel> employeeList}) {
     data.sort((a,b) => a.startTime.compareTo(b.startTime));
 
     List<Appointment> allDayAppointment = [];
@@ -98,7 +103,46 @@ import 'package:easy_localization/easy_localization.dart';
                         ),
                         Column(
                           children: getCalendarPerseonalDetail(context: context, appointment: pmAppointment, timeZone: 2, employeeList: employeeList),
-                        )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0.w),
+                          child: ElevatedButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_circle_outline,
+                                  color: workInsertColor,
+                                ),
+                                SizedBox(
+                                  width: 5.0.w,
+                                ),
+                                Text(
+                                  "일정 추가하기",
+                                  style: TextStyle(
+                                    fontSize: 15.0.sp,
+                                    fontWeight: fontWeight["Medium"],
+                                    color: textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: blackColor.withOpacity(0.01),
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(13.0.r),
+                              ),
+                              shadowColor: blackColor.withOpacity(0.3),
+                            ),
+                            onPressed: (){
+                              PublicFunctionRepository().mainNavigator(
+                                  context: context, navigator: ScheduleRegisrationView(choiseDate: date,), isMove: false, loginUser: loginUser, employeeModel: employeeList[0]
+                              );
+                            },
+                          ),
+                        ),
                       ]
                     ),
                   ),
@@ -110,6 +154,102 @@ import 'package:easy_localization/easy_localization.dart';
       },
     );
   }
+
+Widget? showNotScheduleDetail({required BuildContext context, required DateTime date, required UserModel loginUser, required List<EmployeeModel> employeeList}) {
+
+
+/*    amAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));
+    pmAppointment.sort((a, b) => a.startTime.compareTo(b.startTime));*/
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        titlePadding: EdgeInsets.all(0),
+        title: Container(),
+        contentPadding: EdgeInsets.all(0),
+        //contentPadding: EdgeInsets.only(top: 21.0.h, bottom: 5.0.h),
+        content: Container(
+          width: 313.0.w,
+          height: 120.0.h,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 17.0.w, top: 21.0.h, bottom: 17.0.h, right: 23.1.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _format.dateFormat(date: date),
+                      style: getNotoSantBold(fontSize: 14.0, color: textColor),
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        color: whiteColor,
+                        width: 40.0.w,
+                        height: 30.0.h,
+                        alignment: Alignment.centerRight,
+                        child: SvgPicture.asset(
+                          'assets/icons/close.svg',
+                          width: 13.17.w,
+                          height: 13.17.h,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.0.w),
+                child: ElevatedButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_circle_outline,
+                        color: workInsertColor,
+                      ),
+                      SizedBox(
+                        width: 5.0.w,
+                      ),
+                      Text(
+                        "일정 추가하기",
+                        style: TextStyle(
+                          fontSize: 15.0.sp,
+                          fontWeight: fontWeight["Medium"],
+                          color: textColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: blackColor.withOpacity(0.01),
+                    elevation: 10.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(13.0.r),
+                    ),
+                    shadowColor: blackColor.withOpacity(0.3),
+                  ),
+                  onPressed: (){
+                    PublicFunctionRepository().mainNavigator(
+                        context: context, navigator: ScheduleRegisrationView(choiseDate: date,), isMove: false, loginUser: loginUser, employeeModel: employeeList[0]
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 
 
   getCalendarPerseonalDetail({required BuildContext context, required List<Appointment> appointment,required int timeZone, required List<EmployeeModel> employeeList}) {

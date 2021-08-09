@@ -7,6 +7,7 @@ import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/approval/model/approval_model.dart';
 import 'package:mycompany/attendance/widget/attendance_bottom_sheet.dart';
 import 'package:mycompany/attendance/widget/attendance_button_widget.dart';
+import 'package:mycompany/expense/db/expense_firestore_repository.dart';
 import 'package:mycompany/expense/model/expense_model.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/public/format/date_format.dart';
@@ -81,8 +82,9 @@ Future<dynamic> applyExpenseBottomSheet({required BuildContext context}) {
 }
 
 
-Future<dynamic> selectExpenseApprovalBottomSheet({required BuildContext context, required List<EmployeeModel> approvalList, required UserModel loginUser, required List<String> docId, required int totalPrice}) {
+Future<dynamic> selectExpenseApprovalBottomSheet({required BuildContext context, required List<EmployeeModel> approvalList, required UserModel loginUser, required List<String> docId, required int totalCost}) {
   ApprovalFirebaseRepository approvalFirebaseRepository = ApprovalFirebaseRepository();
+  ExpenseFirebaseRepository expenseFirebaseRepository = ExpenseFirebaseRepository();
   ValueNotifier<EmployeeModel?> selectApproval = ValueNotifier<EmployeeModel?>(null);
 
   return showModalBottomSheet(
@@ -254,19 +256,26 @@ Future<dynamic> selectExpenseApprovalBottomSheet({required BuildContext context,
                               buttonAction: value == null ? null : () async {
                                 ApprovalModel model = ApprovalModel(
                                   allDay: false,
-                                  status: "대기",
+                                  status: "요청",
                                   location: "",
                                   approvalUser: selectApproval.value!.name,
                                   approvalMail: selectApproval.value!.mail,
                                   approvalType: "경비",
-                                  title: "[경비] ",
+                                  title: DateTime.now().month.toString() + "월 경비 신청",
                                   requestContent: "",
+                                  totalCost: totalCost,
                                   requestStartDate: Timestamp.now(),
                                   requestEndDate: Timestamp.now(),
                                   user: loginUser.name,
                                   userMail: loginUser.mail,
                                   docIds: docId
                                 );
+
+                                await approvalFirebaseRepository.createApprovalData(companyId: loginUser.companyCode!, approvalModelModel: model);
+                                await expenseFirebaseRepository.updatgeExpenseStatusData(loginUser: loginUser, mail: model.userMail, docsId: docId, status: "결");
+                                sendFcmWithTokens(loginUser, [selectApproval.value!.mail], "[결재 요청]", "[${loginUser.name}]님이 경비 결재를 요청 했습니다.", "");
+
+                                Navigator.pop(context);
                               }
                           );
                         }

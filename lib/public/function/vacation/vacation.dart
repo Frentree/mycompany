@@ -117,16 +117,20 @@ Future<double> UsedVacation(
       result = await  _repository.usedVacationWithDuration(
           companyCode,
           mail,
-          DateTime(_present.year, _enterDate.month, _enterDate.day),
-          DateTime(_present.year, _present.month, _present.day));
+          //DateTime(_present.year, _enterDate.month, _enterDate.day),
+          //DateTime(_present.year, _present.month, _present.day));
+          DateTime(_present.year, 1,1),
+          DateTime(_present.year, 12, 31));
       print(
           '${_present.year}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
     } else {
       result = await  _repository.usedVacationWithDuration(
           companyCode,
           mail,
-          DateTime(_present.year - 1, _enterDate.month, _enterDate.day),
-          DateTime(_present.year, _present.month, _present.day));
+          DateTime(_present.year, 1, 1),
+          //DateTime(_present.year - 1, _enterDate.month, _enterDate.day),
+          //DateTime(_present.year, _present.month, _present.day));
+          DateTime(_present.year, 12, 31));
       print(
           '${_present.year - 1}.${_enterDate.month}.${_enterDate.day} ~ ${_present.year}.${_present.month}.${_present.day}');
     }

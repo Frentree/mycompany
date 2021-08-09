@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mycompany/approval/model/approval_model.dart';
+import 'package:mycompany/expense/widget/expense_dialog_widget.dart';
+import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/text_style.dart';
 
@@ -206,3 +209,60 @@ Widget getDetailsScrollContents({
     ),
   );
 }
+
+
+
+Widget getExpenseItem({
+  required BuildContext context,
+  required String title,
+  required ApprovalModel model,
+  required double size,
+  required UserModel loginUser
+}){
+  return InkWell(
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0.w),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color(0xff9C9C9C).withOpacity(0.3),
+              offset: Offset(1.0, 15.0),
+              blurRadius: 20.0,
+            ),
+          ],
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(12.0.r),
+        ),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.0.w,
+            vertical: 10.0.h,
+          ),
+          decoration: BoxDecoration(
+            color: Color(0xff2093F0),
+            borderRadius: BorderRadius.circular(12.0.r),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title.tr(),
+                style: getRobotoBold(fontSize: 13, color: whiteColor),
+              ),
+              Icon(
+                Icons.zoom_in_sharp,
+                color: whiteColor,
+              )
+            ],
+          ),
+        ),
+      ),
+    ),
+    onTap: () {
+      showExpenseDataDetail(context: context, model: model, loginUser: loginUser);
+    },
+  );
+}
+

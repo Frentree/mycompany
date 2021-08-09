@@ -13,25 +13,32 @@ import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/function/vacation/vacation.dart';
+import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
+import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
-import 'package:mycompany/public/model/team_model.dart';
+import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
+import 'package:provider/provider.dart';
 
 class ScheduleRegisrationView extends StatefulWidget {
+  DateTime? choiseDate;
+
+  ScheduleRegisrationView({this.choiseDate});
+
   @override
   _ScheduleRegisrationViewState createState() => _ScheduleRegisrationViewState();
 }
 
 class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
-
   PublicFunctionRepository _publicFunctionReprository = PublicFunctionRepository();
 
   // 전체 팀
   List<TeamModel> teamList = <TeamModel>[];
+
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
 
@@ -42,7 +49,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   List<String> workTeamChkList = [];
 
   late UserModel loginUser;
-  late EmployeeModel loginEmployee;
 
   // 반차(오후&연차)
   ValueNotifier<bool> _isHalfway = ValueNotifier<bool>(false);
@@ -52,7 +58,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
   ValueNotifier<double> useVacation = ValueNotifier<double>(0);
   ValueNotifier<bool> companyVacation = ValueNotifier<bool>(false);
 
-
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
     List<EmployeeModel> employee = await ScheduleFunctionReprository().getEmployee(loginUser: loginUser);
@@ -60,13 +65,9 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
     companyVacation.value = company.vacation!;
 
-    totalVacation.value = TotalVacation(loginEmployee.enteredDate!, companyVacation.value, loginEmployee.vacation!.toDouble());
-    useVacation.value = await UsedVacation(loginUser.companyCode, loginUser.mail, loginEmployee.enteredDate!, companyVacation.value);
-
     setState(() {
       teamList = team;
       employeeList = employee;
-
     });
   }
 
@@ -77,10 +78,10 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   DateTime timeZone = DateTime.now();
 
-  late DateTime startTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
-  late DateTime endTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
-  late ValueNotifier<DateTime> _startDateTime = ValueNotifier<DateTime>(startTime);
-  late ValueNotifier<DateTime> _endDateTime = ValueNotifier<DateTime>(endTime);
+  late DateTime startTime;
+  late DateTime endTime;
+  late ValueNotifier<DateTime> _startDateTime;
+  late ValueNotifier<DateTime> _endDateTime;
 
   ValueNotifier<bool> _isAllDay = ValueNotifier<bool>(false);
 
@@ -88,7 +89,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   // 결재자
   late ValueNotifier<EmployeeModel> approvalUser = ValueNotifier<EmployeeModel>(defaultEmpUser);
-
 
   List workNames = [
     "internal_work".tr(),
@@ -117,11 +117,22 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   @override
   void initState() {
+    if(widget.choiseDate != null) {
+      startTime = DateTime(widget.choiseDate!.year, widget.choiseDate!.month, widget.choiseDate!.day, timeZone.hour + 1, 0, 0);
+      endTime = DateTime(widget.choiseDate!.year, widget.choiseDate!.month, widget.choiseDate!.day, timeZone.hour + 2, 0, 0);
+      _startDateTime = ValueNotifier<DateTime>(startTime);
+      _endDateTime = ValueNotifier<DateTime>(endTime);
+    } else {
+      startTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
+      endTime = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
+      _startDateTime = ValueNotifier<DateTime>(startTime);
+      _endDateTime = ValueNotifier<DateTime>(endTime);
+    }
+
     // TODO: implement initState
     _scrollController = ScrollController();
     super.initState();
     loginUser = PublicFunction().getUserProviderSetting(context);
-    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
     _getPersonalDataSource();
 
     setState(() {});
@@ -135,7 +146,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
     totalVacation.dispose();
     useVacation.dispose();
     companyVacation.dispose();
-
     _scrollController.dispose();
     titleController.dispose();
     noteController.dispose();
@@ -148,6 +158,10 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
 
   @override
   Widget build(BuildContext context) {
+    EmployeeModel loginEmployee = Provider.of<EmployeeModel>(context);
+
+    totalVacation.value = TotalVacation(loginEmployee.enteredDate!, companyVacation.value, 0);
+
     return WillPopScope(
       onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
       child: Scaffold(
@@ -169,14 +183,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                   ),
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff000000).withOpacity(0.16),
-                            blurRadius: 3.0.h,
-                            offset: Offset(0.0, 1.0)
-                        )
-                      ]
-                  ),
+                      boxShadow: [BoxShadow(color: Color(0xff000000).withOpacity(0.16), blurRadius: 3.0.h, offset: Offset(0.0, 1.0))]),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -225,50 +232,72 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             ),
                           ),
                           onTap: () async {
-                            var result = await CalenderMethod().insertSchedule(
-                                allDay: _isAllDay.value,
-                                workName: works[workChkCount],
-                                title: titleController.text,
-                                content: noteController.text,
-                                startTime: _startDateTime.value,
-                                endTime: _endDateTime.value,
-                                workColleagueChkList: workColleagueChkList,
-                                isAllDay: _isAllDay.value,
-                                location: locationController.text,
-                                approvalUser: approvalUser.value,
-                                loginUser: loginUser
-                            );
+                            List<Map<String, String>>? colleaguesList;
 
-                            if(result){
+                            if (workColleagueChkList.length != 0) {
+                              colleaguesList = [
+                                {loginUser.mail: loginUser.name}
+                              ];
+                              workColleagueChkList.map((e) {
+                                Map<String, String> map = {e.mail.toString(): e.name.toString()};
+                                colleaguesList!.add(map);
+                              }).toList();
+                            }
+
+                            if (loginEmployee.level!.contains(9) && works[workChkCount] != "요청") {
+                              WorkModel workModel = WorkModel(
+                                allDay: _isAllDay.value,
+                                type: works[workChkCount],
+                                title: titleController.text,
+                                contents: noteController.text,
+                                location: locationController.text,
+                                startTime: Timestamp.fromDate(_startDateTime.value),
+                                endTime: Timestamp.fromDate(_startDateTime.value),
+                                colleagues: colleaguesList,
+                                name: loginEmployee.name,
+                                createUid: loginEmployee.mail,
+                              );
+
+                              ScheduleFirebaseReository().insertAdminSchedule(loginEmployee: loginEmployee, model: workModel);
+
                               _publicFunctionReprository.onBackPressed(context: context);
                             } else {
-                              loginDialogWidget(
-                                  context: context,
-                                  message: "결재자를 선택해주세요.",
-                                  actions: [
-                                    confirmElevatedButton(
-                                        topPadding: 81.0.h,
-                                        buttonName: "dialogConfirm".tr(),
-                                        buttonAction: () => Navigator.pop(context),
-                                        customWidth: 200.0,
-                                        customHeight: 40.0.h
-                                    ),
-                                  ]
-                              );
+                              var result = await CalenderMethod().insertSchedule(
+                                  allDay: _isAllDay.value,
+                                  workName: works[workChkCount],
+                                  title: titleController.text,
+                                  content: noteController.text,
+                                  startTime: _startDateTime.value,
+                                  endTime: _endDateTime.value,
+                                  colleaguesList: colleaguesList,
+                                  isAllDay: _isAllDay.value,
+                                  location: locationController.text,
+                                  approvalUser: approvalUser.value,
+                                  loginUser: loginUser);
+
+                              if (result) {
+                                _publicFunctionReprository.onBackPressed(context: context);
+                              } else {
+                                loginDialogWidget(context: context, message: "결재자를 선택해주세요.", actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h),
+                                ]);
+                              }
                             }
-                          }
-                      ),
+                          }),
                     ],
                   ),
                 ),
-                SizedBox(height: 10.0.h,),
+                SizedBox(
+                  height: 10.0.h,
+                ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(
-                      top: 21.0.h,
-                      left: 26.0.w,
-                      right: 21.0.w
-                    ),
+                    padding: EdgeInsets.only(top: 21.0.h, left: 26.0.w, right: 21.0.w),
                     child: Column(
                       children: [
                         SizedBox(
@@ -310,26 +339,22 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                             elevation: MaterialStateProperty.all(
                                               0.0,
                                             )),
-                                        child: Text(
-                                          workNames[index],
-                                          style: getNotoSantMedium(
-                                              fontSize: 13.0,
-                                              color: workChkCount != index ? calendarLineColor : whiteColor
-                                          )
-                                        ),
+                                        child: Text(workNames[index],
+                                            style: getNotoSantMedium(fontSize: 13.0, color: workChkCount != index ? calendarLineColor : whiteColor)),
                                         onPressed: () {
                                           // 결재자
                                           approvalUser.value = defaultEmpUser;
-                                          _isAllDay.value = false;
-                                          _isHalfway.value = false;
 
-                                          if(works[index] == "연차"){
-                                            _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 9, 0, 0);
-                                            _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, 18, 0, 0);
-                                          } else {
+                                          if (works[index] == "연차") {
+                                            _isAllDay.value = true;
+                                            _isHalfway.value = false;
+                                            _startDateTime.value = DateTime(_startDateTime.value.year, _startDateTime.value.month, _startDateTime.value.day, 9, 0, 0);
+                                            _endDateTime.value = DateTime(_endDateTime.value.year, _endDateTime.value.month, _endDateTime.value.day, 18, 0, 0);
+                                          }
+                                          /* else {
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
                                             _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
-                                          }
+                                          }*/
                                           setState(() {
                                             workChkCount = index;
                                           });
@@ -337,13 +362,13 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                       ),
                                     ));
                               },
-                            )
-                        ),
+                            )),
                         Expanded(
                           child: SingleChildScrollView(
                             child: Container(
                               width: 309.0.w,
                               child: ScheduleInsertWidget(
+                                loginEmployee: loginEmployee,
                                 workName: works[workChkCount],
                                 isAllDay: _isAllDay,
                                 isHalfway: _isHalfway,
@@ -365,7 +390,6 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),

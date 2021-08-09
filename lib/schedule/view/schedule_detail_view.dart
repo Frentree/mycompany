@@ -159,10 +159,13 @@ class _ScheduleDetailViewState extends State<ScheduleDetailView> {
                               }
 
                               result = await CalenderMethod().updateScheduleWork(
-                                  context: context,
-                                  companyCode: loginUser.companyCode.toString(),
-                                  documentId: widget.appointment.documentId.toString(),
-                                  appointment: widget.appointment);
+                                context: context,
+                                companyCode: loginUser.companyCode.toString(),
+                                documentId: widget.appointment.documentId.toString(),
+                                appointment: widget.appointment,
+                                loginUser: loginUser,
+                                loginEmployee: loginEmployee
+                              );
                               break;
                             case 2:   //삭제
                               if(widget.appointment.profile != widget.appointment.organizerId){

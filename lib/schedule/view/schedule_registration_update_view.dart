@@ -13,11 +13,14 @@ import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
+import 'package:mycompany/schedule/db/schedule_firestore_repository.dart';
 import 'package:mycompany/schedule/function/calender_method.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
 import 'package:mycompany/public/model/team_model.dart';
+import 'package:mycompany/schedule/model/work_model.dart';
 import 'package:mycompany/schedule/widget/schedule_insert_widget.dart';
 import 'package:mycompany/schedule/widget/sfcalender/src/calendar.dart';
+import 'package:provider/provider.dart';
 
 class ScheduleRegisrationUpdateView extends StatefulWidget {
   final String documentId;
@@ -44,7 +47,6 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
   List<String> workTeamChkList = [];
 
   late UserModel loginUser;
-  late EmployeeModel loginEmployee;
 
   _getPersonalDataSource() async {
     List<TeamModel> team = await ScheduleFunctionReprository().getTeam(companyCode: loginUser.companyCode);
@@ -122,7 +124,6 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
     _scrollController = ScrollController();
     super.initState();
     loginUser = PublicFunction().getUserProviderSetting(context);
-    loginEmployee= PublicFunction().getEmployeeProviderSetting(context);
 
     _getPersonalDataSource();
 
@@ -158,6 +159,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
+    EmployeeModel loginEmployee = Provider.of<EmployeeModel>(context);
     return WillPopScope(
       onWillPop: () => _publicFunctionReprository.onBackPressed(context: context),
       child: Scaffold(
@@ -237,39 +239,71 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                               ),
                             ),
                             onTap: () async {
-                              var result = await CalenderMethod().updateSchedule(
-                                  documentId: widget.documentId,
-                                  companyCode: loginUser.companyCode.toString(),
-                                  allDay: _isAllDay.value,
-                                  workName: works[workChkCount],
-                                  title: titleController.text,
-                                  content: noteController.text,
-                                  startTime: _startDateTime.value,
-                                  endTime: _endDateTime.value,
-                                  workColleagueChkList: workColleagueChkList,
-                                  isAllDay: _isAllDay.value,
-                                  location: locationController.text,
-                                  approvalUser: approvalUser.value,
-                                  loginUser: loginUser
-                              );
+                              List<Map<String, dynamic>>? colleaguesList;
 
-                              if(result){
+                              if(workColleagueChkList.length != 0){
+                                colleaguesList = [{loginUser.mail : loginUser.name}];
+                                workColleagueChkList.map((e) {
+                                  Map<String,String> map = {e.mail.toString() : e.name.toString()};
+                                  colleaguesList!.add(map);
+                                }).toList();
+                              }
+
+                              if(loginEmployee.level!.contains(9) && works[workChkCount] != "요청"){
+                                WorkModel workModel = WorkModel(
+                                  allDay: _isAllDay.value,
+                                  type: works[workChkCount],
+                                  title: titleController.text,
+                                  contents: noteController.text,
+                                  location: locationController.text,
+                                  startTime: Timestamp.fromDate(_startDateTime.value),
+                                  endTime: Timestamp.fromDate(_startDateTime.value),
+                                  colleagues: colleaguesList,
+                                  name: loginEmployee.name,
+                                  createUid: loginEmployee.mail,
+                                );
+
+                                ScheduleFirebaseReository().updateAdminSchedule(loginEmployee: loginEmployee, model: workModel, docId: widget.documentId);
+
                                 _publicFunctionReprository.onBackPressed(context: context);
                               } else {
-                                loginDialogWidget(
-                                    context: context,
-                                    message: "결재자를 선택해주세요.",
-                                    actions: [
-                                      confirmElevatedButton(
-                                          topPadding: 81.0.h,
-                                          buttonName: "dialogConfirm".tr(),
-                                          buttonAction: () => Navigator.pop(context),
-                                          customWidth: 200.0,
-                                          customHeight: 40.0.h
-                                      ),
-                                    ]
+                                var result = await CalenderMethod().updateSchedule(
+                                    documentId: widget.documentId,
+                                    companyCode: loginUser.companyCode.toString(),
+                                    allDay: _isAllDay.value,
+                                    workName: works[workChkCount],
+                                    title: titleController.text,
+                                    content: noteController.text,
+                                    startTime: _startDateTime.value,
+                                    endTime: _endDateTime.value,
+                                    colleaguesList: colleaguesList!,
+                                    isAllDay: _isAllDay.value,
+                                    location: locationController.text,
+                                    approvalUser: approvalUser.value,
+                                    loginUser: loginUser
                                 );
+
+                                if(result){
+                                  _publicFunctionReprository.onBackPressed(context: context);
+                                } else {
+                                  loginDialogWidget(
+                                      context: context,
+                                      message: "결재자를 선택해주세요.",
+                                      actions: [
+                                        confirmElevatedButton(
+                                            topPadding: 81.0.h,
+                                            buttonName: "dialogConfirm".tr(),
+                                            buttonAction: () => Navigator.pop(context),
+                                            customWidth: 200.0,
+                                            customHeight: 40.0.h
+                                        ),
+                                      ]
+                                  );
+                                }
                               }
+
+
+
                             }
                         ),
                       ],
@@ -335,7 +369,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                           onPressed: () {
                                             // 결재자
                                             approvalUser.value = defaultEmpUser;
-                                            _isAllDay.value = false;
+                                            /*_isAllDay.value = false;
                                             _isHalfway.value = false;
 
                                             if(workNames[index] == "annual".tr()){
@@ -344,7 +378,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                             } else {
                                               _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
                                               _endDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 2, 0, 0);
-                                            }
+                                            }*/
                                             setState(() {
                                               workChkCount = index;
                                             });
@@ -362,6 +396,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                   workName: works[workChkCount],
                                   isAllDay: _isAllDay,
                                   isHalfway: _isHalfway,
+                                  loginEmployee: loginEmployee,
                                   locationController: locationController,
                                   titleController: titleController,
                                   noteController: noteController,

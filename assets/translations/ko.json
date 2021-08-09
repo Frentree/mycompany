@@ -34,7 +34,7 @@
   "other": "기타",
   "meeting": "미팅",
   "request": "요청",
-  "task_request": "업무요청",
+  "task_request": "외근요청",
   "registering_a_schedule": "일정등록",
   "schedule_modification": "일정수정",
   "start_time": "시작시간",
@@ -213,5 +213,10 @@
 
   "expense" : "경비",
   "expense_dialog_1" : "경비를 삭제하시겠습니까?",
-  "expense_price_fail" : "금액을 입력해주세요."
+  "expense_dialog_2" : "입금 확인하시겠습니까?",
+  "expense_price_fail" : "금액을 입력해주세요.",
+  "cost" : "금액",
+  "total_cost" : "총 금액",
+  "expense_date" : "경비 결재 요청일",
+  "expense_item" : "경비 항목 보기"
 }
