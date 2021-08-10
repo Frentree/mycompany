@@ -234,6 +234,30 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                           onTap: () async {
                             List<Map<String, String>>? colleaguesList;
 
+                            if(works[workChkCount] == "연차"){  // 연차 갯수 계산
+                              double remainAnnual = totalVacation.value - useVacation.value + loginEmployee.vacation!.toDouble();  // 남은 연차
+                              bool resultAnnual = true;
+                              if(_isAllDay.value){  // 연차
+                                int useDate = _endDateTime.value.difference(_startDateTime.value).inDays + 1;
+                                resultAnnual = (useDate > remainAnnual) ? false : true;
+                              } else {   // 반차
+                                resultAnnual = (remainAnnual < 0.5) ? false : true;
+                              }
+
+                              if(!resultAnnual){
+                                loginDialogWidget(context: context, message: "사용하려는 연차일이 잔여 연차일을 초과하였습니다.",
+                                 actions: [
+                                  confirmElevatedButton(
+                                      topPadding: 81.0.h,
+                                      buttonName: "dialogConfirm".tr(),
+                                      buttonAction: () => Navigator.pop(context),
+                                      customWidth: 200.0,
+                                      customHeight: 40.0.h),
+                                ]);
+                                return;
+                              }
+                            }
+
                             if (workColleagueChkList.length != 0) {
                               colleaguesList = [
                                 {loginUser.mail: loginUser.name}
@@ -350,6 +374,8 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                                             _isHalfway.value = false;
                                             _startDateTime.value = DateTime(_startDateTime.value.year, _startDateTime.value.month, _startDateTime.value.day, 9, 0, 0);
                                             _endDateTime.value = DateTime(_endDateTime.value.year, _endDateTime.value.month, _endDateTime.value.day, 18, 0, 0);
+                                          } else {
+                                            _isAllDay.value = false;
                                           }
                                           /* else {
                                             _startDateTime.value = DateTime(timeZone.year, timeZone.month, timeZone.day, timeZone.hour + 1, 0, 0);
