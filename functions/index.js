@@ -100,7 +100,9 @@ exports.autoOffWorkCheck1 = functions.region('asia-northeast3').pubsub.schedule(
                                 if(attendanceDoc.data().overTime == 0 || attendanceDoc.data().overTime == null){
                                     if(attendanceDoc.data().endTime == null || attendanceDoc.data().endTime.toDate().getTime() > offWorkTime.getTime()) {
                                         await attendanceDoc.ref.update({
+                                            autoOffWork: 2,
                                             endTime: setOffWorkTime,
+                                            status: 6,
                                         })
                                     }
                                }
@@ -139,6 +141,7 @@ exports.autoOffWorkCheck2 = functions.region('asia-northeast3').pubsub.schedule(
                                         await attendanceDoc.ref.update({
                                             endTime: setOffWorkTime,
                                             autoOffWork: 2,
+                                            status: 6,
                                         })
                                     }
                                }
@@ -151,6 +154,7 @@ exports.autoOffWorkCheck2 = functions.region('asia-northeast3').pubsub.schedule(
                                             await attendanceDoc.ref.update({
                                                 endTime: tempTime,
                                                 autoOffWork: 2,
+                                                status: 6,
                                             })
                                         }
                                     }
@@ -159,6 +163,7 @@ exports.autoOffWorkCheck2 = functions.region('asia-northeast3').pubsub.schedule(
                                         await attendanceDoc.ref.update({
                                             endTime: tempTime,
                                             autoOffWork: 2,
+                                            status: 6,
                                         })
                                     }
                                }

@@ -27,6 +27,8 @@ class LoginFirestoreRepository {
 
   Future<void> updateEmployeeData({required EmployeeModel employeeModel}) => _loginFirebaseCrud.updateEmployeeData(employeeModel: employeeModel);
 
+  Future<void> updateTokenNullEmployeeData({required EmployeeModel employeeModel}) => _loginFirebaseCrud.updateTokenNullEmployeeData(employeeModel: employeeModel);
+
   //User 관련
   Future<void> createUserData({required UserModel userModel}) =>
       _loginFirebaseCrud.createUserData(userModel: userModel);

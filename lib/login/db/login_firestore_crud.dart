@@ -54,6 +54,17 @@ class LoginFirestoreCrud {
     await _firebaseFirestore.collection(COMPANY).doc(employeeModel.companyCode).collection(USER).doc(employeeModel.mail).update(employeeModel.toJson());
   }
 
+  Future<void> updateTokenNullEmployeeData({required EmployeeModel employeeModel}) async {
+    employeeModel.lastModDate = Timestamp.now();
+
+    await _firebaseFirestore.collection(COMPANY).doc(employeeModel.companyCode).collection(USER).doc(employeeModel.mail).update(
+      {
+        "lastModDate": Timestamp.now(),
+        "token": "",
+      }
+    );
+  }
+
   //User 관련
   Future<void> createUserData({required UserModel userModel}) async {
     await _firebaseFirestore.collection(USER).doc(userModel.mail).set(userModel.toJson());

@@ -43,8 +43,7 @@ class SignOutFunction {
             loginUserData.deviceId = "";
             loginUserData.token = "";
             if(loginEmployeeData != null){
-              loginEmployeeData.token = "";
-              await loginFirestoreRepository.updateEmployeeData(employeeModel: loginEmployeeData);
+              await loginFirestoreRepository.updateTokenNullEmployeeData(employeeModel: loginEmployeeData);
             }
 
             await loginFirestoreRepository.updateUserSignOut(userMail: loginUserData.mail);
