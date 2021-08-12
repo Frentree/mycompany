@@ -384,7 +384,118 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
   }
 
   Widget getAnnualTotal(BuildContext context) {
-    return Column(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0.w),
+      child: Container(
+        width: double.infinity,
+        height: 130.0.h,
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color(0xff9C9C9C).withOpacity(0.3),
+              offset: Offset(1.0, 15.0),
+              blurRadius: 20.0,
+            ),
+          ],
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(12.0.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.0.w,
+                vertical: 10.0.h,
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xff2093F0),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12.0.r),
+                  topRight: Radius.circular(12.0.r),
+                ),
+              ),
+              child: Text(
+                "잔여 연차 현황".tr(),
+                style: getRobotoBold(fontSize: 13, color: whiteColor),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    right: 16.0.w,
+                    left: 16.0.w,
+                    top: 5.0.h,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "연차 기준",
+                            style: getNotoSantRegular(fontSize: 12, color: textColor),
+                          ),
+                          Text(
+                            widget.companyVacation!.value == false ? "입사년도" : "회계년도",
+                            style: getNotoSantRegular(fontSize: 12, color: textColor),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${DateTime.now().year} 년 총 연차",
+                            style: getNotoSantRegular(fontSize: 12, color: textColor),
+                          ),
+                          Text(
+                            "${widget.totalVacation!.value.toString()} 일",
+                            style: getNotoSantRegular(fontSize: 12, color: textColor),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "남은 연차",
+                            style: getNotoSantRegular(fontSize: 12, color: textColor),
+                          ),
+                          FutureBuilder<double>(
+                              future: UsedVacation(widget.loginEmployee.companyCode, widget.loginEmployee.mail, widget.loginEmployee.enteredDate!, widget.companyVacation!.value),
+                              builder: (context, snapshot) {
+                                if(!snapshot.hasData){
+                                  return Text(
+                                    "${(widget.totalVacation!.value - widget.useVacation!.value)}",
+                                    style: getNotoSantMedium(fontSize: 12, color: textColor),
+                                  );
+                                }
+                                widget.useVacation!.value = snapshot.data!;
+
+                                widget.useVacation!.value += widget.loginEmployee.vacation!.toDouble();
+
+                                return Text(
+                                  "${(widget.totalVacation!.value - widget.useVacation!.value)} 일",
+                                  style: getNotoSantRegular(fontSize: 12, color: textColor),
+                                );
+                              }
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+
+      Column(
       children: [
         Container(
           padding: EdgeInsets.all(0.7),
@@ -421,8 +532,9 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                                 style: getNotoSantMedium(fontSize: 12, color: textColor),
                               );
                             }
-
                             widget.useVacation!.value = snapshot.data!;
+                            
+
                             return Text(
                               "${(widget.totalVacation!.value - widget.useVacation!.value)}",
                               style: getNotoSantMedium(fontSize: 12, color: textColor),
@@ -502,9 +614,13 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   widget.startDateTime.value = await showDatesPicker(context: context, date: widget.startDateTime.value);
 
                   if(widget.startDateTime.value.difference(widget.endDateTime.value).inDays >= 0) {
-                    widget.endDateTime.value =  widget.startDateTime.value.add(Duration(days: 0));
+                    widget.endDateTime.value =  DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 18);
+                  } else {
+                    widget.endDateTime.value =  DateTime(widget.endDateTime.value.year, widget.endDateTime.value.month, widget.endDateTime.value.day, 18);
                   }
-                  widget.isAllDay.value = false;
+                  widget.isAllDay.value = true;
+                  widget.isHalfway.value = false;
+                  widget.startDateTime.value =  DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
 
                 }),
             Container(
@@ -545,8 +661,13 @@ class _ScheduleInsertWidgetState extends State<ScheduleInsertWidget> {
                   widget.endDateTime.value = await showDatesPicker(context: context, date: widget.endDateTime.value);
 
                   if(widget.endDateTime.value.difference(widget.startDateTime.value).inDays <= 0 ) {
-                    widget.startDateTime.value =  widget.endDateTime.value.add(Duration(days: 0));
+                    widget.startDateTime.value = DateTime(widget.endDateTime.value.year, widget.endDateTime.value.month, widget.endDateTime.value.day, 9);
+                  } else {
+                    widget.startDateTime.value =  DateTime(widget.startDateTime.value.year, widget.startDateTime.value.month, widget.startDateTime.value.day, 9);
                   }
+                  widget.isAllDay.value = true;
+                  widget.isHalfway.value = false;
+                  widget.endDateTime.value =  DateTime(widget.endDateTime.value.year, widget.endDateTime.value.month, widget.endDateTime.value.day, 18);
 
                 }),
           ],

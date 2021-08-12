@@ -4,6 +4,7 @@ import 'package:mycompany/approval/db/approval_firestore_repository.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
 import 'package:mycompany/public/db/public_firebase_repository.dart';
+import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/fcm/send_fcm.dart';
 import 'package:mycompany/public/model/public_comment_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
@@ -182,7 +183,7 @@ class CalenderMethod {
     // 선택된 동료 리스트
     bool result = false;
 
-    if (workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근") {
+    if (workName == "요청" || workName == "재택" || workName == "외출" || workName == "외근" || workName == "연차") {
       if (approvalUser == null || approvalUser.mail == "") {
         return false;
       }
@@ -382,12 +383,18 @@ class CalenderMethod {
   Future<int> insertScheduleCommentMethod(
       {required UserModel loginUser, CommentModel? model, required TextEditingController noticeComment, required Appointment mode}) async {
     late CommentModel insertModel;
+    DateFormatCustom _formatCustom = DateFormatCustom();
 
     var result = -1;
 
     if (model == null) {
       insertModel =
           CommentModel(level: 0, comment: noticeComment.text, createDate: Timestamp.now(), uid: loginUser.mail, uname: loginUser.name, commentId: "");
+      if(mode.userMail != loginUser.mail){
+        sendFcmWithTokens(loginUser, [mode.userMail],
+            "[댓글 입력]",
+            "[${loginUser.name}] 님이 ${_formatCustom.getDate(date: mode.startTime)} 일정에 댓글을 달았습니다.", "");
+      }
     } else {
       insertModel = CommentModel(
           level: 1,
@@ -399,6 +406,12 @@ class CalenderMethod {
           uid: loginUser.mail,
           uname: loginUser.name,
           commentId: model.reference!.id);
+
+      if(loginUser.mail != model.uid){
+        sendFcmWithTokens(loginUser, [model.uid],
+            "[댓글 입력]",
+            "[${loginUser.name}] 님이 ${_formatCustom.getDate(date: mode.startTime)} 일정에 댓글을 달았습니다.", "");
+      }
     }
 
     result = await _repository.insertScheduleComment(companyCode: loginUser.companyCode, scheduleId: mode.documentId, model: insertModel);

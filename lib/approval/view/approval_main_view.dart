@@ -15,8 +15,10 @@ import 'package:mycompany/main.dart';
 import 'package:mycompany/public/format/date_format.dart';
 import 'package:mycompany/public/function/public_funtion.dart';
 import 'package:mycompany/public/style/color.dart';
+import 'package:mycompany/public/style/fontWeight.dart';
 import 'package:mycompany/public/style/text_style.dart';
 import 'package:mycompany/schedule/function/schedule_function_repository.dart';
+import 'package:mycompany/schedule/widget/schedule_dialog_widget.dart';
 
 
 class ApprovalMainView extends StatefulWidget {
@@ -37,7 +39,11 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
   var _color = [checkColor, outWorkColor, Colors.purple, Colors.teal, annualColor, annualColor, annualColor, Colors.cyanAccent, Colors.amber, Colors.purple, Colors.cyan];
   int typeChoise = 1;
   var typeList = ["내근", "외근", "업무", "미팅", "연차", "반차", "휴가", "기타", "연장", "요청", "경비"];
+  
+  late DateTime startDate;
+  late DateTime endDate;
 
+  
   // 전체 직원
   List<EmployeeModel> employeeList = <EmployeeModel>[];
 
@@ -64,6 +70,10 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
     super.initState();
     loginUser = PublicFunction().getUserProviderSetting(context);
     getApprovalData();
+
+    endDate = DateTime.now();
+    startDate = endDate.add(Duration(days: -30));
+
 
     if(widget.approvalChk != null){
       approvalChk = 1;
@@ -154,9 +164,9 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                         ApprovalModel model = ApprovalModel.fromMap(mapData: (data.data() as dynamic), reference: data.reference);
                         if(model.status == "요청"){
                           requestWaitingApproval.add(model);
-                        }else if(model.status == "승인"){
+                        }else if(model.status == "승인" && startDate.difference(model.createDate!.toDate()).inDays < 0 && endDate.difference(model.createDate!.toDate()).inDays > 0){
                           requestCompleteApproval.add(model);
-                        }else if(model.status == "반려"){
+                        }else if(model.status == "반려" && startDate.difference(model.createDate!.toDate()).inDays < 0 && endDate.difference(model.createDate!.toDate()).inDays > 0){
                           requestCancelApproval.add(model);
                         }
                       }).toList();
@@ -164,6 +174,89 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                       return SingleChildScrollView(
                         child: Column(
                           children: [
+                            Container(
+                              height: 60.0.h,
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "신청일",
+                                    style: getNotoSantBold(fontSize: 13, color: textColor),
+                                  ),
+                                  SizedBox(width: 20.0.w,),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 110.0.w,
+                                        child: ElevatedButton(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                _format.getDateSummary(date: startDate),
+                                                style: TextStyle(
+                                                  fontSize: 12.0.sp,
+                                                  fontWeight: fontWeight["Medium"],
+                                                  color: textColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: blackColor.withOpacity(0.01),
+                                            elevation: 10.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(13.0.r),
+                                            ),
+                                            shadowColor: blackColor.withOpacity(0.3),
+                                          ),
+                                          onPressed: () async {
+                                            startDate = await showDatesPicker(context: context, date: startDate);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 15.0.w,),
+                                      Container(
+                                        width: 110.0.w,
+                                        child: ElevatedButton(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                _format.getDateSummary(date: endDate),
+                                                style: TextStyle(
+                                                  fontSize: 12.0.sp,
+                                                  fontWeight: fontWeight["Medium"],
+                                                  color: textColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: blackColor.withOpacity(0.01),
+                                            elevation: 10.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(13.0.r),
+                                            ),
+                                            shadowColor: blackColor.withOpacity(0.3),
+                                          ),
+                                          onPressed: () async{
+                                            endDate = await showDatesPicker(context: context, date: endDate);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],
+                              ),
+                            ),
                             Column(
                               children: getRequestData(context: context, approval: requestWaitingApproval, approvalName: "approval_request".tr()),
                             ),
@@ -191,13 +284,14 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
 
                       docs.sort((a, b) => b.get("createDate").compareTo(a.get("createDate")));
 
+
                       docs.map((data) {
                         ApprovalModel model = ApprovalModel.fromMap(mapData: (data.data() as dynamic), reference: data.reference);
                         if(model.status == "요청"){
                           responseWaitingApproval.add(model);
-                        }else if(model.status == "승인"){
+                        }else if(model.status == "승인" && startDate.difference(model.createDate!.toDate()).inDays < 0 && endDate.difference(model.createDate!.toDate()).inDays > 0){
                           responseCompleteApproval.add(model);
-                        }else if(model.status == "반려"){
+                        }else if(model.status == "반려" && startDate.difference(model.createDate!.toDate()).inDays < 0 && endDate.difference(model.createDate!.toDate()).inDays > 0){
                           responseCancelApproval.add(model);
                         }
                       }).toList();
@@ -205,6 +299,89 @@ class _ApprovalMainViewState extends State<ApprovalMainView> {
                       return SingleChildScrollView(
                         child: Column(
                             children: [
+                              Container(
+                                height: 60.0.h,
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "신청일",
+                                      style: getNotoSantBold(fontSize: 13, color: textColor),
+                                    ),
+                                    SizedBox(width: 20.0.w,),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 110.0.w,
+                                          child: ElevatedButton(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  _format.getDateSummary(date: startDate),
+                                                  style: TextStyle(
+                                                    fontSize: 12.0.sp,
+                                                    fontWeight: fontWeight["Medium"],
+                                                    color: textColor,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: blackColor.withOpacity(0.01),
+                                              elevation: 10.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(13.0.r),
+                                              ),
+                                              shadowColor: blackColor.withOpacity(0.3),
+                                            ),
+                                            onPressed: () async {
+                                              startDate = await showDatesPicker(context: context, date: startDate);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 15.0.w,),
+                                        Container(
+                                          width: 110.0.w,
+                                          child: ElevatedButton(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  _format.getDateSummary(date: endDate),
+                                                  style: TextStyle(
+                                                    fontSize: 12.0.sp,
+                                                    fontWeight: fontWeight["Medium"],
+                                                    color: textColor,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: blackColor.withOpacity(0.01),
+                                              elevation: 10.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(13.0.r),
+                                              ),
+                                              shadowColor: blackColor.withOpacity(0.3),
+                                            ),
+                                            onPressed: () async{
+                                              endDate = await showDatesPicker(context: context, date: endDate);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
+                              ),
                               Column(
                                 children: getResponseData(context: context, approval: responseWaitingApproval, approvalName: "approval_request".tr()),
                               ),
