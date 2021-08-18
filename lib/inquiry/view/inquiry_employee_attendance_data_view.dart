@@ -674,26 +674,30 @@ class EmployeeAttendanceDataViewState extends State<EmployeeAttendanceDataView> 
                 onTap: (){
                   isSelectTeam.value = !isSelectTeam.value;
                 },
-                child: SvgPicture.asset(
-                  'assets/icons/switch.svg',
-                  width: 16.51.w,
-                  height: 11.37.h,
-                ),
-              ),
-              SizedBox(
-                width: 10.0.w,
-              ),
-              ValueListenableBuilder(
-                valueListenable: isSelectTeam,
-                builder: (BuildContext context, bool isSelectTeamValue, Widget? child) {
-                  return Text(
-                    isSelectTeamValue == true ? "department".tr() : "employee".tr(),
-                    style: TextStyle(
-                      fontSize: 13.0.sp,
-                      color: textColor,
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/switch.svg',
+                      width: 16.51.w,
+                      height: 11.37.h,
                     ),
-                  );
-                }
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    ValueListenableBuilder(
+                        valueListenable: isSelectTeam,
+                        builder: (BuildContext context, bool isSelectTeamValue, Widget? child) {
+                          return Text(
+                            isSelectTeamValue == true ? "department".tr() : "employee".tr(),
+                            style: TextStyle(
+                              fontSize: 13.0.sp,
+                              color: textColor,
+                            ),
+                          );
+                        }
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -217,7 +217,7 @@ class CalenderMethod {
       case "외근":
       case "요청":
       case "업무":
-        result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser);
+        result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser!, loginUser: loginUser, workName: workName);
         sendFcmWithTokens(
             loginUser, [approvalUser.mail], "[결재 요청]", "[${loginUser.name}] 님이 ${workName == "요청" ? "업무 요청" : workName} 결재를 요청 했습니다.", "");
         break;
@@ -233,7 +233,7 @@ class CalenderMethod {
     if (workModel.type == "기타" && approvalUser!.mail == "") {
       result = await _repository.insertWorkNotApprovalDocument(workModel: workModel, companyCode: loginUser.companyCode!);
     } else if (workModel.type == "기타" && approvalUser!.mail != "") {
-      result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser);
+      result = await _repository.insertWorkApprovalDocument(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, workName: workName);
     }
 
     return result;

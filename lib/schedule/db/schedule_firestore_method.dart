@@ -57,9 +57,10 @@ class ScheduleFirebaseMethods {
     return isResult;
   }
 
-  Future<bool> insertWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser) async {
+  Future<bool> insertWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser, String workName) async {
     bool isResult = false;
-    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORK).add(workModel.toJson()).then((value) => approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, docId: value.id)).whenComplete(() => {isResult = true});
+    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORK).add(workModel.toJson()).then((value) =>
+        approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, docId: value.id, workName: workName)).whenComplete(() => {isResult = true});
 
     return isResult;
   }
@@ -75,7 +76,8 @@ class ScheduleFirebaseMethods {
   Future<bool> updateWorkApprovalDocument(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser, String documentId) async {
     bool isResult = false;
 
-    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORK).doc(documentId).set(workModel.toJson()).then((value) => approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, docId: documentId)).whenComplete(() => {isResult = true});
+    await _store.collection(COMPANY).doc(loginUser.companyCode).collection(WORK).doc(documentId).set(workModel.toJson()).then((value) =>
+        approvalRepository.insertWorkApproval(workModel: workModel, approvalUser: approvalUser, loginUser: loginUser, docId: documentId)).whenComplete(() => {isResult = true});
 
     return isResult;
   }

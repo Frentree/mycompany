@@ -259,9 +259,7 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                             }
 
                             if (workColleagueChkList.length != 0) {
-                              colleaguesList = [
-                                {loginUser.mail: loginUser.name}
-                              ];
+                              colleaguesList = [{loginUser.mail: loginUser.name}];
                               workColleagueChkList.map((e) {
                                 Map<String, String> map = {e.mail.toString(): e.name.toString()};
                                 colleaguesList!.add(map);
@@ -302,14 +300,17 @@ class _ScheduleRegisrationViewState extends State<ScheduleRegisrationView> {
                               if (result) {
                                 _publicFunctionReprository.onBackPressed(context: context);
                               } else {
-                                loginDialogWidget(context: context, message: "결재자를 선택해주세요.", actions: [
-                                  confirmElevatedButton(
-                                      topPadding: 81.0.h,
-                                      buttonName: "dialogConfirm".tr(),
-                                      buttonAction: () => Navigator.pop(context),
-                                      customWidth: 200.0,
-                                      customHeight: 40.0.h),
-                                ]);
+                                loginDialogWidget(context: context,
+                                    message: "결재자를 선택해주세요.",
+                                    actions: [
+                                    confirmElevatedButton(
+                                        topPadding: 81.0.h,
+                                        buttonName: "dialogConfirm".tr(),
+                                        buttonAction: () => Navigator.pop(context),
+                                        customWidth: 200.0,
+                                        customHeight: 40.0.h),
+                                  ]
+                                );
                               }
                             }
                           }),

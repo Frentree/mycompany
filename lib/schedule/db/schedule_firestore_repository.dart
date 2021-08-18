@@ -24,8 +24,8 @@ class ScheduleFirebaseReository {
   Future<bool> insertWorkNotApprovalDocument({required WorkModel workModel, required String companyCode}) =>
       _curd.insertWorkNotApprovalDocument(workModel, companyCode);
 
-  Future<bool> insertWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required loginUser}) =>
-      _curd.insertWorkApprovalDocument(workModel, approvalUser, loginUser);
+  Future<bool> insertWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required loginUser,required String workName}) =>
+      _curd.insertWorkApprovalDocument(workModel, approvalUser, loginUser, workName);
 
   Future<bool> updateWorkApprovalDocument({required WorkModel workModel, required EmployeeModel approvalUser,required UserModel loginUser, required String documentId}) =>
       _curd.updateWorkApprovalDocument(workModel, approvalUser, loginUser, documentId);

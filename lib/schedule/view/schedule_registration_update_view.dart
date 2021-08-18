@@ -96,7 +96,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
   List workNames = [
     "internal_work".tr(),
     "outside_work".tr(),
-    "task_request".tr(),
+//    "task_request".tr(),
 //    "home_job".tr(),
 //    "annual".tr(),
     //"외출",
@@ -107,7 +107,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
   List works = [
     "내근",
     "외근",
-    "요청",
+//    "요청",
 //    "재택",
 //    "연차",
     //"외출",
@@ -240,14 +240,15 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                             ),
                             onTap: () async {
                               List<Map<String, dynamic>>? colleaguesList;
-
+                              colleaguesList = [{loginUser.mail : loginUser.name}];
                               if(workColleagueChkList.length != 0){
-                                colleaguesList = [{loginUser.mail : loginUser.name}];
                                 workColleagueChkList.map((e) {
                                   Map<String,String> map = {e.mail.toString() : e.name.toString()};
                                   colleaguesList!.add(map);
                                 }).toList();
                               }
+
+                              print(colleaguesList);
 
                               if(loginEmployee.level!.contains(9) && works[workChkCount] != "요청"){
                                 WorkModel workModel = WorkModel(

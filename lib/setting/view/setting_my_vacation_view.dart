@@ -111,7 +111,7 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
     UserInfoProvider userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
     UserModel loginUser = userInfoProvider.getUserData()!;
     EmployeeModel employeeUser = Provider.of<EmployeeModel>(context);
-    double totalVacation = TotalVacation(employeeUser.enteredDate!, companyVacation, employeeUser.vacation!.toDouble());
+    double totalVacation = TotalVacation(employeeUser.enteredDate!, companyVacation, 0);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -164,27 +164,6 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                        right: 27.5.w,
-                        left: 27.5.w,
-                        top: 29.0.h,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "${now.year}년 연차 내역",
-                            style: TextStyle(
-                              fontSize: 15.0.sp,
-                              color: Color(0xff2093F0),
-                              fontWeight: fontWeight['Bold'],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     FutureBuilder(
                       future: UsedVacation(loginUser.companyCode, loginUser.mail, employeeUser.enteredDate!, companyVacation),
                       builder: (context, snapshot) {
@@ -192,15 +171,38 @@ class SettingMyVacationViewState extends State<SettingMyVacationView> {
                           return Container();
                         }
                         double useVacation = (snapshot.data as double);
+                        double userVacation = employeeUser.vacation!.toDouble();
 
                         List<ChartData> chartData = [
                           ChartData('사용 연차일', useVacation, titleTextColor),
+                          ChartData('추가 연차일', userVacation, Colors.red),
                           ChartData('남은 연차일', (totalVacation - useVacation), Colors.teal),
                         ];
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                right: 27.5.w,
+                                left: 27.5.w,
+                                top: 29.0.h,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "${now.year}년 연차 내역 (${totalVacation - useVacation + userVacation} 일 남음)",
+                                    style: TextStyle(
+                                      fontSize: 15.0.sp,
+                                      color: Color(0xff2093F0),
+                                      fontWeight: fontWeight['Bold'],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Container(
                               padding: EdgeInsets.only(
                                 right: 27.5.w,

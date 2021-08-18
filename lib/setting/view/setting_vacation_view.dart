@@ -135,7 +135,7 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                           itemBuilder: (context, index) {
                             EmployeeModel empModel = EmployeeModel.fromMap(mapData: (docs[index].data() as dynamic), reference: docs[index].reference);
                             double? userVacation = empModel.vacation?.toDouble();
-                            double? totalVacation = TotalVacation(empModel.enteredDate!, companyVacation, userVacation ?? 0);
+                            double? totalVacation = TotalVacation(empModel.enteredDate!, companyVacation, 0);
 
                             return FutureBuilder(
                                 future: UsedVacation(empModel.companyCode, empModel.mail, empModel.enteredDate!, companyVacation),
@@ -215,7 +215,7 @@ class _SettingVacationViewState extends State<SettingVacationView> {
                                                           Text("vacation_content_3".tr() +  " ",
                                                             style: getNotoSantBold(fontSize: 11.0, color: textColor),
                                                           ),
-                                                          Text("${(totalVacation - useVacation)}",
+                                                          Text("${(totalVacation - useVacation + userVacation!)}",
                                                             style: getNotoSantRegular(fontSize: 11.0, color: textColor),
                                                           ),
                                                         ]

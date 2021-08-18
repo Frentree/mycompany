@@ -24,8 +24,8 @@ class ApprovalFirebaseRepository {
   Stream<QuerySnapshot> getResponseApprovalDataCount({required UserModel loginUser}) =>
       _curd.getResponseApprovalDataCount(loginUser);
 
-  Future<bool> insertWorkApproval({required WorkModel workModel,required EmployeeModel approvalUser,required UserModel loginUser, String? docId}) =>
-      _curd.insertWorkApproval(workModel, approvalUser, loginUser, docId);
+  Future<bool> insertWorkApproval({required WorkModel workModel,required EmployeeModel approvalUser,required UserModel loginUser, String? docId, String? workName}) =>
+      _curd.insertWorkApproval(workModel, approvalUser, loginUser, docId, workName);
 
   Future<void> createApprovalData({required String companyId, required ApprovalModel approvalModelModel}) => _curd.createApprovalData(companyId: companyId, approvalModelModel: approvalModelModel);
 
