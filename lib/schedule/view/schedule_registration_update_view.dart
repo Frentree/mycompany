@@ -277,7 +277,7 @@ class _ScheduleRegisrationUpdateViewState extends State<ScheduleRegisrationUpdat
                                     content: noteController.text,
                                     startTime: _startDateTime.value,
                                     endTime: _endDateTime.value,
-                                    colleaguesList: colleaguesList!,
+                                    colleaguesList: colleaguesList,
                                     isAllDay: _isAllDay.value,
                                     location: locationController.text,
                                     approvalUser: approvalUser.value,
