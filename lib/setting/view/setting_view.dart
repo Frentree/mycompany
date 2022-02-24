@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mycompany/login/function/sign_out_function.dart';
 import 'package:mycompany/login/model/employee_model.dart';
 import 'package:mycompany/login/model/user_model.dart';
+import 'package:mycompany/login/widget/login_button_widget.dart';
+import 'package:mycompany/login/widget/login_dialog_widget.dart';
 import 'package:mycompany/public/db/public_firebase_repository.dart';
 import 'package:mycompany/public/function/public_function_repository.dart';
 import 'package:mycompany/public/provider/user_info_provider.dart';
@@ -70,6 +72,39 @@ class _SettingViewState extends State<SettingView> {
                           fontWeight: fontWeight['Medium'],
                           color: textColor,
                         ),
+                      ),
+                      SizedBox(
+                        width: 50.0.w,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.file_download,
+                        ),
+                        iconSize: 24.0.h,
+                        splashRadius: 24.0.r,
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        color: Color(0xff2093F0),
+                        onPressed: () => {
+                          loginDialogWidget(
+                            context: context,
+                            message: "Will you download receipts on your device?",
+                            actions: [
+                              loginDialogCancelButton(
+                                buttonName: "Cancel",
+                                buttonAction: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              loginDialogConfirmButton(
+                                buttonName: "Download",
+                                buttonAction: () async {
+                                  _publicFunctionRepository.downloadReceipts(loginUser);
+                                }
+                              )
+                            ]
+                          )
+                        }
                       ),
                     ],
                   ),

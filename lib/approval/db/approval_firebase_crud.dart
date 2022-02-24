@@ -55,7 +55,7 @@ class ApprovalFirebaseCurd {
   *  결재 Doc
   *
   * */
-  Future<bool> insertWorkApproval(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser, String? docId) async {
+  Future<bool> insertWorkApproval(WorkModel workModel, EmployeeModel approvalUser, UserModel loginUser, String? docId, String? workName) async {
     ApprovalModel model = ApprovalModel(
       workIds: docId,
       allDay: workModel.allDay,
@@ -64,9 +64,9 @@ class ApprovalFirebaseCurd {
       colleagues: workModel.colleagues,
       title: workModel.title,
       location: workModel.location!,
-      approvalType: workModel.type,
-      user: workModel.type == "요청" ? loginUser.name : workModel.name,
-      userMail: workModel.type == "요청" ? loginUser.mail : workModel.createUid,
+      approvalType: workName ?? workModel.type,
+      user: workName == "요청" ? loginUser.name : workModel.name,
+      userMail: workName == "요청" ? loginUser.mail : workModel.createUid,
       requestContent: workModel.contents,
       status: "요청",
       requestStartDate: workModel.startTime,

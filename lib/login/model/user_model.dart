@@ -77,4 +77,20 @@ class UserModel {
       "deviceId": deviceId,
     };
   }
+
+  Map toMap() {
+    var map = Map<String, dynamic>();
+    map['token'] = this.token;
+    map['mail'] = this.mail;
+    map['name'] = this.name;
+    map['phone'] = this.phone;
+    map['birthday'] = this.birthday;
+    map['createDate'] = this.createDate;
+    map['lastModDate'] = this.lastModDate;
+    map['companyCode'] = this.companyCode;
+    map['state'] = this.state;
+    map['profilePhoto'] = this.profilePhoto;
+    map['deviceId'] = this.deviceId;
+    return map;
+  }
 }

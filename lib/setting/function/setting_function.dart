@@ -43,9 +43,11 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
     widget: SettingCompanyInformationView(gradeLevel: employeeModel.level!,)
   ));
 
-  list.add(SettingModel(munuName: "회사가입 신청", menuLavel: [8, 9], menuIcon: Icon(Icons.assignment_ind, color: workInsertColor, size: 30.0.h),
-      widget: ApprovalJoinCompanyView()
-  ));
+  if(getGradeChk(employeeModel: employeeModel, level: [8,9])){
+    list.add(SettingModel(munuName: "회사가입 신청", menuLavel: [8, 9], menuIcon: Icon(Icons.assignment_ind, color: workInsertColor, size: 30.0.h),
+        widget: ApprovalJoinCompanyView()
+    ));
+  }
 
   if(getGradeChk(employeeModel: employeeModel, level: [8,9])){
     list.add(SettingModel(munuName: "setting_menu_9".tr(), menuLavel: [8,9], menuIcon: Icon(Icons.airplanemode_on_sharp, color: workInsertColor, size: 30.0.h),
@@ -79,7 +81,6 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
         widget: SettingWifiView()
     ));
   }
-  /*
   // 앱버전
   list.add(SettingModel(munuName: "setting_menu_5".tr(), menuLavel: [0], menuIcon: Icon(Icons.perm_device_info, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()
@@ -94,7 +95,6 @@ List<SettingModel> getSettingMenu({required BuildContext context, required Emplo
   list.add(SettingModel(munuName: "setting_menu_7".tr(), menuLavel: [0], menuIcon: Icon(Icons.wb_incandescent_outlined, color: workInsertColor, size: 30.0.h),
       widget: SettingUnomplementedScreen()
   ));
-  */
 
   // 로그아웃
   list.add(SettingModel(munuName: "setting_menu_8".tr(), menuLavel: [0], menuIcon: Icon(Icons.logout, color: workInsertColor, size: 30.0.h),));

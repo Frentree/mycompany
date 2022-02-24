@@ -11,6 +11,7 @@ import 'package:mycompany/public/model/position_model.dart';
 import 'package:mycompany/public/model/team_model.dart';
 import 'package:mycompany/public/style/color.dart';
 import 'package:mycompany/public/style/fontWeight.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, required String buttonName, required EmployeeModel confirmUser, required List<TeamModel> teamList, required List<PositionModel> positionList}) {
   FormValidationFunction formValidationFunction = FormValidationFunction();
@@ -26,7 +27,6 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
   ValueNotifier<String> positionName = ValueNotifier<String>("");
 
   return showDialog(
-    barrierDismissible: false,
     context: context,
     builder: (BuildContext context) {
       return StatefulBuilder(
@@ -72,7 +72,7 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
                           ),
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
-                          onPressed: () => backPage(context: context, returnValue: confirmUser),
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ],
                     ),
@@ -115,7 +115,7 @@ Future<dynamic> enterEmployeeInformationDialog({required BuildContext context, r
                                     }
                                   }),
                                   decoration: loginTextFormRoundBorderDecoration(
-                                    hintText: "입사일",
+                                    hintText: 'entered'.tr() + " (ex: 1999.01.01)",
                                   ),
                                   style: TextStyle(
                                     fontSize: 14.0.sp,

@@ -270,7 +270,14 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                                           value == false ? Icons.mode_edit : Icons.check,
                                                           color: isNoErrorValue.contains(false) == true ? hintTextColor : Color(0xff2093F0),
                                                         ),
-                                                        onPressed: isNoErrorValue.contains(false) == false ? () async{
+                                                        onPressed: isNoErrorValue.contains(false) == false ? () async {
+                                                          if(bankName.value != null){
+                                                            if(_accountTextController.value.text.trim() == ""){
+                                                              _bankNameTextController.text = "";
+                                                              bankName.value = null;
+                                                            }
+                                                          }
+
                                                           if(value == true) {
                                                             _isUpload.value = true;
                                                             if(changeImagePath.value != null){
@@ -614,8 +621,7 @@ class SettingMyInformationViewState extends State<SettingMyInformationView> {
                                                                     bankName.value = null;
                                                                     _bankNameTextController.clear();
                                                                     _accountTextController.clear();
-                                                                  }
-                                                                  else {
+                                                                  } else {
                                                                     _bankNameTextController.text = bankName.value!;
                                                                   }
                                                                 }

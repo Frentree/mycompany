@@ -1922,7 +1922,7 @@ Future<bool> colleagueUpdateDialog(BuildContext context, EmployeeModel employeeM
                             controller: enteredDateController,
                             maxLines: 1,
                             decoration: colleagueTextFormRoundBorderDecoration(
-                              hintText: 'vacation_setting_dialog_2'.tr(),
+                              hintText: 'entered'.tr() + " (ex: 1999.01.01)",
                             ),
                             style: TextStyle(
                               fontSize: 12.0.sp,

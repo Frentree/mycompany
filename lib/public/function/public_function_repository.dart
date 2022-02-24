@@ -16,4 +16,8 @@ class PublicFunctionRepository {
 
   Future<bool> onScheduleBackPressed({required BuildContext context}) =>
       _function.onScheduleBackPressed(context);
+
+  /// Download receipts
+  Future<void> downloadReceipts(UserModel userModel) =>
+      _function.downloadReceipts(userModel);
 }

@@ -312,7 +312,7 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                       buttonAction: () async {
                         List<TeamModel> teamList = await loginFirestoreRepository.readTeamData(companyId: loginEmployeeData.companyCode);
                         List<PositionModel> positionList = await loginFirestoreRepository.readPositionData(companyId: loginEmployeeData.companyCode);
-                        EmployeeModel confirmUser = EmployeeModel(
+                        EmployeeModel? confirmUser = EmployeeModel(
                           mail: joinCompanyApprovalData[selectedIndex.value].mail,
                           name: joinCompanyApprovalData[selectedIndex.value].name,
                           phone: joinCompanyApprovalData[selectedIndex.value].phone,
@@ -329,48 +329,48 @@ class ApprovalJoinCompanyViewState extends State<ApprovalJoinCompanyView> {
                           positionList: positionList,
                           confirmUser: confirmUser,
                         );
+                        if(confirmUser != null) {
+                          if(confirmUser.enteredDate == "" || confirmUser.team == null || confirmUser.position == null){
+                            await loginDialogWidget(
+                                context: context,
+                                message: "직원 정보 입력이 완료되지 않았습니다\n직원 정보 조회 페이지에서\n직원 정보를 수정해주세요.",
+                                actions: [
+                                  loginDialogConfirmButton(
+                                      buttonName: 'dialogConfirm'.tr(),
+                                      buttonAction: (){
+                                        backPage(context: context);
+                                      }
+                                  ),
+                                ]
+                            );
+                          } else{
+                            await loginDialogWidget(
+                                context: context,
+                                message: "직원 정보 입력이 완료되었습니다",
+                                actions: [
+                                  loginDialogConfirmButton(
+                                      buttonName: 'dialogConfirm'.tr(),
+                                      buttonAction: (){
+                                        backPage(context: context);
+                                      }
+                                  ),
+                                ]
+                            );
+                          }
 
-                        if(confirmUser.enteredDate == "" || confirmUser.team == null || confirmUser.position == null){
-                          await loginDialogWidget(
-                            context: context,
-                            message: "직원 정보 입력이 완료되지 않았습니다\n직원 정보 조회 페이지에서\n직원 정보를 수정해주세요.",
-                            actions: [
-                              loginDialogConfirmButton(
-                                buttonName: 'dialogConfirm'.tr(),
-                                buttonAction: (){
-                                  backPage(context: context);
-                                }
-                              ),
-                            ]
-                          );
+                          joinCompanyApprovalData[selectedIndex.value].state = 1;
+                          joinCompanyApprovalData[selectedIndex.value].signUpApprover = loginEmployeeData.mail;
+                          joinCompanyApprovalData[selectedIndex.value].approvalDate = Timestamp.now();
+
+                          loginFirestoreRepository.updateJoinCompanyApprovalData(companyId: loginEmployeeData.companyCode, joinCompanyApprovalModel: joinCompanyApprovalData[selectedIndex.value]);
+                          loginFirestoreRepository.createEmployeeData(employeeModel: confirmUser);
+                          loginFirestoreRepository.updateUserJoinCompanyState(userMail: confirmUser.mail, companyId: confirmUser.companyCode);
+
+                          sendFcmWithTokens(loginUserData, [joinCompanyApprovalData[selectedIndex.value].mail], "[회사가입 승인]", "[${loginUserData.name}] 님이 회사가입을 승인 했습니다.", "");
+
+                          selectedIndex.value = -1;
                         }
 
-                        else{
-                          await loginDialogWidget(
-                              context: context,
-                              message: "직원 정보 입력이 완료되었습니다",
-                              actions: [
-                                loginDialogConfirmButton(
-                                    buttonName: 'dialogConfirm'.tr(),
-                                    buttonAction: (){
-                                      backPage(context: context);
-                                    }
-                                ),
-                              ]
-                          );
-                        }
-
-                        joinCompanyApprovalData[selectedIndex.value].state = 1;
-                        joinCompanyApprovalData[selectedIndex.value].signUpApprover = loginEmployeeData.mail;
-                        joinCompanyApprovalData[selectedIndex.value].approvalDate = Timestamp.now();
-
-                        loginFirestoreRepository.updateJoinCompanyApprovalData(companyId: loginEmployeeData.companyCode, joinCompanyApprovalModel: joinCompanyApprovalData[selectedIndex.value]);
-                        loginFirestoreRepository.createEmployeeData(employeeModel: confirmUser);
-                        loginFirestoreRepository.updateUserJoinCompanyState(userMail: confirmUser.mail, companyId: confirmUser.companyCode);
-
-                        sendFcmWithTokens(loginUserData, [joinCompanyApprovalData[selectedIndex.value].mail], "[회사가입 승인]", "[${loginUserData.name}] 님이 회사가입을 승인 했습니다.", "");
-
-                        selectedIndex.value = -1;
                       }
                     ),
                   ],

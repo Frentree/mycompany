@@ -121,11 +121,13 @@ class SettingCompanyInformationViewState extends State<SettingCompanyInformation
                               }
                               CompanyModel model = CompanyModel.fromMap(mapData: (snapshot.data!.data() as dynamic), reference: snapshot.data!.reference);
                               _phoneTextController.text = model.companyPhone ?? "";
+                              if(!isEdit.value){
+                                _companyAddrTextController.text = model.companyAddr;
+                                _companyWebTextController.text = model.companyWeb ?? "";
+                                _companyNoTextController.text = model.companyNo ?? "";
+                                _isVacation.value = model.vacation ?? false;
+                              }
 
-                              _companyAddrTextController.text = model.companyAddr;
-                              _companyWebTextController.text = model.companyWeb ?? "";
-                              _companyNoTextController.text = model.companyNo ?? "";
-                              _isVacation.value = model.vacation ?? false;
 
                               return ValueListenableBuilder(
                                   valueListenable: isEdit,
